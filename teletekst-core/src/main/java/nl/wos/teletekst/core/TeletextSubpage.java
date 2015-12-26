@@ -7,10 +7,17 @@ public class TeletextSubpage {
     public TeletextSubpage() {
     }
 
+    public String[] getTextLines() {
+        return textLines;
+    }
+
     public String getPageText() {
         String result = "";
 
         for (String line : textLines) {
+            if(line == null) {
+                result += "\n";
+            }
             result += line + "\n";
         }
 

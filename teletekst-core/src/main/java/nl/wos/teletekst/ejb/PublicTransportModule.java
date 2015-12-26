@@ -1,30 +1,109 @@
 package nl.wos.teletekst.ejb;
 
+import nl.wos.teletekst.core.TeletextPage;
+import nl.wos.teletekst.core.TeletextSubpage;
+import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.dao.TrainStationDao;
 import nl.wos.teletekst.entity.TrainStation;
+import nl.wos.teletekst.objects.PublicTransportModuleHelper;
+import nl.wos.teletekst.objects.TrainDeparture;
 import nl.wos.teletekst.util.Web;
+import nl.wos.teletekst.util.XMLParser;
 import org.apache.http.auth.*;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.ejb.*;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Singleton
 public class PublicTransportModule {
+    private static final Logger log = Logger.getLogger(PublicTransportModule.class.getName());
 
     @Inject private TrainStationDao trainStationDao;
+    @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(second="*/10", minute="*",hour="*", persistent=false)
-    public void doTeletextUpdate() {
-        System.out.println(getClass().toString() + " is going to update teletext.");
+    @Schedule(second="*/15", minute="*",hour="*", persistent=false)
+    public void doTeletextUpdate() throws Exception {
+        log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 
+        Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
+        log.fine(trainDepartures.toString());
+
+        TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
+
         for(TrainStation station : trainStations) {
-            String departures = getTrainDeparturesForTrainstation(station.getTrainStation());
-            System.out.println(departures);
+            List<TrainDeparture> stationDepartures = trainDepartures.get(station.getTrainStation());
+            TeletextPage teletextPage = new TeletextPage(station.getTeletextPage());
+            TeletextSubpage subPage = teletextPage.addNewSubpage();
+            subPage.setLayoutTemplateFileName("template-treinen.tpg");
+            PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());
+
+            updatePackage.addTeletextPage(teletextPage);
+
         }
+        updatePackage.generateTextFiles();
+        phecapConnector.uploadFilesToTeletextServer(updatePackage);
+
+    }
+
+    private Map<String, List<TrainDeparture>> getTrainDepartureData(List<TrainStation> trainStations) {
+        Map<String, List<TrainDeparture>> trainDepartures = new HashMap<>(trainStations.size());
+
+        for(TrainStation station : trainStations) {
+            try {
+                Element root = XMLParser.XMLParser(getTrainDeparturesForTrainstation(station.getTrainStation())).getDocumentElement();
+                NodeList trainStationDepartureNodeList = root.getElementsByTagName("VertrekkendeTrein");
+
+                List stationDepartureList = new ArrayList<TrainDeparture>(trainStationDepartureNodeList.getLength());
+                for(int i=0; i<trainStationDepartureNodeList.getLength(); i++) {
+                    Node trainDeparture = trainStationDepartureNodeList.item(i);
+                    NodeList trainDeparturePropertiesNodeList = trainDeparture.getChildNodes();
+
+                    parseDeparture(stationDepartureList, trainDeparturePropertiesNodeList);
+                }
+                trainDepartures.put(station.getTrainStation(), stationDepartureList);
+            } catch (Exception e) {
+                log.severe(e.toString());
+                e.printStackTrace();
+            }
+        }
+        return trainDepartures;
+    }
+
+    private void parseDeparture(List stationDepartureList, NodeList trainDeparturePropertiesNodeList) {
+        TrainDeparture departure = new TrainDeparture();
+
+        for (int j=0; j<trainDeparturePropertiesNodeList.getLength(); j++) {
+            Node node = trainDeparturePropertiesNodeList.item(j);
+
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if(node.hasChildNodes()) {
+                departure.setValue(node.getNodeName(), node.getFirstChild().getNodeValue());
+            }
+
+            if(node.hasAttributes()) {
+                for(int a =0 ; a < node.getAttributes().getLength(); a++) {
+                    Node n = node.getAttributes().item(a);
+                    if(n.getNodeType() != n.ATTRIBUTE_NODE && n.getNodeName().equals("wijziging")) {
+                        departure.setValue(n.getNodeName(), n.getNodeValue());
+                    }
+                }
+            }
+        }
+        stationDepartureList.add(departure);
     }
 
     /***
@@ -43,6 +122,7 @@ public class PublicTransportModule {
             return EntityUtils.toString(Web.doWebRequest(url, credentials), "UTF-8");
 
         } catch (Exception e) {
+            log.severe(e.toString());
             e.printStackTrace();
             return "";
         }

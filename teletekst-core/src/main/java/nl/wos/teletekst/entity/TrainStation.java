@@ -15,7 +15,7 @@ public class TrainStation extends BaseEntity<String>{
     @Column
     private String fullName;
     @Column
-    private short teletextPage;
+    private int teletextPage;
     @Column
     private boolean enabled;
 
@@ -51,7 +51,7 @@ public class TrainStation extends BaseEntity<String>{
         this.fullName = fullName;
     }
 
-    public short getTeletextPage() {
+    public int getTeletextPage() {
         return teletextPage;
     }
 

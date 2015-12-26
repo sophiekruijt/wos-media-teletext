@@ -5,37 +5,46 @@ import java.util.ArrayList;
 public class TeletextPage {
     private int pageNumber;
     private FastText fastText;
-    private StringBuilder teletextCommands;
-    private ArrayList<TeletextSubpage> teletextSubPages = new ArrayList<TeletextSubpage>();
+    private String teletextCommands;
+    private ArrayList<TeletextSubpage> teletextSubPages = new ArrayList<>();
     private boolean locked;
+
+    public ArrayList<TeletextSubpage> getTeletextSubPages() {
+        return teletextSubPages;
+    }
 
     /***
      * @param pageNumber
      * @return first subpage of teletext page
      */
-    public TeletextSubpage TeletextPage(int pageNumber) {
+    public TeletextPage (int pageNumber) {
         this.pageNumber = pageNumber;
+        initializeFastText();
+    }
+
+    public TeletextSubpage addNewSubpage() throws Exception {
+        if(locked) {
+            throw new Exception("TeletextPage is final and can't be changed.");
+        }
         TeletextSubpage subpage = new TeletextSubpage();
         teletextSubPages.add(subpage);
-        initializeFastText();
         return subpage;
     }
 
     private void initializeFastText() {
-        //TODO get fasttext entity from database and use those values for setting up fasttext
         this.fastText = new FastText();
     }
 
-    private void finalizeTeletextPage() {
+    private boolean finalizeTeletextPage() {
         if (teletextPageReadyForBroadcast()) {
             locked = true;
-
+            return true;
         }
+        return false;
     }
 
     /***
-     * A teletextPage can be broadcast only! when the layoutTemplate and fasttext buttons are setup.
-     *
+     * A teletextPage can be broadcast only! when the layoutTemplate and fasttext buttons are set up!
      * @return
      */
     private boolean teletextPageReadyForBroadcast() {
@@ -50,6 +59,13 @@ public class TeletextPage {
         }
 
         return true;
+    }
+
+    public String getConfigurationString() {
+        this.locked = true;
+        finalizeTeletextPage();
+        this.teletextCommands = generateTeletextCommandString();
+        return this.teletextCommands;
     }
 
     public String generateTeletextCommandString() {
@@ -76,5 +92,17 @@ public class TeletextPage {
 
     private String getFastTextLinks() {
         return String.format("%d %d %d %d", fastText.getRedButtonLink(), fastText.getGreenButtonLink(), fastText.getYellowButtonLink(), fastText.getBlueButtonLink());
+    }
+
+    public int getTeletextPagenumber() {
+        return this.pageNumber;
+    }
+
+    public int getSubpageNumber(TeletextSubpage s) {
+        return teletextSubPages.indexOf(s);
+    }
+
+    public boolean isLocked() {
+        return this.locked;
     }
 }
