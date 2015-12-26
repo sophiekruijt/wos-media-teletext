@@ -4,34 +4,18 @@ public class TeletextSubpage {
     private String[] textLines = new String[25];
     private String layoutTemplateFileName;
 
-    public TeletextSubpage() {
-    }
-
-    public String[] getTextLines() {
-        return textLines;
-    }
-
     public String getPageText() {
-        String result = "";
-
+        StringBuilder result = new StringBuilder();
         for (String line : textLines) {
-            if(line == null) {
-                result += "\n";
-            }
-            result += line + "\n";
+            result.append((line != null) ? line + "\n" : "\n");
         }
-
-        return result;
+        return result.toString();
     }
 
     public void setTextOnLine(int line, String text) {
         if (line < textLines.length) {
             textLines[line] = text;
         }
-    }
-
-    public String getPageLineTextAt(int line) {
-        return (textLines[line] != null) ? textLines[line] : "";
     }
 
     public String getLayoutTemplateFileName() {
