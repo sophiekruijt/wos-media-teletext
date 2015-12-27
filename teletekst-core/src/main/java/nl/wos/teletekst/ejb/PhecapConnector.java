@@ -1,8 +1,12 @@
 package nl.wos.teletekst.ejb;
 
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Singleton;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import nl.wos.teletekst.core.TeletextUpdatePackage;
+import nl.wos.teletekst.util.Configuration;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -26,8 +31,12 @@ public class PhecapConnector {
 
     private FTPClient ftpClient = new FTPClient();
 
+    @Lock(LockType.WRITE)
     public void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
+        if(Configuration.DEBUG) {
+            return;
+        }
         Path folder = Paths.get(updatePackage.getFolder());
         log.info("Start new upload for teletext update package: " + updatePackage.toString());
 
@@ -53,17 +62,15 @@ public class PhecapConnector {
                 }
             }
 
-            FileInputStream fis = new FileInputStream(folder + "/update.sem");
-            ftpClient.storeFile("update.sem", fis);
-            fis.close();
-            Files.delete(Paths.get(folder + "/" + "update.sem"));
+            InputStream emptyFileInputStream = new ByteArrayInputStream("".getBytes());
+            ftpClient.storeFile("update.sem", emptyFileInputStream);
+            emptyFileInputStream.close();
 
             ftpClient.logout();
             Files.deleteIfExists(folder);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        log.info("All files are uploaded");
+        log.info("All files are uploaded. Update package " + updatePackage.getId() + " id finished.");
     }
 }

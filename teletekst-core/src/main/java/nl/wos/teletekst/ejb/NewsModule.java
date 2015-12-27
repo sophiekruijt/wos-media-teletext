@@ -1,130 +1,145 @@
 package nl.wos.teletekst.ejb;
 
+import nl.wos.teletekst.core.RSSItem;
 import nl.wos.teletekst.core.TeletextPage;
 import nl.wos.teletekst.core.TeletextSubpage;
 import nl.wos.teletekst.core.TeletextUpdatePackage;
-import nl.wos.teletekst.dao.TrainStationDao;
-import nl.wos.teletekst.entity.TrainStation;
-import nl.wos.teletekst.objects.PublicTransportModuleHelper;
-import nl.wos.teletekst.objects.TrainDeparture;
+import nl.wos.teletekst.util.Configuration;
+import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
-import nl.wos.teletekst.util.XMLParser;
-import org.apache.http.auth.*;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.ejb.*;
+import javax.ejb.Schedule;
+import javax.ejb.Singleton;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @Singleton
 public class NewsModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
 
-    @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(second="*/15", minute="*/2",hour="*", persistent=false)
+    private int pageNumberNews = Configuration.PAGENUMBER_NIEUWS_BERICHTEN_START;
+    private int pageNumberSport = Configuration.PAGENUMBER_SPORT_BERICHTEN_START;
+
+    @Schedule(second="*/10", minute="*",hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
         log.info(this.getClass().getName() + " is going to update teletext.");
-        List<TrainStation> trainStations = trainStationDao.findAll();
-
-        Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
-        log.fine(trainDepartures.toString());
 
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
+        List<RSSItem> newsData = GetNewsData();
 
-        for(TrainStation station : trainStations) {
-            List<TrainDeparture> stationDepartures = trainDepartures.get(station.getTrainStation());
-            TeletextPage teletextPage = new TeletextPage(station.getTeletextPage());
-            TeletextSubpage subPage = teletextPage.addNewSubpage();
-            subPage.setLayoutTemplateFileName("template-treinen.tpg");
-            PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());
+        updateNieuwsEnSportBerichten(updatePackage, newsData);
+        updateNieuwsOverzicht(updatePackage, newsData);
+        updateLaatsteNieuwsOverzicht(updatePackage, newsData);
+        //updateSportOverzicht(updatePackage, newsData);
 
-            updatePackage.addTeletextPage(teletextPage);
-
-        }
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
+    }
+
+    private void updateLaatsteNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
+    {
+        try {
+            TeletextPage teletextPage = new TeletextPage(Configuration.PAGENUMBER_LAATSTE_NIEUWS);
+            TeletextSubpage subpage = teletextPage.addNewSubpage();
+            subpage.setLayoutTemplateFileName("template-laatstenieuws.tpg");
+
+            int line = 0;
+            RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
+            for(RSSItem item: newsItems)
+            {
+                int lineNumber = line * 2 + 1;
+                subpage.setTextOnLine(line * 2 + 1,
+                        TextOperations.makeBerichtTitelVoorIndexPagina(item.getTitle()) + "\u0003" + (103 + line));
+                line++;
+            }
+            updatePackage.addTeletextPage(teletextPage);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    private Map<String, List<TrainDeparture>> getTrainDepartureData(List<TrainStation> trainStations) {
-        Map<String, List<TrainDeparture>> trainDepartures = new HashMap<>(trainStations.size());
+    private void updateNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
+    {
+        TeletextPage teletextPage = new TeletextPage(Configuration.PAGENUMBER_NIEUWS_OVERZICHT);
+        TeletextSubpage subpage = teletextPage.addNewSubpage();
+        subpage.setLayoutTemplateFileName("template-laatstenieuws.tpg");
 
-        for(TrainStation station : trainStations) {
+        int line = 0;
+        RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
+        for(RSSItem bericht : newsItems)
+        {
+            subpage.setTextOnLine(line,
+                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (103 + line));
+            line++;
+        }
+        updatePackage.addTeletextPage(teletextPage);
+    }
+
+    private void updateNieuwsEnSportBerichten(TeletextUpdatePackage updatePackage, List<RSSItem> berichten) {
+        for(RSSItem bericht : berichten) {
             try {
-                Element root = XMLParser.XMLParser(getTrainDeparturesForTrainstation(station.getTrainStation())).getDocumentElement();
-                NodeList trainStationDepartureNodeList = root.getElementsByTagName("VertrekkendeTrein");
+                TeletextPage teletextPage = createTeletextPage(bericht);
+                TeletextSubpage subpage = teletextPage.addNewSubpage();
+                subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
 
-                List stationDepartureList = new ArrayList<TrainDeparture>(trainStationDepartureNodeList.getLength());
-                for(int i=0; i<trainStationDepartureNodeList.getLength(); i++) {
-                    Node trainDeparture = trainStationDepartureNodeList.item(i);
-                    NodeList trainDeparturePropertiesNodeList = trainDeparture.getChildNodes();
+                addTitleToTeletextPage(bericht, subpage);
+                addTextToTeletextPage(bericht, subpage);
 
-                    parseDeparture(stationDepartureList, trainDeparturePropertiesNodeList);
-                }
-                trainDepartures.put(station.getTrainStation(), stationDepartureList);
-            } catch (Exception e) {
-                log.severe(e.toString());
+                updatePackage.addTeletextPage(teletextPage);
+            }
+            catch(Exception e) {
                 e.printStackTrace();
             }
         }
-        return trainDepartures;
     }
 
-    private void parseDeparture(List stationDepartureList, NodeList trainDeparturePropertiesNodeList) {
-        TrainDeparture departure = new TrainDeparture();
-
-        for (int j=0; j<trainDeparturePropertiesNodeList.getLength(); j++) {
-            Node node = trainDeparturePropertiesNodeList.item(j);
-
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-
-            if(node.hasChildNodes()) {
-                departure.setValue(node.getNodeName(), node.getFirstChild().getNodeValue());
-            }
-
-            if(node.hasAttributes()) {
-                for(int a =0 ; a < node.getAttributes().getLength(); a++) {
-                    Node n = node.getAttributes().item(a);
-                    if(n.getNodeType() != n.ATTRIBUTE_NODE && n.getNodeName().equals("wijziging")) {
-                        departure.setValue(n.getNodeName(), n.getNodeValue());
-                    }
-                }
-            }
-        }
-        stationDepartureList.add(departure);
-    }
-
-    /***
-     * @param stationIdentifier The code (abbreviation) or short, medium or full name or synonym for the trainstation name.
-     * @return
-     */
-    private String getTrainDeparturesForTrainstation(String stationIdentifier)
-    {
+    private List<RSSItem> getNewsData() {
+        String url = "http://teletekst.ibbroadcast.nl/getFeed.ashx?id=190";
         try {
-            BasicCredentialsProvider credentials = new BasicCredentialsProvider();
-            credentials.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(
-                    "stefank@wos.nl",
-                    "4IaKyMDu4rMx3yxccTsjDAjJX1SOGTiYN_4D1HEcETu1hc66xKIbeA"));
-
-            String url = "http://webservices.ns.nl/ns-api-avt?station=" + stationIdentifier;
-            return EntityUtils.toString(Web.doWebRequest(url, credentials), "UTF-8");
-
+            String data EntityUtils.toString(Web.doWebRequest(url), "UTF-8");
+            return parser.ParseNewsData(data);
         } catch (Exception e) {
-            log.severe(e.toString());
             e.printStackTrace();
-            return "";
         }
+    }
+
+    private void addTitleToTeletextPage(RSSItem bericht, TeletextSubpage subpage)
+    {
+        subpage.setTextOnLine(0, bericht.getTitle());
+    }
+
+    private void addTextToTeletextPage(RSSItem item, TeletextSubpage subpage)
+    {
+        int lineNumber = 2;
+        for(String line : item.getText().split("\n"))
+        {
+            subpage.setTextOnLine(lineNumber, line);
+            lineNumber++;
+        }
+    }
+
+    private TeletextPage createTeletextPage(RSSItem item) throws Exception
+    {
+        TeletextPage teletextPage;
+        switch (item.getCategory())
+        {
+            case "nieuws":
+                teletextPage = new TeletextPage(pageNumberNews);
+                pageNumberNews++;
+                break;
+            case "sport":
+                teletextPage = new TeletextPage(pageNumberSport);
+                pageNumberSport++;
+                break;
+            default:
+                throw new Exception("Bericht heeft geen geldige categorie: " + item.getCategory());
+        }
+        return teletextPage;
     }
 }

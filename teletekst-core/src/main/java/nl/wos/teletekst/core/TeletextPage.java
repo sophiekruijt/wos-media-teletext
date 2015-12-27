@@ -22,10 +22,7 @@ public class TeletextPage {
         initializeFastText();
     }
 
-    public TeletextSubpage addNewSubpage() throws Exception {
-        if(locked) {
-            throw new Exception("TeletextPage is final and can't be changed.");
-        }
+    public TeletextSubpage addNewSubpage() {
         TeletextSubpage subpage = new TeletextSubpage();
         teletextSubPages.add(subpage);
         return subpage;

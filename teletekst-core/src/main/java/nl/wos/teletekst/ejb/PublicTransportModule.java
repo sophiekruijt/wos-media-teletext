@@ -31,7 +31,7 @@ public class PublicTransportModule {
     @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(second="*/15", minute="*",hour="*", persistent=false)
+    @Schedule(second="", minute="*/1",hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
