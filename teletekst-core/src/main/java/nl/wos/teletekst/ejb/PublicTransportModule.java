@@ -7,6 +7,7 @@ import nl.wos.teletekst.dao.TrainStationDao;
 import nl.wos.teletekst.entity.TrainStation;
 import nl.wos.teletekst.objects.PublicTransportModuleHelper;
 import nl.wos.teletekst.objects.TrainDeparture;
+import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.Web;
 import nl.wos.teletekst.util.XMLParser;
 import org.apache.http.auth.*;
@@ -31,19 +32,23 @@ public class PublicTransportModule {
     @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(second="", minute="*/1",hour="*", persistent=false)
+    @Schedule(minute="*/2", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
-        log.info(this.getClass().getName() + " is going to update teletext.");
+        if(!Configuration.PUBLIC_TRANSPORT_MODULE_ENABLED) {
+            return;
+        }
+
+        log.info(this.getClass().getName() + " iss going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 
         Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
-        log.fine(trainDepartures.toString());
-
+        log.info("Departure data is binnen: " + trainDepartures.toString());
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
         for(TrainStation station : trainStations) {
             List<TrainDeparture> stationDepartures = trainDepartures.get(station.getTrainStation());
             TeletextPage teletextPage = new TeletextPage(station.getTeletextPage());
+            log.info("Nieuwe pagina aangemaakt: " + teletextPage.getTeletextPagenumber());
             TeletextSubpage subPage = teletextPage.addNewSubpage();
             subPage.setLayoutTemplateFileName("template-treinen.tpg");
             PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());

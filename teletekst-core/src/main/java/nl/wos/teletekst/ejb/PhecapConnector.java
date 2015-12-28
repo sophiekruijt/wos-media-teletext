@@ -70,6 +70,7 @@ public class PhecapConnector {
             Files.deleteIfExists(folder);
         } catch (Exception e) {
             e.printStackTrace();
+            log.severe(e.toString());
         }
         log.info("All files are uploaded. Update package " + updatePackage.getId() + " id finished.");
     }

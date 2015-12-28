@@ -28,4 +28,18 @@ public class RSSItem {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public void setValue(String property, String waarde) {
+        switch(property) {
+            case "title":
+                this.title = waarde;
+                break;
+            case "description":
+                this.text = waarde;
+                break;
+            case "category":
+                this.category = waarde;
+                break;
+        }
+    }
 }
