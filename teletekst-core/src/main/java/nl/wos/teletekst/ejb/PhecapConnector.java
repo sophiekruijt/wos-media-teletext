@@ -44,6 +44,7 @@ public class PhecapConnector {
             ftpClient.connect(server, port);
             ftpClient.login(user, pass);
             ftpClient.enterLocalPassiveMode();
+            ftpClient.setConnectTimeout(5);
             ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
             ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
             ftpClient.changeWorkingDirectory(this.path);

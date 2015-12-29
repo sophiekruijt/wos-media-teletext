@@ -11,6 +11,6 @@ public class Configuration {
     public static final int PAGENUMBER_SPORT_BERICHTEN_START = 650;
     public static final int PAGENUMBER_SPORT_BERICHTEN_END = 655;
 
-    public static boolean NEWS_MODULE_ENABLED = false;
+    public static boolean NEWS_MODULE_ENABLED = true;
     public static boolean PUBLIC_TRANSPORT_MODULE_ENABLED = true;
 }

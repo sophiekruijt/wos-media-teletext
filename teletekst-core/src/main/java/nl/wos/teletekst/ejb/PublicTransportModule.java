@@ -38,7 +38,7 @@ public class PublicTransportModule {
             return;
         }
 
-        log.info(this.getClass().getName() + " iss going to update teletext.");
+        log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 
         Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);

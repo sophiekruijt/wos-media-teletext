@@ -32,6 +32,10 @@ public abstract class BaseDao<T extends BaseEntity<PK>, PK> {
         this.entityManager = em;
     }
 
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
     public void addCollection(Collection<T> collection) {
         for(T entity : collection) {
             add(entity);
