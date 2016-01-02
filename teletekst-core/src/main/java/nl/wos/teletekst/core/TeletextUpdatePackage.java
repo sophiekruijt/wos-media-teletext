@@ -16,11 +16,13 @@ public class TeletextUpdatePackage {
     private static final Logger log = Logger.getLogger(TeletextUpdatePackage.class.getName());
     private StringBuilder teletextCommands = new StringBuilder();
     private final String folderName;
+    private int packageId;
 
     private List<TeletextPage> teletextPages = new ArrayList<>();
 
     public TeletextUpdatePackage() {
-        folderName = Configuration.DATA_DIR + teletextUpdatePackageId + "/";
+        packageId = teletextUpdatePackageId++;
+        folderName = Configuration.DATA_DIR + this.packageId + "/";
 
         try {
             File f = new File(folderName);
@@ -31,7 +33,6 @@ public class TeletextUpdatePackage {
             e.printStackTrace();
         }
         new File(folderName).mkdirs();
-        teletextUpdatePackageId++;
     }
 
     public void addTeletextPage(TeletextPage teletextPage) {
@@ -63,7 +64,6 @@ public class TeletextUpdatePackage {
             teletextCommands.append(teletextPage.getConfigurationString());
         }
         generateConfigurationFile(teletextCommands);
-        generateUpdateSemFile();
     }
 
     public String getFolder() {
@@ -100,24 +100,16 @@ public class TeletextUpdatePackage {
         }
     }
 
-    private void generateUpdateSemFile()
-    {
-        try {
-            File file = new File(folderName + "update.sem");
-            file.createNewFile();
-            FileUtils.writeStringToFile(file, " ");
-        } catch (Exception e) {
-            log.severe(e.toString());
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for(TeletextPage page : teletextPages) {
+        for (TeletextPage page : teletextPages) {
             result.append("Pagenumber: " + page.getTeletextPagenumber() + " (" + page.getTeletextSubPages().size() + " subpages)]\n");
         }
         return result.toString();
+    }
+
+    public int getId() {
+        return this.packageId;
     }
 }

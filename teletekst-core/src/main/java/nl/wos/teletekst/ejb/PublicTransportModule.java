@@ -7,6 +7,7 @@ import nl.wos.teletekst.dao.TrainStationDao;
 import nl.wos.teletekst.entity.TrainStation;
 import nl.wos.teletekst.objects.PublicTransportModuleHelper;
 import nl.wos.teletekst.objects.TrainDeparture;
+import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.Web;
 import nl.wos.teletekst.util.XMLParser;
 import org.apache.http.auth.*;
@@ -31,14 +32,12 @@ public class PublicTransportModule {
     @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(second="*/15", minute="*",hour="*", persistent=false)
+    @Schedule(minute="*/4", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 
         Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
-        log.fine(trainDepartures.toString());
-
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
         for(TrainStation station : trainStations) {
@@ -49,7 +48,6 @@ public class PublicTransportModule {
             PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());
 
             updatePackage.addTeletextPage(teletextPage);
-
         }
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
