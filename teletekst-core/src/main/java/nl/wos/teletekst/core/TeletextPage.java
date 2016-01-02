@@ -1,6 +1,7 @@
 package nl.wos.teletekst.core;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class TeletextPage {
     private int pageNumber;
@@ -12,12 +13,14 @@ public class TeletextPage {
     public ArrayList<TeletextSubpage> getTeletextSubPages() {
         return teletextSubPages;
     }
+    private static final Logger log = Logger.getLogger(TeletextPage.class.getName());
 
     /***
      * @param pageNumber
      * @return first subpage of teletext page
      */
     public TeletextPage (int pageNumber) {
+        log.info("Nieuwe pagina aangemaakt: " + pageNumber);
         this.pageNumber = pageNumber;
         initializeFastText();
     }
@@ -99,7 +102,4 @@ public class TeletextPage {
         return teletextSubPages.indexOf(s);
     }
 
-    public boolean isLocked() {
-        return this.locked;
-    }
 }

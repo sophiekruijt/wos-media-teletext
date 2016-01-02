@@ -4,12 +4,12 @@ import nl.wos.teletekst.core.RSSItem;
 import nl.wos.teletekst.core.TeletextPage;
 import nl.wos.teletekst.core.TeletextSubpage;
 import nl.wos.teletekst.core.TeletextUpdatePackage;
+import nl.wos.teletekst.dao.ItemsDao;
 import nl.wos.teletekst.dao.TeletextPaginaDao;
-import nl.wos.teletekst.entity.TeletextPagina;
+import nl.wos.teletekst.entity.Items;
 import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
-import nl.wos.teletekst.util.XMLParser;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,35 +35,52 @@ public class NewsModule {
 
     @Inject private PhecapConnector phecapConnector;
     @Inject private TeletextPaginaDao teletextPaginaDao;
+    @Inject private ItemsDao itemDao;
 
-    private int pageNumberNews = Configuration.PAGENUMBER_NIEUWS_BERICHTEN_START;
-    private int pageNumberSport = Configuration.PAGENUMBER_SPORT_BERICHTEN_START;
+    private final int pageNumberNews = Configuration.PAGENUMBER_NIEUWS_BERICHTEN_START;
+    private final int pageNumberSport = Configuration.PAGENUMBER_SPORT_BERICHTEN_START;
+    private int newsPageNumberCounter = 0;
+    private int sportPageNumberCounter = 0;
 
-    @Schedule(second="*/15", minute="*",hour="*", persistent=false)
+    @Schedule(second="*", minute="*/5",hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
-        if(!Configuration.NEWS_MODULE_ENABLED) {
-            return;
-        }
-
         log.info(this.getClass().getName() + " is going to update teletext.");
+        this.newsPageNumberCounter = 0;
+        this.sportPageNumberCounter= 0;
 
         try {
             TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
             List<RSSItem> newsData = getNewsData();
+            if(newsData.isEmpty()) {
+                log.warning("Geen data ontvangen uit RSS feed van IB Broadcast.");
+                return;
+            }
 
             updateNieuwsEnSportBerichten(updatePackage, newsData);
             updateNieuwsOverzicht(updatePackage, newsData);
             updateLaatsteNieuwsOverzicht(updatePackage, newsData);
 
-            TeletextPagina p648 = teletextPaginaDao.findPagina(648);
-            TeletextPagina p649 = teletextPaginaDao.findPagina(649);
-            TeletextPagina p656 = teletextPaginaDao.findPagina(656);
-            TeletextPagina p657 = teletextPaginaDao.findPagina(657);
+            Items p648 = itemDao.findById("item001");
+            Items p649 = itemDao.findById("item001");
+            Items p656 = itemDao.findById("item001");
+            Items p657 = itemDao.findById("item001");
 
             publiceerSportOverzicht(newsData, updatePackage, p648, p649, p656, p657);
+            publiceerExtraSportPaginas(p648, p649, p656, p657);
 
             updatePackage.generateTextFiles();
             phecapConnector.uploadFilesToTeletextServer(updatePackage);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void publiceerExtraSportPaginas(Items p648, Items p649, Items p656, Items p657) {
+        try {
+            // To Do !
+            //TeletextPage teletextPage = new TeletextPage(648);
+            //TeletextSubpage subpage = teletextPage.addNewSubpage();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -97,7 +114,7 @@ public class NewsModule {
     {
         TeletextPage teletextPage = new TeletextPage(Configuration.PAGENUMBER_NIEUWS_OVERZICHT);
         TeletextSubpage subpage = teletextPage.addNewSubpage();
-        subpage.setLayoutTemplateFileName("template-laatstenieuws.tpg");
+        subpage.setLayoutTemplateFileName("template-nieuwsoverzicht.tpg");
 
         int line = 0;
         RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
@@ -113,6 +130,9 @@ public class NewsModule {
     private void updateNieuwsEnSportBerichten(TeletextUpdatePackage updatePackage, List<RSSItem> berichten) {
         for(RSSItem bericht : berichten) {
             try {
+                this.newsPageNumberCounter = 0;
+                this.sportPageNumberCounter= 0;
+
                 TeletextPage teletextPage = createTeletextPage(bericht);
                 TeletextSubpage subpage = teletextPage.addNewSubpage();
                 subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
@@ -129,7 +149,7 @@ public class NewsModule {
     }
 
     public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage,
-                                        TeletextPagina i1, TeletextPagina i2, TeletextPagina i3, TeletextPagina i4) {
+                                        Items i1, Items i2, Items i3, Items i4) {
 
         RSSItem[] sportItems = items.stream().filter(b -> b.getCategory().equals("sport")).toArray(RSSItem[]::new);
 
@@ -137,8 +157,8 @@ public class NewsModule {
         TeletextSubpage subPage = page.addNewSubpage();
         subPage.setLayoutTemplateFileName("template-sportoverzicht.tpg");
         subPage.setTextOnLine(0, "\u0003Uitslagen amateurvoetbal");
-        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getTitel()) + "\u0003" + 648);
-        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getTitel()) + "\u0003" + 649);
+        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getPublication_title()) + "\u0003" + 648);
+        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getPublication_title()) + "\u0003" + 649);
         subPage.setTextOnLine(4, "\u0003Sportnieuws");
         int row = 5;
         for(int i=0; i < sportItems.length; i++) {
@@ -150,8 +170,8 @@ public class NewsModule {
         }
 
         subPage.setTextOnLine(12, "\u0003Inhoud WOS Sport radio 87.6 FM");
-        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getTitel()) + "\u0003" + 656);
-        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getTitel()) + "\u0003" + 657);
+        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getPublication_title()) + "\u0003" + 656);
+        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getPublication_title()) + "\u0003" + 657);
 
         updatePackage.addTeletextPage(page);
     }
@@ -160,7 +180,9 @@ public class NewsModule {
         List<RSSItem> result = new ArrayList<>();
         String url = "http://teletekst.ibbroadcast.nl/getFeed.ashx?id=190";
         try {
+            log.info("Request naar IB Broadcast wordt verstuurd.");
             String data = EntityUtils.toString(Web.doWebRequest(url), "UTF-8");
+            log.info("Request naar IB Broadcast is klaar.");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -182,11 +204,10 @@ public class NewsModule {
                     result.add(item);
                 }
             }
-            return result;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Parse error" + e.toString());
         }
+        return result;
     }
 
     private void addTitleToTeletextPage(RSSItem bericht, TeletextSubpage subpage)
@@ -210,12 +231,12 @@ public class NewsModule {
         switch (item.getCategory())
         {
             case "nieuws":
-                teletextPage = new TeletextPage(pageNumberNews);
-                pageNumberNews++;
+                teletextPage = new TeletextPage(pageNumberNews + newsPageNumberCounter);
+                newsPageNumberCounter = newsPageNumberCounter++;
                 break;
             case "sport":
-                teletextPage = new TeletextPage(pageNumberSport);
-                pageNumberSport++;
+                teletextPage = new TeletextPage(pageNumberSport + sportPageNumberCounter);
+                sportPageNumberCounter = sportPageNumberCounter++;
                 break;
             default:
                 throw new Exception("Bericht heeft geen geldige categorie: " + item.getCategory());

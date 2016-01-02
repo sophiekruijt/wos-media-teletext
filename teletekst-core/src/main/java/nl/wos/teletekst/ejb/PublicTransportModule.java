@@ -32,29 +32,22 @@ public class PublicTransportModule {
     @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(minute="*/2", hour="*", persistent=false)
+    @Schedule(minute="*/4", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
-        if(!Configuration.PUBLIC_TRANSPORT_MODULE_ENABLED) {
-            return;
-        }
-
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 
         Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
-        log.info("Departure data is binnen: " + trainDepartures.toString());
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
         for(TrainStation station : trainStations) {
             List<TrainDeparture> stationDepartures = trainDepartures.get(station.getTrainStation());
             TeletextPage teletextPage = new TeletextPage(station.getTeletextPage());
-            log.info("Nieuwe pagina aangemaakt: " + teletextPage.getTeletextPagenumber());
             TeletextSubpage subPage = teletextPage.addNewSubpage();
             subPage.setLayoutTemplateFileName("template-treinen.tpg");
             PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());
 
             updatePackage.addTeletextPage(teletextPage);
-
         }
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
