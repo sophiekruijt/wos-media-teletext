@@ -22,7 +22,7 @@ public class TeletextUpdatePackage {
 
     public TeletextUpdatePackage() {
         packageId = teletextUpdatePackageId++;
-        folderName = Configuration.DATA_DIR + this.packageId + "/";
+        folderName = "/apps/wos/" + this.packageId + "/";
 
         try {
             File f = new File(folderName);
