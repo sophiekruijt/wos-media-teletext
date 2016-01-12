@@ -1,6 +1,5 @@
 package nl.wos.teletekst.core;
 
-import nl.wos.teletekst.util.Configuration;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

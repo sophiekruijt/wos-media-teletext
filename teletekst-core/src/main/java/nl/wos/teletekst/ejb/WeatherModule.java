@@ -52,6 +52,7 @@ public class WeatherModule {
 
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
+        log.info("Weather module teletext update is finished.");
     }
 
     private void updateCurrentWeatherMeasurements(ActualWeather actualWeather, TeletextUpdatePackage updatePackage) {
