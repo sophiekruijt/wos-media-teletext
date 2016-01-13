@@ -1,12 +1,13 @@
 package nl.wos.teletekst.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TextOperations {
     private static int textPageSize = 39;
     private static int maxTitleSize = 35;
 
-    public static String RemoveSpecialCharactersAndHTML(String text)
+    public static String removeSpecialCharactersAndHTML(String text)
     {
         String result = text.toString();
 
@@ -80,78 +81,58 @@ public class TextOperations {
         result = result.replace("</b>", "");
         result = result.replace("<B>", "");
         result = result.replace("</B>", "");
+        result = result.replace("\u00a0", " ");
+        result = result.replaceAll(" ", " ");
 
         return result;
     }
 
-    // Parse een string naar een lijst (subpagina's), met lijsten met tekst per regel.
-    /*public static List<List<String>> parseTekstToTeletextPageSizeArray(String tekst, int height)
+    // Parse een string naar een lijst (subpagina's), met lijsten met strings per regel.
+    public static List<List<String>> parseTekstToTeletextPageSizeArray(String tekst, int height)
     {
-        List<List<string>> result = new List<List<string>>();
-        result.Add(new List<string>());
-        String[] words = tekst.Split(' ');
+        List<List<String>> result = new ArrayList<>();
+        result.add(new ArrayList<>());
+        String[] words = tekst.split(" ");
 
         StringBuilder builder = new StringBuilder();
         int subPage = 0;
         int line = 0;
         int counter = 0;
 
-        for (int i = 0; i < words.Length; i++)
-        {
+        for (int i = 0; i < words.length; i++) {
             String word = words[i];
 
-            if (counter + word.Length == textPageSize || counter + word.Length == textPageSize - 1)
-            {
-                builder.Append(word);
-                counter += word.Length;
+            if (counter + word.length() == textPageSize || counter + word.length()  == textPageSize - 1) {
+                builder.append(word);
+                counter += word.length();
             }
-            else
-            if (counter + word.Length + 1 < textPageSize)
-            {
-                builder.Append(word + " ");
-                counter += (word.Length + 1);
+            else if (counter + word.length() + 1 < textPageSize) {
+                builder.append(word + " ");
+                counter += (word.length() + 1);
             }
-            else
-            {
-                result[subPage].Add(builder.ToString());
-                builder.Clear();
+            else {
+                result.get(subPage).add(builder.toString());
+                builder.setLength(0);
 
                 counter = 0;
                 line++;
-                if (line > height)
-                {
+                if (line > height) {
                     subPage++;
-                    result.Add(new List<string>());
+                    result.add(new ArrayList<>());
                     line = 0;
                 }
-
-                builder.Append(word + " ");
-                counter += (word.Length + 1);
+                builder.append(word + " ");
+                counter += (word.length() + 1);
             }
         }
-        if (!String.IsNullOrEmpty(builder.ToString()))
-        {
-            result[subPage].Add(builder.ToString());
-            builder.Clear();
+        if (!builder.toString().isEmpty()) {
+            result.get(subPage).add(builder.toString());
+            builder.setLength(0);
         }
         return result;
     }
 
-    /// <summary>
-    /// Berekens the aantal benodigde index paginas voor een opgeven aantal berichten en het maximaal aantal posities per index.
-    /// </summary>
-    public static int BerekenAantalBenodigdeIndexPaginas(int aantalBerichten, int aantalPosities)
-    {
-        int result = aantalBerichten / aantalPosities;
-        if (aantalBerichten % aantalPosities != 0)
-        {
-            result++;
-        }
-        return result;
-    }
-
-    public static string GetStringInBetween(string stringBegin, string stringEnd, string stringSource)
-    {
+    /*public static string GetStringInBetween(string stringBegin, string stringEnd, string stringSource) {
         string result = "";
 
         int start1 = stringSource.IndexOf(stringBegin);

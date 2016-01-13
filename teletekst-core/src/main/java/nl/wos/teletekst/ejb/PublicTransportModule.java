@@ -4,10 +4,10 @@ import nl.wos.teletekst.core.TeletextPage;
 import nl.wos.teletekst.core.TeletextSubpage;
 import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.dao.TrainStationDao;
+import nl.wos.teletekst.entity.PropertyManager;
 import nl.wos.teletekst.entity.TrainStation;
 import nl.wos.teletekst.objects.PublicTransportModuleHelper;
 import nl.wos.teletekst.objects.TrainDeparture;
-import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.Web;
 import nl.wos.teletekst.util.XMLParser;
 import org.apache.http.auth.*;
@@ -29,10 +29,11 @@ import java.util.logging.Logger;
 public class PublicTransportModule {
     private static final Logger log = Logger.getLogger(PublicTransportModule.class.getName());
 
+    @Inject private PropertyManager propertyManager;
     @Inject private TrainStationDao trainStationDao;
     @Inject private PhecapConnector phecapConnector;
 
-    @Schedule(minute="*/4", hour="*", persistent=false)
+    @Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();

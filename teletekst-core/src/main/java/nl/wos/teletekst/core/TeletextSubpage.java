@@ -1,5 +1,7 @@
 package nl.wos.teletekst.core;
 
+import nl.wos.teletekst.util.TextOperations;
+
 public class TeletextSubpage {
     private String[] textLines = new String[25];
     private String layoutTemplateFileName;
@@ -13,8 +15,9 @@ public class TeletextSubpage {
     }
 
     public void setTextOnLine(int line, String text) {
+        String checkedText = TextOperations.removeSpecialCharactersAndHTML(text);
         if (line < textLines.length) {
-            textLines[line] = text;
+            textLines[line] = checkedText;
         }
     }
 

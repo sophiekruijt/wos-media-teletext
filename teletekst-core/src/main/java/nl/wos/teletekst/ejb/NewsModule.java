@@ -7,6 +7,7 @@ import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.dao.ItemsDao;
 import nl.wos.teletekst.dao.TeletextPaginaDao;
 import nl.wos.teletekst.entity.Items;
+import nl.wos.teletekst.entity.PropertyManager;
 import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 @Singleton
 public class NewsModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
+    @Inject private PropertyManager propertyManager;
 
     @Inject private PhecapConnector phecapConnector;
     @Inject private TeletextPaginaDao teletextPaginaDao;
@@ -42,9 +44,9 @@ public class NewsModule {
     private int newsPageNumberCounter = 0;
     private int sportPageNumberCounter = 0;
 
-    @Schedule(second="*", minute="*/5",hour="*", persistent=false)
+    @Schedule(minute="0,5,10,15,20,25,30,35,40,45,50,55", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
-        log.info(this.getClass().getName() + " is going to update teletext.");
+        log.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;
         this.sportPageNumberCounter= 0;
 
@@ -61,12 +63,12 @@ public class NewsModule {
             updateLaatsteNieuwsOverzicht(updatePackage, newsData);
 
             Items p648 = itemDao.findById("item001");
-            Items p649 = itemDao.findById("item001");
-            Items p656 = itemDao.findById("item001");
-            Items p657 = itemDao.findById("item001");
+            Items p649 = itemDao.findById("item002");
+            Items p656 = itemDao.findById("item003");
+            Items p657 = itemDao.findById("item004");
 
             publiceerSportOverzicht(newsData, updatePackage, p648, p649, p656, p657);
-            publiceerExtraSportPaginas(p648, p649, p656, p657);
+            //publiceerExtraSportPaginas(p648, p649, p656, p657);
 
             updatePackage.generateTextFiles();
             phecapConnector.uploadFilesToTeletextServer(updatePackage);
@@ -128,11 +130,11 @@ public class NewsModule {
     }
 
     private void updateNieuwsEnSportBerichten(TeletextUpdatePackage updatePackage, List<RSSItem> berichten) {
+        this.newsPageNumberCounter = 0;
+        this.sportPageNumberCounter= 0;
+
         for(RSSItem bericht : berichten) {
             try {
-                this.newsPageNumberCounter = 0;
-                this.sportPageNumberCounter= 0;
-
                 TeletextPage teletextPage = createTeletextPage(bericht);
                 TeletextSubpage subpage = teletextPage.addNewSubpage();
                 subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
@@ -232,11 +234,11 @@ public class NewsModule {
         {
             case "nieuws":
                 teletextPage = new TeletextPage(pageNumberNews + newsPageNumberCounter);
-                newsPageNumberCounter = newsPageNumberCounter++;
+                this.newsPageNumberCounter = newsPageNumberCounter + 1;
                 break;
             case "sport":
                 teletextPage = new TeletextPage(pageNumberSport + sportPageNumberCounter);
-                sportPageNumberCounter = sportPageNumberCounter++;
+                this.sportPageNumberCounter = sportPageNumberCounter + 1;
                 break;
             default:
                 throw new Exception("Bericht heeft geen geldige categorie: " + item.getCategory());
