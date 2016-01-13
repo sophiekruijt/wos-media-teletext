@@ -17,7 +17,6 @@ public class TextOperations {
         result = result.replace("<br>", "");
         result = result.replace("&gt;", ">");
         result = result.replace("&lt;", "<");
-
         result = result.replace("&#38;", "&");
         result = result.replace("]]>", "");
         result = result.replace("‘", "'");

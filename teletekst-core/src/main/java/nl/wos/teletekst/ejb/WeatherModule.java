@@ -8,6 +8,8 @@ import nl.wos.teletekst.objects.ActualWeather;
 import nl.wos.teletekst.objects.Meerdaagse;
 import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
+
+
 import org.apache.http.util.EntityUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -17,7 +19,10 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -55,7 +60,7 @@ public class WeatherModule {
         log.info("Weather module teletext update is finished.");
     }
 
-    private void updateCurrentWeatherMeasurements(ActualWeather actualWeather, TeletextUpdatePackage updatePackage) {
+    private void updateCurrentWeatherMeasurements(ActualWeather actualWeather, TeletextUpdatePackage updatePackage) throws java.text.ParseException {
         TeletextPage page = new TeletextPage(703);
         TeletextSubpage subpage = page.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-weersverwachting.tpg");
@@ -70,9 +75,10 @@ public class WeatherModule {
         subpage.setTextOnLine(6, String.format(format, "Windrichting:", actualWeather.getWindrichting()));
         subpage.setTextOnLine(7, String.format(format, "Windkracht:", actualWeather.getWindsnelheidbf() + " BF"));
 
-        //Date timestamp = Date.par.Parse(meetstationHvH.Datum);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = dateFormat.parse(actualWeather.getDatum());
+        subpage.setTextOnLine(15, "Tijdstip meting: \u0003" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(date));
 
-        subpage.setTextOnLine(15, "Tijdstip meting: \u0003" + actualWeather.getDatum());
         updatePackage.addTeletextPage(page);
     }
 
@@ -172,9 +178,10 @@ public class WeatherModule {
                 }
 
                 subpage.setTextOnLine(0, title);
-
-                for(int line=2; line < pageTextList.get(i).size(); line++) {
-                    subpage.setTextOnLine(line, pageTextList.get(i).get(line).toString());
+                int line = 2;
+                for(int j=0; j < pageTextList.get(i).size(); j++) {
+                    subpage.setTextOnLine(line, pageTextList.get(i).get(j).toString());
+                    line++;
                 }
             }
             updatePackage.addTeletextPage(weerberichtPage);
