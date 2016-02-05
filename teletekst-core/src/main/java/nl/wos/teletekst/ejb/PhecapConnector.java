@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.entity.PropertyManager;
+import nl.wos.teletekst.util.Configuration;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -27,7 +28,7 @@ public class PhecapConnector {
     @Lock(LockType.WRITE)
     public void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
-        if (false) {
+        if (Configuration.DEBUG_MODE) {
             log.info("Debug mode is enabled. The following teletext update package will not be uploaded to the " +
                     "teletext inserter:\n" + updatePackage.toString());
             return;
@@ -37,7 +38,6 @@ public class PhecapConnector {
         log.info("Start new upload for teletext update package: " + updatePackage.toString());
 
         try {
-
             connectAndInitializeFtpClient();
             uploadTextFiles(folder);
             uploadUpdateSem();
@@ -57,13 +57,13 @@ public class PhecapConnector {
     }
 
     private void connectAndInitializeFtpClient() throws IOException {
-        ftpClient.connect("10.35.0.80", 21);
-        ftpClient.login("FTP_2016", "qk34&#sdfhk123()%");
+        ftpClient.connect(Configuration.IP_TELETEXT_SERVER, Configuration.PORT_TELETEXT_SERVER);
+        ftpClient.login(Configuration.FTP_USER_TELETEXT_SERVER, Configuration.FTP_PASSWORD_TELETEXT_SERVER);
         ftpClient.enterLocalActiveMode();
         ftpClient.setConnectTimeout(5);
         ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
         ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
-        ftpClient.changeWorkingDirectory("/PheTxtServer/Transfer/FTP_2016/");
+        ftpClient.changeWorkingDirectory(Configuration.FTP_UPLOAD_PATH_TELETEXT_SERVER);
     }
 
     private void uploadTextFiles(Path folder) throws IOException, InterruptedException {
@@ -81,12 +81,5 @@ public class PhecapConnector {
                 Files.delete(Paths.get(file.getCanonicalPath()));
             }
         }
-    }
-
-    private boolean checkForDebugMode() {
-        if(true) {
-            return true;
-        }
-        return false;
     }
 }

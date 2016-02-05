@@ -4,63 +4,103 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextOperations {
-    private static int textPageSize = 39;
-    private static int maxTitleSize = 35;
 
-    public static String removeSpecialCharactersAndHTML(String text)
-    {
-        String result = text.toString();
+    public static String removeSpecialCharactersAndHTML(String text) {
+        String result = text;
 
-        result = result.replace("<br />", "");
-        result = result.replace("<BR />", "");
-        result = result.replace("<BR>", "");
-        result = result.replace("<br>", "");
         result = result.replace("&gt;", ">");
         result = result.replace("&lt;", "<");
         result = result.replace("&#38;", "&");
+        result = result.replace("&quot;", "\"");
+        result = result.replace("&nbsp;", " ");
+        result = result.replace("&amp;", "&");
+
         result = result.replace("]]>", "");
         result = result.replace("‘", "'");
-        result = result.replace("`", "'");
         result = result.replace("’", "'");
+        result = result.replace("`", "'");
+        result = result.replace("´", "'");
+        result = result.replace("“", "\"");
+        result = result.replace("”", "\"");
+        result = result.replace("³", "3");
+        result = result.replace("²", "2");
+
+        result = result.replace("ë", "e");
+        result = result.replace("é", "e");
         result = result.replace("è", "e");
         result = result.replace("È", "E");
         result = result.replace("Ë", "E");
-        result = result.replace("é", "e");
         result = result.replace("É", "E");
-        result = result.replace("ë", "e");
+
+        result = result.replace("ä", "a");
         result = result.replace("á", "a");
         result = result.replace("à", "a");
-        result = result.replace("ä", "a");
+        result = result.replace("ã", "a");
+        result = result.replace("â", "a");
+
         result = result.replace("Á", "A");
         result = result.replace("À", "A");
         result = result.replace("Ä", "A");
+
         result = result.replace("í", "i");
         result = result.replace("ì", "i");
+        result = result.replace("ï", "i");
         result = result.replace("Í", "I");
         result = result.replace("Ì", "I");
         result = result.replace("Ï", "I");
-        result = result.replace("ï", "i");
-        result = result.replace("ü", "u");
+        result = result.replace("Î", "I");
+
         result = result.replace("ù", "u");
         result = result.replace("ú", "u");
+        result = result.replace("ü", "u");
         result = result.replace("Ù", "u");
         result = result.replace("Ú", "U");
         result = result.replace("Ü", "U");
+
+        result = result.replace("ö", "o");
         result = result.replace("ò", "o");
         result = result.replace("ó", "o");
         result = result.replace("Ò", "O");
         result = result.replace("Ó", "O");
         result = result.replace("Ö", "O");
-        result = result.replace("ö", "o");
-        result = result.replace("&quot;", "\"");
-        result = result.replace("&nbsp;", " ");
-        result = result.replace("&amp;", "&");
+        result = result.replace("Õ", "O");
+        result = result.replace("Ø", "O");
+        result = result.replace("Ô", "O");
+
+        result = result.replace("†", "-");
+        result = result.replace("‡", "-");
+        result = result.replace("•", ".");
+        result = result.replace("…", ".");
+        result = result.replace("‰", "%");
+        result = result.replace("™", " ");
+        result = result.replace("·", ".");
+        result = result.replace("˜", "");
+
+        result = result.replace("Œ", "");
+        result = result.replace("œ", "");
+        result = result.replace("Š", "");
+        result = result.replace("š", "");
+        result = result.replace("Ÿ", "");
+        result = result.replace("ƒ", "");
+        result = result.replace("Ç", "");
+        result = result.replace("¬", "");
+        result = result.replace("¦", "");
+        result = result.replace("¥", "");
+        result = result.replace("§", "");
+        result = result.replace("¢", "");
+        result = result.replace("Þ", "");
+        result = result.replace("ß", "");
+        result = result.replace("¶", "");
+
+
+        result = result.replace("©", "C");
+        result = result.replace("®", "R");
+
         result = result.replace("€", "");
-        result = result.replace("“", "\"");
-        result = result.replace("”", "\"");
         result = result.replace("\r", " ");
         result = result.replace("\n", "");
         result = result.replace("–", "-");
+        result = result.replace("—", "-");
         result = result.replace("<link", "");
         result = result.replace("=\"\">", "");
         result = result.replace("</span>", "");
@@ -81,6 +121,11 @@ public class TextOperations {
         result = result.replace("</b>", "");
         result = result.replace("<B>", "");
         result = result.replace("</B>", "");
+        result = result.replace("<br />", "");
+        result = result.replace("<BR />", "");
+        result = result.replace("<BR>", "");
+        result = result.replace("<br>", "");
+
         result = result.replace("\u00a0", " ");
         result = result.replaceAll(" ", " ");
 
@@ -102,11 +147,11 @@ public class TextOperations {
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
 
-            if (counter + word.length() == textPageSize || counter + word.length()  == textPageSize - 1) {
+            if (counter + word.length() == Configuration.TEXT_PAGE_SIZE || counter + word.length()  ==  Configuration.TEXT_PAGE_SIZE - 1) {
                 builder.append(word);
                 counter += word.length();
             }
-            else if (counter + word.length() + 1 < textPageSize) {
+            else if (counter + word.length() + 1 < Configuration.TEXT_PAGE_SIZE) {
                 builder.append(word + " ");
                 counter += (word.length() + 1);
             }
@@ -152,13 +197,12 @@ public class TextOperations {
 
     public static String makeBerichtTitelVoorIndexPagina(String publicationTitle) {
         String result;
-
-        if (publicationTitle.length() >= maxTitleSize) {
-            result = publicationTitle.substring(0, maxTitleSize);
+        if (publicationTitle.length() >= Configuration.MAX_TITLE_SIZE) {
+            result = publicationTitle.substring(0, Configuration.MAX_TITLE_SIZE);
         }
         else {
             result = publicationTitle;
-            for (int i = 0; i < maxTitleSize - publicationTitle.length(); i++) {
+            for (int i = 0; i < Configuration.MAX_TITLE_SIZE - publicationTitle.length(); i++) {
                 result += ".";
             }
         }

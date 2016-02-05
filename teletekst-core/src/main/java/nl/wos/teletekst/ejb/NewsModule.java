@@ -27,6 +27,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -68,7 +69,7 @@ public class NewsModule {
             Items p657 = itemDao.findById("item004");
 
             publiceerSportOverzicht(newsData, updatePackage, p648, p649, p656, p657);
-            //publiceerExtraSportPaginas(p648, p649, p656, p657);
+            publiceerExtraSportPaginas(Arrays.asList(p648, p649, p656, p657), updatePackage);
 
             updatePackage.generateTextFiles();
             phecapConnector.uploadFilesToTeletextServer(updatePackage);
@@ -78,15 +79,34 @@ public class NewsModule {
         }
     }
 
-    private void publiceerExtraSportPaginas(Items p648, Items p649, Items p656, Items p657) {
-        try {
-            // To Do !
-            //TeletextPage teletextPage = new TeletextPage(648);
-            //TeletextSubpage subpage = teletextPage.addNewSubpage();
+    private void publiceerExtraSportPaginas(List<Items> items, TeletextUpdatePackage updatePackage) {
+        updatePackage.addRemovePagesTask(648, 649);
+        updatePackage.addRemovePagesTask(656, 657);
+
+        publiceerExtraSportPagina(items.get(0), 648, updatePackage);
+        publiceerExtraSportPagina(items.get(1), 649, updatePackage);
+        publiceerExtraSportPagina(items.get(2), 656, updatePackage);
+        publiceerExtraSportPagina(items.get(3), 657, updatePackage);
+    }
+
+    private void publiceerExtraSportPagina(Items item, int pageNumber, TeletextUpdatePackage updatePackage) {
+        String titel = item.getPublication_title();
+        String[] subpageTexts = item.getPublication_text().split("#NEWSUBPAGE#");
+
+        TeletextPage teletextPage = new TeletextPage(pageNumber);
+        for (int i=0; i<subpageTexts.length; i++)
+        {
+            String[] subpageText = subpageTexts[i].split("\n");
+
+            TeletextSubpage subpage = teletextPage.addNewSubpage();
+            subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
+            subpage.setTextOnLine(0, titel);
+
+            for(int j=0; j<subpageText.length; j++) {
+                subpage.setTextOnLine(j+2, subpageText[j]);
+            }
         }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+        updatePackage.addTeletextPage(teletextPage);
     }
 
     private void updateLaatsteNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
@@ -109,7 +129,6 @@ public class NewsModule {
         catch(Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void updateNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
@@ -180,10 +199,9 @@ public class NewsModule {
 
     private List<RSSItem> getNewsData() throws Exception {
         List<RSSItem> result = new ArrayList<>();
-        String url = "http://teletekst.ibbroadcast.nl/getFeed.ashx?id=190";
         try {
             log.info("Request naar IB Broadcast wordt verstuurd.");
-            String data = EntityUtils.toString(Web.doWebRequest(url), "UTF-8");
+            String data = EntityUtils.toString(Web.doWebRequest(Configuration.RSS_FEED_IB_BROADCAST), "UTF-8");
             log.info("Request naar IB Broadcast is klaar.");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -212,26 +230,21 @@ public class NewsModule {
         return result;
     }
 
-    private void addTitleToTeletextPage(RSSItem bericht, TeletextSubpage subpage)
-    {
+    private void addTitleToTeletextPage(RSSItem bericht, TeletextSubpage subpage) {
         subpage.setTextOnLine(0, bericht.getTitle());
     }
 
-    private void addTextToTeletextPage(RSSItem item, TeletextSubpage subpage)
-    {
+    private void addTextToTeletextPage(RSSItem item, TeletextSubpage subpage) {
         int lineNumber = 2;
-        for(String line : item.getText().split("\n"))
-        {
+        for(String line : item.getText().split("\n")) {
             subpage.setTextOnLine(lineNumber, line);
             lineNumber++;
         }
     }
 
-    private TeletextPage createTeletextPage(RSSItem item) throws Exception
-    {
+    private TeletextPage createTeletextPage(RSSItem item) throws Exception {
         TeletextPage teletextPage;
-        switch (item.getCategory())
-        {
+        switch (item.getCategory()) {
             case "nieuws":
                 teletextPage = new TeletextPage(pageNumberNews + newsPageNumberCounter);
                 this.newsPageNumberCounter = newsPageNumberCounter + 1;
