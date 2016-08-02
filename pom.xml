@@ -28,6 +28,8 @@
             </activation>
             <modules>
                 <module>teletekst-api</module>
+                <module>teletekst-core</module>
+                <module>teletekst-emulator</module>
             </modules>
         </profile>
     </profiles>
