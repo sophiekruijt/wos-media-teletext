@@ -29,7 +29,7 @@
             <modules>
                 <module>teletekst-api</module>
                 <module>teletekst-core</module>
-                <module>teletekst-emulator</module>
+                <module>teletekst-mock-server</module>
             </modules>
         </profile>
     </profiles>

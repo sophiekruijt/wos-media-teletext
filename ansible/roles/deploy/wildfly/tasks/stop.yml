@@ -1,8 +1,0 @@
----
-
- - name: Stop Wildfly
-   shell: /etc/init.d/wildfly start
-   async: 3600
-   poll: 5
-   sudo: yes
-   sudo_user: stefank

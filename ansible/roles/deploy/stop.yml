@@ -1,6 +1,0 @@
----
-
- - name: Wildfly stop
-   hosts: wildfly
-   tasks:
-    - include: wildfly/tasks/stop.yml
