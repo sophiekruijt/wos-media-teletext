@@ -1,16 +1,16 @@
 package nl.wos.teletekst.dao;
 
-import nl.wos.teletekst.entity.TeletextPagina;
+import nl.wos.teletekst.entity.TeletextPage;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 @Stateless
-public class TeletextPaginaDao extends BaseDao<TeletextPagina, Integer> {
-    public TeletextPagina findPagina(int pagina) {
+public class TeletextPaginaDao extends BaseDao<TeletextPage, Integer> {
+    public TeletextPage findPagina(int pagina) {
         EntityManager em = super.getEntityManager();
-        return (TeletextPagina) em.createQuery(
-                "SELECT t FROM TeletextPagina t WHERE t.pagina = :pagina")
+        return (TeletextPage) em.createQuery(
+                "SELECT t FROM TeletextPage t WHERE t.pageNumber = :pagina")
                 .setParameter("pagina", pagina)
                 .getSingleResult();
     }
