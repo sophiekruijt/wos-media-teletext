@@ -6,7 +6,7 @@ import nl.wos.teletekst.util.ConfigurationLoader;
 import javax.inject.Inject;
 import java.util.Properties;
 
-public abstract class TeletekstModule implements ITeletekstModule {
+public abstract class TeletextModule {
 
     @Inject protected PropertyManager propertyManager;
     @Inject protected PhecapConnector phecapConnector;

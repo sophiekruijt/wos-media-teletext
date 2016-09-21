@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class WeatherModuleI extends TeletekstModule {
+public class WeatherModuleI extends TeletextModule {
     private static final Logger log = Logger.getLogger(WeatherModuleI.class.getName());
 
     @Inject private PropertyManager propertyManager;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class SportModuleI extends TeletekstModule {
+public class SportModuleI extends TeletextModule {
     private static final Logger log = Logger.getLogger(SportModuleI.class.getName());
 
     @Inject private PropertyManager propertyManager;

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class NewsModule extends TeletekstModule {
+public class NewsModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
 
     @Inject private TeletextPaginaDao teletextPaginaDao;
