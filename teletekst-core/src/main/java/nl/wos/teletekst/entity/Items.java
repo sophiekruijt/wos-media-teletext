@@ -6,7 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /*
-    Tijdelijke entity class om oude items uit te lezen voor de extra sportberichten pagina's.
+    Etity to be able to broadcast teletext pages like in the old situation in .NET application.
+    Most database fields are not used anymore and need to be removed.
  */
 
 @Entity
