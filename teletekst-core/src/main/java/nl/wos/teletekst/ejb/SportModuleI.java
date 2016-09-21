@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class SportModule {
-    private static final Logger log = Logger.getLogger(SportModule.class.getName());
+public class SportModuleI extends TeletekstModule {
+    private static final Logger log = Logger.getLogger(SportModuleI.class.getName());
 
     @Inject private PropertyManager propertyManager;
     @Inject private PhecapConnector phecapConnector;

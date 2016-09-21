@@ -25,16 +25,4 @@ public class PropertyManager {
             throw new FileNotFoundException("Property file '" + propFileName + "' not found in the classpath");
         }
     }
-
-    /*public String getStringByKey(String key) {
-        return properties.getProperty(key);
-    }
-
-    public boolean getBooleanByKey(String key) {
-        return Boolean.getBoolean(properties.getProperty(key));
-    }
-
-    public int getIntByKey(String key) {
-        return Integer.getInteger(properties.getProperty(key));
-    }*/
 }

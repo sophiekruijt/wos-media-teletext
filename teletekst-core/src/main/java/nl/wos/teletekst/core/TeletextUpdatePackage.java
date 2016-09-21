@@ -1,17 +1,21 @@
 package nl.wos.teletekst.core;
 
-import nl.wos.teletekst.util.Configuration;
+import nl.wos.teletekst.util.ConfigurationLoader;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 public class TeletextUpdatePackage {
 
     private static int teletextUpdatePackageId = 1;
+    protected Properties properties = new ConfigurationLoader().getProperties();
+
+    private final String dataDirectory = properties.getProperty("dataDirectory");
 
     private static final Logger log = Logger.getLogger(TeletextUpdatePackage.class.getName());
     private StringBuilder teletextCommands = new StringBuilder();
@@ -22,7 +26,7 @@ public class TeletextUpdatePackage {
 
     public TeletextUpdatePackage() {
         packageId = teletextUpdatePackageId++;
-        folderName = Configuration.DATA_DIR + this.packageId + "/";
+        folderName = dataDirectory + this.packageId + "/";
 
         try {
             File f = new File(folderName);

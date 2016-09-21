@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Singleton
-public class PublicTransportModule {
+public class PublicTransportModule extends TeletekstModule {
     private static final Logger log = Logger.getLogger(PublicTransportModule.class.getName());
 
     @Inject private PropertyManager propertyManager;

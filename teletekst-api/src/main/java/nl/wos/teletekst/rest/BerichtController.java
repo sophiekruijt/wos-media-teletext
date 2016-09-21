@@ -20,5 +20,4 @@ public class BerichtController {
     public Object getBericht() {
         return berichtDao.getAll();
     }
-
 }

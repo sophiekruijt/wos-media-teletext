@@ -1,10 +1,11 @@
 package nl.wos.teletekst.objects;
 
 import nl.wos.teletekst.core.TeletextSubpage;
-import nl.wos.teletekst.util.Configuration;
+import nl.wos.teletekst.util.ConfigurationLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Properties;
 
 public class PublicTransportModuleHelper
 {
@@ -26,7 +27,7 @@ public class PublicTransportModuleHelper
                 }
 
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                String departureTime = format.format(d.getDepartureTime()).toString();
+                String departureTime = format.format(d.getDepartureTime());
                 String departureDelay = (!d.getDepartureDelay().isEmpty()) ? "\u0001" + d.getDepartureDelay().trim() : "";
                 String destination = d.getFinalDestination();
                 String opmerking = "";
@@ -39,14 +40,9 @@ public class PublicTransportModuleHelper
                     destination = destination.substring(0,22);
                 }
 
-                String vertrekspoor = (d.isChanged()) ?
-                        "\u0001"+d.getDepartureTrack() :
-                        "\u0003"+d.getDepartureTrack();
+                String vertrekspoor = (d.isChanged()) ? "\u0001"+d.getDepartureTrack() : "\u0003"+d.getDepartureTrack();
 
-                String text = String.format(" %-11s" + Configuration.COLOR_WHITE + "%-23s %3s",
-                        departureTime + departureDelay,
-                        destination,
-                        vertrekspoor);
+                String text = String.format(" %-11s" + "\u0007" + "%-23s %3s", departureTime + departureDelay, destination, vertrekspoor);
                 page.setTextOnLine(line, text);
                 line++;
                 if(d.isChanged()) {
@@ -61,7 +57,6 @@ public class PublicTransportModuleHelper
         }
         catch(Exception ex) {
             ex.printStackTrace();
-            System.out.println("Something is wrong! " + ex.toString());
         }
     }
 }

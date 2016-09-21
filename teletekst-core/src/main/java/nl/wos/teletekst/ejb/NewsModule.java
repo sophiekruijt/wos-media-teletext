@@ -7,8 +7,6 @@ import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.dao.ItemsDao;
 import nl.wos.teletekst.dao.TeletextPaginaDao;
 import nl.wos.teletekst.entity.Items;
-import nl.wos.teletekst.entity.PropertyManager;
-import nl.wos.teletekst.util.Configuration;
 import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
 import org.apache.http.util.EntityUtils;
@@ -32,20 +30,21 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class NewsModule {
+public class NewsModule extends TeletekstModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
-    @Inject private PropertyManager propertyManager;
 
-    @Inject private PhecapConnector phecapConnector;
     @Inject private TeletextPaginaDao teletextPaginaDao;
     @Inject private ItemsDao itemDao;
 
-    private final int pageNumberNews = Configuration.PAGENUMBER_NIEUWS_BERICHTEN_START;
-    private final int pageNumberSport = Configuration.PAGENUMBER_SPORT_BERICHTEN_START;
+    private final int pageNumberLatestNews = Integer.parseInt(properties.getProperty("PAGENUMBER_LAATSTE_NIEUWS"));
+    private final int pageNumberNews = Integer.parseInt(properties.getProperty("PAGENUMBER_NIEUWS_OVERZICHT"));
+    private final int pageNumberSport = Integer.parseInt(properties.getProperty("PAGENUMBER_SPORT_BERICHTEN_START"));
+    private final String newsDataSource = properties.getProperty("newsDataSource");
+
     private int newsPageNumberCounter = 0;
     private int sportPageNumberCounter = 0;
 
-    @Schedule(minute="0,5,10,15,20,25,30,35,40,45,50,55", hour="*", persistent=false)
+    @Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
     public void doTeletextUpdate() throws Exception {
         log.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;
@@ -112,7 +111,7 @@ public class NewsModule {
     private void updateLaatsteNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
     {
         try {
-            TeletextPage teletextPage = new TeletextPage(Configuration.PAGENUMBER_LAATSTE_NIEUWS);
+            TeletextPage teletextPage = new TeletextPage(pageNumberLatestNews);
             TeletextSubpage subpage = teletextPage.addNewSubpage();
             subpage.setLayoutTemplateFileName("template-laatstenieuws.tpg");
 
@@ -133,7 +132,7 @@ public class NewsModule {
 
     private void updateNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
     {
-        TeletextPage teletextPage = new TeletextPage(Configuration.PAGENUMBER_NIEUWS_OVERZICHT);
+        TeletextPage teletextPage = new TeletextPage(pageNumberNews);
         TeletextSubpage subpage = teletextPage.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-nieuwsoverzicht.tpg");
 
@@ -169,8 +168,7 @@ public class NewsModule {
         }
     }
 
-    public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage,
-                                        Items i1, Items i2, Items i3, Items i4) {
+    public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage, Items i1, Items i2, Items i3, Items i4) {
 
         RSSItem[] sportItems = items.stream().filter(b -> b.getCategory().equals("sport")).toArray(RSSItem[]::new);
 
@@ -201,7 +199,7 @@ public class NewsModule {
         List<RSSItem> result = new ArrayList<>();
         try {
             log.info("Request naar IB Broadcast wordt verstuurd.");
-            String data = EntityUtils.toString(Web.doWebRequest(Configuration.RSS_FEED_IB_BROADCAST), "UTF-8");
+            String data = EntityUtils.toString(Web.doWebRequest(newsDataSource), "UTF-8");
             log.info("Request naar IB Broadcast is klaar.");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

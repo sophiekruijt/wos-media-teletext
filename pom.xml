@@ -9,9 +9,11 @@
     <version>1.0</version>
     <modules>
         <module>teletekst-core</module>
+        <module>teletekst-api</module>
+        <module>teletekst-mock-server</module>
     </modules>
     <packaging>pom</packaging>
-    <name>WOS Media : Teletekst</name>
+    <name>WOS Media : Teletext</name>
 
     <repositories>
         <repository>
@@ -46,7 +48,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

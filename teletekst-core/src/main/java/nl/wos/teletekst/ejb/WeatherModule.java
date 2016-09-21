@@ -1,5 +1,11 @@
 package nl.wos.teletekst.ejb;
 
+public class WeatherModule {
+}
+/*
+
+
+
 import nl.wos.teletekst.core.TeletextPage;
 import nl.wos.teletekst.core.TeletextSubpage;
 import nl.wos.teletekst.core.TeletextUpdatePackage;
@@ -11,9 +17,6 @@ import nl.wos.teletekst.util.Web;
 
 
 import org.apache.http.util.EntityUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -27,8 +30,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class WeatherModule {
-    private static final Logger log = Logger.getLogger(WeatherModule.class.getName());
+public class WeatherModuleI extends TeletekstModule {
+    private static final Logger log = Logger.getLogger(WeatherModuleI.class.getName());
 
     @Inject private PropertyManager propertyManager;
     @Inject private PhecapConnector phecapConnector;
@@ -154,7 +157,7 @@ public class WeatherModule {
         updatePackage.addTeletextPage(page);
     }
 
-    private String parseWeerbericht(Document document) {
+    /*private String parseWeerbericht(Document document) {
         return document.getRootElement()
                 .getChild("weergegevens")
                 .getChild("verwachting_vandaag")
@@ -251,4 +254,4 @@ public class WeatherModule {
 
         return result;
     }
-}
+}*/

@@ -2,8 +2,12 @@ package nl.wos.teletekst.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class TextOperations {
+
+    public static int TEXT_PAGE_SIZE = 39;
+    public static int MAX_TITLE_SIZE = 35;
 
     public static String removeSpecialCharactersAndHTML(String text) {
         String result = text;
@@ -147,11 +151,11 @@ public class TextOperations {
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
 
-            if (counter + word.length() == Configuration.TEXT_PAGE_SIZE || counter + word.length()  ==  Configuration.TEXT_PAGE_SIZE - 1) {
+            if (counter + word.length() ==  TEXT_PAGE_SIZE || counter + word.length()  ==  TEXT_PAGE_SIZE - 1) {
                 builder.append(word);
                 counter += word.length();
             }
-            else if (counter + word.length() + 1 < Configuration.TEXT_PAGE_SIZE) {
+            else if (counter + word.length() + 1 < TEXT_PAGE_SIZE) {
                 builder.append(word + " ");
                 counter += (word.length() + 1);
             }
@@ -197,12 +201,12 @@ public class TextOperations {
 
     public static String makeBerichtTitelVoorIndexPagina(String publicationTitle) {
         String result;
-        if (publicationTitle.length() >= Configuration.MAX_TITLE_SIZE) {
-            result = publicationTitle.substring(0, Configuration.MAX_TITLE_SIZE);
+        if (publicationTitle.length() >= MAX_TITLE_SIZE) {
+            result = publicationTitle.substring(0, MAX_TITLE_SIZE);
         }
         else {
             result = publicationTitle;
-            for (int i = 0; i < Configuration.MAX_TITLE_SIZE - publicationTitle.length(); i++) {
+            for (int i = 0; i < MAX_TITLE_SIZE - publicationTitle.length(); i++) {
                 result += ".";
             }
         }
