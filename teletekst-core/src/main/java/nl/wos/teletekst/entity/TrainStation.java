@@ -6,64 +6,64 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "trainstation")
+@Table(name = "train_station")
 public class TrainStation extends BaseEntity<String>{
 
     @Id
     @Column
-    private String trainStation;
+    private String code;
     @Column
-    private String fullName;
+    private String name;
     @Column
-    private int teletextPage;
+    private int teletextPageNumber;
     @Column
-    private boolean enabled;
+    private boolean broadcastOnTeletext;
 
     public TrainStation() {
 
     }
 
-    public TrainStation(String trainStation, String fullName, short teletextPage, boolean enabled) {
-        this.trainStation = trainStation;
-        this.fullName = fullName;
-        this.teletextPage = teletextPage;
-        this.enabled = enabled;
+    public TrainStation(String code, String name, short teletextPageNumber, boolean broadcastOnTeletext) {
+        this.code = code;
+        this.name = name;
+        this.teletextPageNumber = teletextPageNumber;
+        this.broadcastOnTeletext = broadcastOnTeletext;
     }
 
     @Override
     protected String getPrimaryKey() {
-        return trainStation;
+        return code;
     }
 
-    public String getTrainStation() {
-        return trainStation;
+    public String getCode() {
+        return code;
     }
 
-    public void setTrainStation(String trainStation) {
-        this.trainStation = trainStation;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String fullName) {
+        this.name = fullName;
     }
 
-    public int getTeletextPage() {
-        return teletextPage;
+    public int getTeletextPageNumber() {
+        return teletextPageNumber;
     }
 
-    public void setTeletextPage(short teletextPage) {
-        this.teletextPage = teletextPage;
+    public void setTeletextPageNumber(short teletextPage) {
+        this.teletextPageNumber = teletextPage;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isBroadcastOnTeletext() {
+        return broadcastOnTeletext;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setBroadcastOnTeletext(boolean enabled) {
+        this.broadcastOnTeletext = enabled;
     }
 }

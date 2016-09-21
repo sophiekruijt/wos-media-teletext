@@ -42,11 +42,11 @@ public class PublicTransportModule extends TeletekstModule {
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
         for(TrainStation station : trainStations) {
-            List<TrainDeparture> stationDepartures = trainDepartures.get(station.getTrainStation());
-            TeletextPage teletextPage = new TeletextPage(station.getTeletextPage());
+            List<TrainDeparture> stationDepartures = trainDepartures.get(station.getCode());
+            TeletextPage teletextPage = new TeletextPage(station.getTeletextPageNumber());
             TeletextSubpage subPage = teletextPage.addNewSubpage();
             subPage.setLayoutTemplateFileName("template-treinen.tpg");
-            PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getFullName());
+            PublicTransportModuleHelper.addContentToPage(subPage, stationDepartures, station.getName());
 
             updatePackage.addTeletextPage(teletextPage);
         }
@@ -60,7 +60,7 @@ public class PublicTransportModule extends TeletekstModule {
 
         for(TrainStation station : trainStations) {
             try {
-                Element root = XMLParser.XMLParser(getTrainDeparturesForTrainstation(station.getTrainStation())).getDocumentElement();
+                Element root = XMLParser.XMLParser(getTrainDeparturesForTrainstation(station.getCode())).getDocumentElement();
                 NodeList trainStationDepartureNodeList = root.getElementsByTagName("VertrekkendeTrein");
 
                 List stationDepartureList = new ArrayList<TrainDeparture>(trainStationDepartureNodeList.getLength());
@@ -70,7 +70,7 @@ public class PublicTransportModule extends TeletekstModule {
 
                     parseDeparture(stationDepartureList, trainDeparturePropertiesNodeList);
                 }
-                trainDepartures.put(station.getTrainStation(), stationDepartureList);
+                trainDepartures.put(station.getCode(), stationDepartureList);
             } catch (Exception e) {
                 log.severe(e.toString());
                 e.printStackTrace();
