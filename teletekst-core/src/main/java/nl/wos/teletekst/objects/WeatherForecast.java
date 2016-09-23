@@ -1,13 +1,13 @@
 package nl.wos.teletekst.objects;
 
-public class Meerdaagse {
+public class WeatherForecast {
 
     private String date;
     private String dayOfWeek;
     private String chanceSunshine;
     private String chanceRain;
-    private String minmmRain;
-    private String maxmmRain;
+    private String minMmRain;
+    private String maxMmRain;
     private String minTemp;
     private String minTempMax;
     private String maxTemp;
@@ -48,20 +48,20 @@ public class Meerdaagse {
         this.chanceRain = chanceRain;
     }
 
-    public String getMinmmRain() {
-        return minmmRain;
+    public String getMinMmRain() {
+        return minMmRain;
     }
 
-    public void setMinmmRain(String minmmRain) {
-        this.minmmRain = minmmRain;
+    public void setMinMmRain(String minmmRain) {
+        this.minMmRain = minmmRain;
     }
 
     public String getMaxmmRain() {
-        return maxmmRain;
+        return maxMmRain;
     }
 
     public void setMaxmmRain(String maxmmRain) {
-        this.maxmmRain = maxmmRain;
+        this.maxMmRain = maxmmRain;
     }
 
     public String getMinTemp() {

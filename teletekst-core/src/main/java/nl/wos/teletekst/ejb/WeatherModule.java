@@ -10,8 +10,8 @@ import nl.wos.teletekst.core.TeletextPage;
 import nl.wos.teletekst.core.TeletextSubpage;
 import nl.wos.teletekst.core.TeletextUpdatePackage;
 import nl.wos.teletekst.entity.PropertyManager;
-import nl.wos.teletekst.objects.ActualWeather;
-import nl.wos.teletekst.objects.Meerdaagse;
+import nl.wos.teletekst.objects.WeatherMeasurement;
+import nl.wos.teletekst.objects.WeatherForecast;
 import nl.wos.teletekst.util.TextOperations;
 import nl.wos.teletekst.util.Web;
 
@@ -51,8 +51,8 @@ public class WeatherModuleI extends TeletextModule {
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(new ByteArrayInputStream(data.getBytes("UTF-8")));
         String weerbericht = parseWeerbericht(document);
-        List<Meerdaagse> meerdaagse = parseMeerdaagse(document);
-        ActualWeather actualWeather = parseActualWeather(document);
+        List<WeatherForecast> meerdaagse = parseMeerdaagse(document);
+        WeatherMeasurement actualWeather = parseActualWeather(document);
 
         updateWeersVerwachting(weerbericht, updatePackage);
         updateMeerdaagse(meerdaagse, updatePackage);
@@ -63,7 +63,7 @@ public class WeatherModuleI extends TeletextModule {
         log.info("Weather module teletext update is finished.");
     }
 
-    private void updateCurrentWeatherMeasurements(ActualWeather actualWeather, TeletextUpdatePackage updatePackage) throws java.text.ParseException {
+    private void updateCurrentWeatherMeasurements(WeatherMeasurement actualWeather, TeletextUpdatePackage updatePackage) throws java.text.ParseException {
         TeletextPage page = new TeletextPage(703);
         TeletextSubpage subpage = page.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-weersverwachting.tpg");
@@ -71,21 +71,21 @@ public class WeatherModuleI extends TeletextModule {
         String format = "%-20s\u0003%-10s";
 
         subpage.setTextOnLine(0, "MEETSTATION HOEK VAN HOLLAND");
-        subpage.setTextOnLine(2, String.format(format, "Temperatuur:", actualWeather.getTemperatuur() + " graden"));
-        subpage.setTextOnLine(3, String.format(format, "Luchtdruk:", actualWeather.getLuchtdruk()));
-        subpage.setTextOnLine(4, String.format(format, "Luchtvochtigheid:", actualWeather.getLuchtvochtigheid()));
+        subpage.setTextOnLine(2, String.format(format, "Temperatuur:", actualWeather.getTemperature() + " graden"));
+        subpage.setTextOnLine(3, String.format(format, "Luchtdruk:", actualWeather.getAirPressure()));
+        subpage.setTextOnLine(4, String.format(format, "Luchtvochtigheid:", actualWeather.getHumidity()));
         subpage.setTextOnLine(5, String.format(format, "MM regen p/u:", actualWeather.getRegenMM()));
-        subpage.setTextOnLine(6, String.format(format, "Windrichting:", actualWeather.getWindrichting()));
-        subpage.setTextOnLine(7, String.format(format, "Windkracht:", actualWeather.getWindsnelheidbf() + " BF"));
+        subpage.setTextOnLine(6, String.format(format, "Windrichting:", actualWeather.getWinddirection()));
+        subpage.setTextOnLine(7, String.format(format, "Windkracht:", actualWeather.getWindspeedbf() + " BF"));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        Date date = dateFormat.parse(actualWeather.getDatum());
+        Date date = dateFormat.parse(actualWeather.getDate());
         subpage.setTextOnLine(15, "Tijdstip meting: \u0003" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(date));
 
         updatePackage.addTeletextPage(page);
     }
 
-    private void updateMeerdaagse(List<Meerdaagse> meerdaagse, TeletextUpdatePackage updatePackage) {
+    private void updateMeerdaagse(List<WeatherForecast> meerdaagse, TeletextUpdatePackage updatePackage) {
         if(meerdaagse.isEmpty()) {
             log.warning("Meerdaagselijst is leeg!");
             return;
@@ -194,8 +194,8 @@ public class WeatherModuleI extends TeletextModule {
         }
     }
 
-    private List<Meerdaagse> parseMeerdaagse(Document document) {
-        List<Meerdaagse> result = new ArrayList<>();
+    private List<WeatherForecast> parseMeerdaagse(Document document) {
+        List<WeatherForecast> result = new ArrayList<>();
 
         Element meerdaagse = document.getRootElement()
                 .getChild("weergegevens")
@@ -210,8 +210,8 @@ public class WeatherModuleI extends TeletextModule {
         return result;
     }
 
-    private Meerdaagse parseMeerdaagseDag(Element element) {
-        Meerdaagse result = new Meerdaagse();
+    private WeatherForecast parseMeerdaagseDag(Element element) {
+        WeatherForecast result = new WeatherForecast();
 
         result.setDate(element.getChildText("datum"));
         result.setDayOfWeek(element.getChildText("dagweek"));
@@ -230,8 +230,8 @@ public class WeatherModuleI extends TeletextModule {
         return result;
     }
 
-    private ActualWeather parseActualWeather(Document document) {
-        ActualWeather result = new ActualWeather();
+    private WeatherMeasurement parseActualWeather(Document document) {
+        WeatherMeasurement result = new WeatherMeasurement();
 
         Element weerstations = document.getRootElement()
                 .getChild("weergegevens")
@@ -240,14 +240,14 @@ public class WeatherModuleI extends TeletextModule {
 
         for(Element e : weerstations.getChildren()) {
             if(e.getAttributeValue("id").equals("6330")) {
-                result.setDatum(e.getChildText("datum"));
-                result.setLuchtdruk(e.getChildText("luchtdruk"));
-                result.setLuchtvochtigheid(e.getChildText("luchtvochtigheid"));
-                result.setTemperatuur(e.getChildText("temperatuurGC"));
+                result.setDate(e.getChildText("datum"));
+                result.setAirPressure(e.getChildText("luchtdruk"));
+                result.setHumidity(e.getChildText("luchtvochtigheid"));
+                result.setTemperature(e.getChildText("temperatuurGC"));
                 result.setRegenMM(e.getChildText("regenMMPU"));
-                result.setLuchtdruk(e.getChildText("luchtdruk"));
-                result.setWindrichting(e.getChildText("windrichting"));
-                result.setWindsnelheidbf(e.getChildText("windsnelheidBF"));
+                result.setAirPressure(e.getChildText("luchtdruk"));
+                result.setWinddirection(e.getChildText("windrichting"));
+                result.setWindspeedbf(e.getChildText("windsnelheidBF"));
                 break;
             }
         }
