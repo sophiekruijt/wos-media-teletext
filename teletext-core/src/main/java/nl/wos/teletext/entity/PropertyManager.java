@@ -15,14 +15,18 @@ public class PropertyManager {
     private Properties properties = new Properties();
 
     @PostConstruct
-    public void init() throws IOException {
+    public void init() {
         String propFileName = "config.properties";
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(propFileName);
 
         if (inputStream != null) {
-            properties.load(inputStream);
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
-            throw new FileNotFoundException("Property file '" + propFileName + "' not found in the classpath");
+            System.out.println("Property file '" + propFileName + "' not found in the classpath");
         }
     }
 }
