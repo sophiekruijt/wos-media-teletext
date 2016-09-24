@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @NoCache
 @Path("/")
-public class BerichtController {
+public class MessageController {
     @Inject private BerichtDao berichtDao;
 
     @GET

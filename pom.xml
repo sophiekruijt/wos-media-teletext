@@ -8,9 +8,9 @@
     <artifactId>root</artifactId>
     <version>1.0</version>
     <modules>
-        <module>teletekst-core</module>
-        <module>teletekst-api</module>
-        <module>teletekst-mock-server</module>
+        <module>teletext-core</module>
+        <module>teletext-api</module>
+        <module>teletext-mock-server</module>
     </modules>
     <packaging>pom</packaging>
     <name>WOS Media : Teletext</name>
@@ -19,6 +19,9 @@
         <repository>
             <id>mvnrepository</id>
             <url>http://mvnrepository.com/artifact/</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
         </repository>
     </repositories>
 
@@ -29,9 +32,9 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>teletekst-api</module>
-                <module>teletekst-core</module>
-                <module>teletekst-mock-server</module>
+                <module>teletext-api</module>
+                <module>teletext-core</module>
+                <module>teletext-mock-server</module>
             </modules>
         </profile>
     </profiles>

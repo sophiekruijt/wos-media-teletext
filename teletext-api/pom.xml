@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.wos</groupId>
-    <artifactId>teletekst-api</artifactId>
-    <name>WOS Media : Teletekst-api</name>
+    <artifactId>teletext-api</artifactId>
+    <name>WOS Media : Teletext-api</name>
     <packaging>war</packaging>
 
     <parent>
@@ -35,11 +35,11 @@
         </dependency>
         <dependency>
             <groupId>nl.wos</groupId>
-            <artifactId>teletekst-core</artifactId>
+            <artifactId>teletext-core</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
     <build>
-        <finalName>teletekst-api</finalName>
+        <finalName>teletext-api</finalName>
     </build>
 </project>

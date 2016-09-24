@@ -13,14 +13,14 @@
     <dependencies>
         <dependency>
             <groupId>nl.wos</groupId>
-            <artifactId>teletekst-core</artifactId>
+            <artifactId>teletext-core</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>
 
     <build>
-        <finalName>teletekst-mock-server</finalName>
+        <finalName>teletext-mock-server</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -29,7 +29,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>nl.wos.teletekst.mockserver.PhetxtMockServer</mainClass>
+                            <mainClass>nl.wos.teletext.mockserver.PhetxtMockServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
