@@ -5,8 +5,8 @@ import java.util.List;
 
 public class TextOperations {
 
-    public static int TEXT_PAGE_SIZE = 39;
-    public static int MAX_TITLE_SIZE = 35;
+    public static final int TEXT_PAGE_SIZE = 39;
+    public static final int MAX_TITLE_SIZE = 35;
 
     public static String removeSpecialCharactersAndHTML(String text) {
         String result = text;

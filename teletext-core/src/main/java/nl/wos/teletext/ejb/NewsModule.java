@@ -45,7 +45,7 @@ public class NewsModule extends TeletextModule {
     private int sportPageNumberCounter = 0;
 
     @Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
-    public void doTeletextUpdate() throws Exception {
+    public void doTeletextUpdate() {
         log.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;
         this.sportPageNumberCounter= 0;

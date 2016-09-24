@@ -34,7 +34,7 @@ public class PublicTransportModule extends TeletextModule {
     @Inject private PhecapConnector phecapConnector;
 
     @Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
-    public void doTeletextUpdate() throws Exception {
+    public void doTeletextUpdate() {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = trainStationDao.findAll();
 

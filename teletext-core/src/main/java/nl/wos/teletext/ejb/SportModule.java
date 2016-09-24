@@ -24,11 +24,15 @@ public class SportModule extends TeletextModule {
     private SportModuleDataParser parser = new SportModuleDataParser();
 
     @Schedule(minute="*",hour="*/100", persistent=false)
-    public void doTeletextUpdate() throws Exception {
+    public void doTeletextUpdate() {
         log.info("Sport module is going to update teletext.");
 
         List<SportPoule> poules = sportPouleDao.findAllOrderedByProperty("naam");
-        String data = EntityUtils.toString(Web.doWebRequest("http://sportstanden.infothuis.nl/public/internet-rss.php"), "UTF-8");
+        try {
+            String data = EntityUtils.toString(Web.doWebRequest("http://sportstanden.infothuis.nl/public/internet-rss.php"), "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*if(data.isEmpty()) {
             log.severe("Gedownloade sportdata is null or leeg!, teletext update will be cancelled");
             return;
