@@ -36,7 +36,6 @@ public class PhecapConnector {
     private String mockServerHost = properties.getProperty("mockServerHost");
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
 
-
     @Lock(LockType.WRITE)
     public void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
@@ -68,6 +67,11 @@ public class PhecapConnector {
     }
 
     private void sendFilesToMockServer(TeletextUpdatePackage updatePackage) {
+        if(!mockServerOnline()) {
+            log.info("Mock server not available, ignore teletext update.");
+            return;
+        }
+
         Path folder = Paths.get(updatePackage.getFolder());
         try {
             sendTextFilesToMock(folder);
@@ -75,6 +79,15 @@ public class PhecapConnector {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean mockServerOnline() {
+        try {
+            Socket socket = new Socket(mockServerHost, mockServerPort);
+            return socket.isConnected();
+        } catch (IOException e) {
+        }
+        return false;
     }
 
     private void uploadUpdateSem() throws IOException {
