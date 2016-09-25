@@ -8,7 +8,6 @@ public class TeletextPage {
 
     private int pageNumber;
     private FastText fastText;
-    private String teletextCommands;
     private ArrayList<TeletextSubpage> teletextSubPages = new ArrayList<>();
 
     public ArrayList<TeletextSubpage> getTeletextSubPages() {
@@ -21,7 +20,7 @@ public class TeletextPage {
      * @return first subpage of teletext page
      */
     public TeletextPage (int pageNumber) {
-        log.info("Nieuwe pagina aangemaakt: " + pageNumber);
+        log.info("New page created: " + pageNumber);
         this.pageNumber = pageNumber;
         initializeFastText();
     }
@@ -44,7 +43,7 @@ public class TeletextPage {
     }
 
     /***
-     * A teletextPage can be broadcast only! when the layoutTemplate and fasttext buttons are set up!
+     * A teletextPage can only be broadcast when the layoutTemplate and fasttext buttons are set up.
      * @return
      */
     private boolean teletextPageReadyForBroadcast() {
@@ -63,8 +62,7 @@ public class TeletextPage {
 
     public String getConfigurationString() {
         finalizeTeletextPage();
-        this.teletextCommands = generateTeletextCommandString();
-        return this.teletextCommands;
+        return generateTeletextCommandString();
     }
 
     public String generateTeletextCommandString() {

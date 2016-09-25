@@ -18,26 +18,6 @@ public class ConfigurationParser {
         return instance;
     }
 
-    public static void main(String[] args) {
-        ConfigurationParser.getInstance().parseConfiguration("[719.*]\n" +
-                "\n" +
-                "[719.0000]\n" +
-                "TemplateFilename=template-treinen.tpg\n" +
-                "TextFilename=text-719-0.txt\n" +
-                "Descr= Automatische pagina\n" +
-                "prompts=Nieuws Sport TV Weer\n" +
-                "links=101 600 200 700\n" +
-                "\n" +
-                "[720.*]\n" +
-                "\n" +
-                "[720.0000]\n" +
-                "TemplateFilename=template-sport.tpg\n" +
-                "TextFilename=text-720-0.txt\n" +
-                "Descr= Automatische pagina\n" +
-                "prompts=Nieuws Sport TV Weer\n" +
-                "links=101 600 200 700\n");
-    }
-
     public List<TeletextCommand> parseConfiguration(String configuration) {
         List<TeletextCommand> result = new ArrayList<>();
 
@@ -59,7 +39,6 @@ public class ConfigurationParser {
                 result.add(teletextCommand);
             }
         }
-        System.out.println(result.toString());
         return result;
     }
 
@@ -79,8 +58,8 @@ public class ConfigurationParser {
         regex = Pattern.compile(commandPattern);
         Matcher commandMatcher = regex.matcher(group);
         while(commandMatcher.find()) {
-            String key = commandMatcher.group(1);
-            String value = commandMatcher.group(2);
+            String key = commandMatcher.group(1).trim();
+            String value = commandMatcher.group(2).trim();
 
             switch(key) {
                 case "TemplateFilename":
