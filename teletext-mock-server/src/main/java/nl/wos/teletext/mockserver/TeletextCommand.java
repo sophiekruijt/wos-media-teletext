@@ -1,12 +1,19 @@
 package nl.wos.teletext.mockserver;
 
+import java.util.Arrays;
+
 public class TeletextCommand {
     private String command;
     private int pageNumber;
     private String templateFileName;
+    private String textFileName;
     private String description;
     private String[] promps = new String[4];
-    private Integer[] links = new Integer[4];
+    private String[] links = new String[4];
+
+    public TeletextCommand(String command) {
+        this.command = command;
+    }
 
     public String getCommand() {
         return command;
@@ -32,6 +39,14 @@ public class TeletextCommand {
         this.templateFileName = templateFileName;
     }
 
+    public String getTextFileName() {
+        return textFileName;
+    }
+
+    public void setTextFileName(String textFileName) {
+        this.textFileName = textFileName;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -48,11 +63,24 @@ public class TeletextCommand {
         this.promps = promps;
     }
 
-    public Integer[] getLinks() {
+    public String[] getLinks() {
         return links;
     }
 
-    public void setLinks(Integer[] links) {
+    public void setLinks(String[] links) {
         this.links = links;
+    }
+
+    @Override
+    public String toString() {
+        return "TeletextCommand{" +
+                "command='" + command + '\'' +
+                ", pageNumber=" + pageNumber +
+                ", templateFileName='" + templateFileName + '\'' +
+                ", textFileName='" + textFileName + '\'' +
+                ", description='" + description + '\'' +
+                ", promps=" + Arrays.toString(promps) +
+                ", links=" + Arrays.toString(links) +
+                '}';
     }
 }
