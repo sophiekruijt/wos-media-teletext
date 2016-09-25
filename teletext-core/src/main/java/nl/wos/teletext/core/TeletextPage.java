@@ -8,7 +8,6 @@ public class TeletextPage {
     private FastText fastText;
     private String teletextCommands;
     private ArrayList<TeletextSubpage> teletextSubPages = new ArrayList<>();
-    private boolean locked;
 
     public ArrayList<TeletextSubpage> getTeletextSubPages() {
         return teletextSubPages;
