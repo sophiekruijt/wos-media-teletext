@@ -64,14 +64,21 @@ public class ConfigurationParser {
             switch(key) {
                 case "TemplateFilename":
                     teletextCommand.setTemplateFileName(value);
+                    break;
                 case "TextFilename":
                     teletextCommand.setTextFileName(value);
+                    break;
                 case "Descr":
                     teletextCommand.setDescription(value);
+                    break;
                 case "prompts":
                     teletextCommand.setPromps(value.split(" "));
+                    break;
                 case "links":
                     teletextCommand.setLinks(value.split(" "));
+                    break;
+                default:
+                    log.warning("Unknown key ("+key+")in configuration file");
             }
         }
     }
