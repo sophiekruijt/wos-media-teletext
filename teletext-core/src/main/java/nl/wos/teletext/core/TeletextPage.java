@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class TeletextPage {
+    private static final Logger log = Logger.getLogger(TeletextPage.class.getName());
+
     private int pageNumber;
     private FastText fastText;
     private String teletextCommands;
@@ -12,7 +14,7 @@ public class TeletextPage {
     public ArrayList<TeletextSubpage> getTeletextSubPages() {
         return teletextSubPages;
     }
-    private static final Logger log = Logger.getLogger(TeletextPage.class.getName());
+
 
     /***
      * @param pageNumber
@@ -36,7 +38,6 @@ public class TeletextPage {
 
     private boolean finalizeTeletextPage() {
         if (teletextPageReadyForBroadcast()) {
-            locked = true;
             return true;
         }
         return false;
