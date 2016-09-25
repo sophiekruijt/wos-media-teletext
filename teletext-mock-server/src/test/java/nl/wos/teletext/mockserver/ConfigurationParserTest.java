@@ -1,5 +1,5 @@
-import nl.wos.teletext.mockserver.ConfigurationParser;
-import nl.wos.teletext.mockserver.TeletextCommand;
+package nl.wos.teletext.mockserver;
+
 import org.junit.Test;
 
 import java.util.List;
