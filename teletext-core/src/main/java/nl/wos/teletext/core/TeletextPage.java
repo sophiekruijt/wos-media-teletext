@@ -61,7 +61,6 @@ public class TeletextPage {
     }
 
     public String getConfigurationString() {
-        this.locked = true;
         finalizeTeletextPage();
         this.teletextCommands = generateTeletextCommandString();
         return this.teletextCommands;
