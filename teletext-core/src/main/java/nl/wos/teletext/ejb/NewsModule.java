@@ -89,8 +89,8 @@ public class NewsModule extends TeletextModule {
     }
 
     private void publiceerExtraSportPagina(Items item, int pageNumber, TeletextUpdatePackage updatePackage) {
-        String titel = item.getPublication_title();
-        String[] subpageTexts = item.getPublication_text().split("#NEWSUBPAGE#");
+        String titel = item.getPublicationTitle();
+        String[] subpageTexts = item.getPublicationText().split("#NEWSUBPAGE#");
 
         TeletextPage teletextPage = new TeletextPage(pageNumber);
         for (int i=0; i<subpageTexts.length; i++)
@@ -176,8 +176,8 @@ public class NewsModule extends TeletextModule {
         TeletextSubpage subPage = page.addNewSubpage();
         subPage.setLayoutTemplateFileName("template-sportoverzicht.tpg");
         subPage.setTextOnLine(0, "\u0003Uitslagen amateurvoetbal");
-        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getPublication_title()) + "\u0003" + 648);
-        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getPublication_title()) + "\u0003" + 649);
+        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getPublicationTitle()) + "\u0003" + 648);
+        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getPublicationTitle()) + "\u0003" + 649);
         subPage.setTextOnLine(4, "\u0003Sportnieuws");
         int row = 5;
         for(int i=0; i < sportItems.length; i++) {
@@ -189,8 +189,8 @@ public class NewsModule extends TeletextModule {
         }
 
         subPage.setTextOnLine(12, "\u0003Inhoud WOS Sport radio 87.6 FM");
-        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getPublication_title()) + "\u0003" + 656);
-        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getPublication_title()) + "\u0003" + 657);
+        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getPublicationTitle()) + "\u0003" + 656);
+        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getPublicationTitle()) + "\u0003" + 657);
 
         updatePackage.addTeletextPage(page);
     }

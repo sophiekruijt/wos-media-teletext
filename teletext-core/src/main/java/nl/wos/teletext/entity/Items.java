@@ -15,12 +15,12 @@ import javax.persistence.Table;
 public class Items extends BaseEntity<String>{
 
     @Id
-    @Column(name = "item_id")
-    private String item_id;
-    @Column(name = "publication_text")
-    private String publication_text;
-    @Column(name = "publication_title")
-    private String publication_title;
+    @Column(name = "itemId")
+    private String itemId;
+    @Column(name = "publicationText")
+    private String publicationText;
+    @Column(name = "publicationTitle")
+    private String publicationTitle;
 
     public Items() {
 
@@ -28,30 +28,30 @@ public class Items extends BaseEntity<String>{
 
     @Override
     protected String getPrimaryKey() {
-        return item_id;
+        return itemId;
     }
 
-    public String getItem_id() {
-        return item_id;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setItem_id(String item_id) {
-        this.item_id = item_id;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
-    public String getPublication_text() {
-        return publication_text;
+    public String getPublicationText() {
+        return publicationText;
     }
 
-    public void setPublication_text(String publication_text) {
-        this.publication_text = publication_text;
+    public void setPublicationText(String publicationText) {
+        this.publicationText = publicationText;
     }
 
-    public String getPublication_title() {
-        return publication_title;
+    public String getPublicationTitle() {
+        return publicationTitle;
     }
 
-    public void setPublication_title(String publication_title) {
-        this.publication_title = publication_title;
+    public void setPublicationTitle(String publicationTitle) {
+        this.publicationTitle = publicationTitle;
     }
 }
