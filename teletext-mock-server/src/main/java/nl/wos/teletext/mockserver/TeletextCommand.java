@@ -5,10 +5,11 @@ import java.util.Arrays;
 public class TeletextCommand {
     private String command;
     private int pageNumber;
+    private int subPageNumber;
     private String templateFileName;
     private String textFileName;
     private String description;
-    private String[] promps = new String[4];
+    private String[] prompts = new String[4];
     private String[] links = new String[4];
 
     public TeletextCommand(String command) {
@@ -29,6 +30,14 @@ public class TeletextCommand {
 
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public int getSubPageNumber() {
+        return subPageNumber;
+    }
+
+    public void setSubPageNumber(int subPageNumber) {
+        this.subPageNumber = subPageNumber;
     }
 
     public String getTemplateFileName() {
@@ -55,12 +64,12 @@ public class TeletextCommand {
         this.description = description;
     }
 
-    public String[] getPromps() {
-        return promps;
+    public String[] getPrompts() {
+        return prompts;
     }
 
-    public void setPromps(String[] promps) {
-        this.promps = promps;
+    public void setPrompts(String[] prompts) {
+        this.prompts = prompts;
     }
 
     public String[] getLinks() {
@@ -79,7 +88,7 @@ public class TeletextCommand {
                 ", templateFileName='" + templateFileName + '\'' +
                 ", textFileName='" + textFileName + '\'' +
                 ", description='" + description + '\'' +
-                ", promps=" + Arrays.toString(promps) +
+                ", prompts=" + Arrays.toString(prompts) +
                 ", links=" + Arrays.toString(links) +
                 '}';
     }

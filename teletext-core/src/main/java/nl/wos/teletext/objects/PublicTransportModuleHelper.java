@@ -1,12 +1,17 @@
 package nl.wos.teletext.objects;
 
 import nl.wos.teletext.core.TeletextSubpage;
+import nl.wos.teletext.ejb.NewsModule;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PublicTransportModuleHelper
 {
+    private static final Logger log = Logger.getLogger(PublicTransportModuleHelper.class.getName());
+
     public static void addContentToPage(TeletextSubpage page, List<TrainDeparture> departures, String stationName)
     {
         try {
@@ -54,7 +59,7 @@ public class PublicTransportModuleHelper
             }
         }
         catch(Exception ex) {
-            ex.printStackTrace();
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 }

@@ -5,8 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TrainDeparture {
+    private static final Logger log = Logger.getLogger(TrainDeparture.class.getName());
+
     private String ritNummer = "";
     private Date departureTime = new Date();
     private String finalDestination = "";
@@ -86,6 +89,9 @@ public class TrainDeparture {
                 break;
             case "wijziging":
                 this.changed = new Boolean(waarde).booleanValue();
+                break;
+            default:
+                log.warning("Unknown property to set for TrainDeparture (" + property + ")");
                 break;
         }
     }

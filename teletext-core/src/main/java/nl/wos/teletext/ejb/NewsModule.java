@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
@@ -73,8 +74,8 @@ public class NewsModule extends TeletextModule {
             updatePackage.generateTextFiles();
             phecapConnector.uploadFilesToTeletextServer(updatePackage);
         }
-        catch(Exception e) {
-            e.printStackTrace();
+        catch(Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
@@ -125,8 +126,8 @@ public class NewsModule extends TeletextModule {
             }
             updatePackage.addTeletextPage(teletextPage);
         }
-        catch(Exception e) {
-            e.printStackTrace();
+        catch(Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
@@ -162,8 +163,8 @@ public class NewsModule extends TeletextModule {
 
                 updatePackage.addTeletextPage(teletextPage);
             }
-            catch(Exception e) {
-                e.printStackTrace();
+            catch(Exception ex) {
+                log.log(Level.SEVERE, "Exception occured", ex);
             }
         }
     }
@@ -222,8 +223,8 @@ public class NewsModule extends TeletextModule {
                     result.add(item);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
         return result;
     }

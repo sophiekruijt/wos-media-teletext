@@ -23,7 +23,7 @@ public class ConfigurationParserTest {
                 "\n" +
                 "[720.*]\n" +
                 "\n" +
-                "[720.0000]\n" +
+                "[720.0001]\n" +
                 "TemplateFilename=template-sport.tpg\n" +
                 "TextFilename=text-720-0.txt\n" +
                 "Descr= Sport scores\n" +
@@ -36,9 +36,13 @@ public class ConfigurationParserTest {
         assertThat(teletextCommands, is(not(empty())));
         assertThat(teletextCommands.size(), is(2));
         assertThat(teletextCommands.get(0).getCommand(), is("addPage"));
+        assertThat(teletextCommands.get(0).getPageNumber(), is(719));
+        assertThat(teletextCommands.get(0).getSubPageNumber(), is(0));
         assertThat(teletextCommands.get(0).getDescription(), is("Public transport departures"));
         assertThat(teletextCommands.get(0).getTemplateFileName(), is("template-departures.tpg"));
         assertThat(teletextCommands.get(0).getTextFileName(), is("text-719-0.txt"));
+        assertThat(teletextCommands.get(1).getPageNumber(), is(720));
+        assertThat(teletextCommands.get(1).getSubPageNumber(), is(1));
         assertThat(teletextCommands.get(1).getCommand(), is("addPage"));
         assertThat(teletextCommands.get(1).getDescription(), is("Sport scores"));
         assertThat(teletextCommands.get(1).getTemplateFileName(), is("template-sport.tpg"));

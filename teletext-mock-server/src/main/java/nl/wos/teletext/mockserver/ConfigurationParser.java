@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigurationParser {
-
     private static final Logger log = Logger.getLogger(String.valueOf(ConfigurationParser.class));
     private static ConfigurationParser instance = null;
 
@@ -49,6 +48,7 @@ public class ConfigurationParser {
         Matcher pageNumberMatcher = regex.matcher(group);
         if(pageNumberMatcher.find()) {
             teletextCommand.setPageNumber(Integer.parseInt(pageNumberMatcher.group(2)));
+            teletextCommand.setSubPageNumber(Integer.parseInt(pageNumberMatcher.group(3)));
         }
     }
 
@@ -72,7 +72,7 @@ public class ConfigurationParser {
                     teletextCommand.setDescription(value);
                     break;
                 case "prompts":
-                    teletextCommand.setPromps(value.split(" "));
+                    teletextCommand.setPrompts(value.split(" "));
                     break;
                 case "links":
                     teletextCommand.setLinks(value.split(" "));

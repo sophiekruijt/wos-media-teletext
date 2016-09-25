@@ -1,9 +1,13 @@
 package nl.wos.teletext.mockserver;
 
+import nl.wos.teletext.ejb.NewsModule;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class FileProcessor {
+    private static final Logger log = Logger.getLogger(FileProcessor.class.getName());
 
     private static FileProcessor fileProcessor = new FileProcessor( );
     private FileProcessor(){ }
@@ -21,16 +25,39 @@ public class FileProcessor {
         if(fileName.startsWith("text")) {
             // Text file with contents of a page is received
             textFiles.put(fileName, fileText);
-            System.out.println("The file: " + fileName + " is added to the teletext mock server.");
+            log.info("The file: " + fileName + " is added to the teletext mock server.");
         }
         else if(fileName.equals("control.dat")) {
             controlDat = fileText;
-            System.out.println("The file: " + fileName + " is received with instructions for the teletext server");
+            log.info("The file: " + fileName + " is received with instructions for the teletext server");
             configurationParser.parseConfiguration(fileText);
         }
         else if(fileName.equals("update.sem")) {
-            System.out.println("update.sem received. Execute and send instructions to teletext inserter and remove all received files.");
-            configurationParser.parseConfiguration(fileText);
+            log.info("update.sem received. Execute and send instructions to teletext inserter and remove all received files.");
+
+            for(TeletextCommand command : configurationParser.parseConfiguration(fileText)) {
+                if(command.getCommand().equals("addPage")) {
+                    TeletextPage page = new TeletextPage();
+                    page.setPageNumber(command.getPageNumber());
+                    page.setSubPageNumber(command.getSubPageNumber());
+
+                    String[] fasttext = command.getLinks();
+                    String[] prompts = command.getPrompts();
+                    page.setFastText1(Integer.parseInt(fasttext[0]));
+                    page.setFastText2(Integer.parseInt(fasttext[1]));
+                    page.setFastText3(Integer.parseInt(fasttext[2]));
+                    page.setFastText4(Integer.parseInt(fasttext[3]));
+
+                    page.setFastTextLabel1(prompts[0]);
+                    page.setFastTextLabel2(prompts[1]);
+                    page.setFastTextLabel3(prompts[2]);
+                    page.setFastTextLabel4(prompts[3]);
+
+                    String content = textFiles.get(command.getTextFileName());
+                    page.setTextLines(content.split("\n"));
+                }
+            }
+
             controlDat = "";
             textFiles.clear();
         }

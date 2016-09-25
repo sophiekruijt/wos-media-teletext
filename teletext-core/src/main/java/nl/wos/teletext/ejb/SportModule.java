@@ -11,6 +11,7 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
@@ -30,8 +31,8 @@ public class SportModule extends TeletextModule {
         List<SportPoule> poules = sportPouleDao.findAllOrderedByProperty("naam");
         try {
             String data = EntityUtils.toString(Web.doWebRequest("http://sportstanden.infothuis.nl/public/internet-rss.php"), "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
         /*if(data.isEmpty()) {
             log.severe("Gedownloade sportdata is null or leeg!, teletext update will be cancelled");

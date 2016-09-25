@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,8 @@ public class PhecapConnector {
 
             ftpClient.logout();
             Files.deleteIfExists(folder);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.severe(e.toString());
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
@@ -76,8 +76,8 @@ public class PhecapConnector {
         try {
             sendTextFilesToMock(folder);
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
@@ -142,7 +142,8 @@ public class PhecapConnector {
             });
             dataOutputStream.close();
         }
-        catch (Exception e) {
-            e.printStackTrace();}
+        catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
+        }
     }
 }

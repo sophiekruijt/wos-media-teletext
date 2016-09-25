@@ -5,8 +5,11 @@ import nl.wos.teletext.util.ConfigurationLoader;
 import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestClient {
+    private static final Logger log = Logger.getLogger(String.valueOf(TestClient.class));
     private Properties properties = new ConfigurationLoader().getProperties();
 
     private String mockServerHost = properties.getProperty("mockServerHost");
@@ -17,7 +20,7 @@ public class TestClient {
     }
 
     public TestClient() {
-        System.out.println("TestClient started");
+        log.log(Level.INFO, "TestClient started");
 
         try (Socket sock = new Socket(mockServerHost, mockServerPort)) {
             OutputStream out = sock.getOutputStream();
@@ -36,8 +39,8 @@ public class TestClient {
             dataOutputStream.writeUTF("");
             dataOutputStream.close();
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 }

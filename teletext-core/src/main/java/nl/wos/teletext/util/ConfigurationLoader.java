@@ -1,10 +1,16 @@
 package nl.wos.teletext.util;
 
+import nl.wos.teletext.objects.PublicTransportModuleHelper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConfigurationLoader {
+    private static final Logger log = Logger.getLogger(ConfigurationLoader.class.getName());
+
     private String defaultConfigurationFile = "config.properties";
 
     public Properties getProperties() {
@@ -18,13 +24,13 @@ public class ConfigurationLoader {
         try {
             properties.load(input);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.log(Level.SEVERE, "Exception occured", ex);
         } finally {
             if (input != null) {
                 try {
                     input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    log.log(Level.SEVERE, "Exception occured", ex);
                 }
             }
         }

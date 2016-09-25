@@ -122,7 +122,6 @@ public class PublicTransportModule extends TeletextModule {
 
         } catch (Exception e) {
             log.severe(e.toString());
-            e.printStackTrace();
             return "";
         }
     }

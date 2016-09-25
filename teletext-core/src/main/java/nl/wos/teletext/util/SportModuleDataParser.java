@@ -15,6 +15,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SportModuleDataParser {
@@ -47,14 +48,14 @@ public class SportModuleDataParser {
                     String tekst1 = description.getFirstChild().getNodeValue();
                     String tekst2 = description.getFirstChild().getNextSibling().getNodeValue();
 
-                    System.out.println(tekst1);
-                    System.out.println(tekst2);
+                    log.info(tekst1);
+                    log.info(tekst2);
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            log.severe("Exception: " + e.toString());
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
         return sportPouleLijst;
     }

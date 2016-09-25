@@ -3,15 +3,16 @@ package nl.wos.teletext.entity;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Startup
 @Singleton
 public class PropertyManager {
-
+    private static final Logger log = Logger.getLogger(String.valueOf(PropertyManager.class));
     private Properties properties = new Properties();
 
     @PostConstruct
@@ -22,11 +23,12 @@ public class PropertyManager {
         if (inputStream != null) {
             try {
                 properties.load(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+            catch (IOException ex) {
+                log.log(Level.SEVERE, "Exception occured", ex);
             }
         } else {
-            System.out.println("Property file '" + propFileName + "' not found in the classpath");
+            log.info("Property file '" + propFileName + "' not found in the classpath");
         }
     }
 }
