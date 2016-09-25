@@ -16,12 +16,12 @@ public class ConfigurationParser {
     }
 
     public static void main(String[] args) {
-        ConfigurationParser.getInstance().parseConfiguration("[719.0000]hoihoi[719.0000]hoihoi");
+        ConfigurationParser.getInstance().parseConfiguration("[719.0000]hoihoi[719.*]hoihoi");
     }
 
     public List<TeletextCommand> parseConfiguration(String configuration) {
 
-        String pattern = "\\[.*\\].*";
+        String pattern = "\\[.{0,3}\\..{0,4}[^\\[]+";
 
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(configuration);
