@@ -1,6 +1,7 @@
 package nl.wos.teletext.core;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TeletextPage {
@@ -14,13 +15,12 @@ public class TeletextPage {
         return teletextSubPages;
     }
 
-
     /***
      * @param pageNumber
      * @return first subpage of teletext page
      */
     public TeletextPage (int pageNumber) {
-        log.info("New page created: " + pageNumber);
+        log.log(Level.INFO, "New page created: " + pageNumber);
         this.pageNumber = pageNumber;
         initializeFastText();
     }
@@ -35,37 +35,7 @@ public class TeletextPage {
         this.fastText = new FastText();
     }
 
-    private boolean finalizeTeletextPage() {
-        if (teletextPageReadyForBroadcast()) {
-            return true;
-        }
-        return false;
-    }
-
-    /***
-     * A teletextPage can only be broadcast when the layoutTemplate and fasttext buttons are set up.
-     * @return
-     */
-    private boolean teletextPageReadyForBroadcast() {
-        if (fastText == null) {
-            return false;
-        }
-
-        for (TeletextSubpage page : teletextSubPages) {
-            if (page.getLayoutTemplateFileName().isEmpty()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public String getConfigurationString() {
-        finalizeTeletextPage();
-        return generateTeletextCommandString();
-    }
-
-    public String generateTeletextCommandString() {
         String result = "[" + pageNumber + ".*]\n\n";
 
         for (TeletextSubpage page : teletextSubPages) {
@@ -98,5 +68,4 @@ public class TeletextPage {
     public int getSubpageNumber(TeletextSubpage s) {
         return teletextSubPages.indexOf(s);
     }
-
 }

@@ -88,7 +88,7 @@ public class TrainDeparture {
                 this.departureDelay = waarde;
                 break;
             case "wijziging":
-                this.changed = new Boolean(waarde).booleanValue();
+                this.changed = Boolean.valueOf(waarde);
                 break;
             default:
                 log.warning("Unknown property to set for TrainDeparture (" + property + ")");

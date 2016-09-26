@@ -79,6 +79,7 @@ public class ConfigurationParser {
                     break;
                 default:
                     log.warning("Unknown key ("+key+")in configuration file");
+                    break;
             }
         }
     }
