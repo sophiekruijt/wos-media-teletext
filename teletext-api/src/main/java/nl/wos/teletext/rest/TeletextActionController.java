@@ -42,9 +42,8 @@ public class TeletextActionController {
             case "weather":
                 //weatherModule.doTele();
                 return SUCCESS_RESULT;
-
+            default:
+                return FAILURE_RESULT;
         }
-
-        return FAILURE_RESULT;
     }
 }
