@@ -1,7 +1,5 @@
 package nl.wos.teletext.util;
 
-import nl.wos.teletext.objects.PublicTransportModuleHelper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

@@ -1,7 +1,6 @@
 package nl.wos.teletext.objects;
 
 import nl.wos.teletext.core.TeletextSubpage;
-import nl.wos.teletext.ejb.NewsModule;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

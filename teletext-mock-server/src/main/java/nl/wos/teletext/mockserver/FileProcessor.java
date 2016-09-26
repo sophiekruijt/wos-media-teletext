@@ -1,7 +1,5 @@
 package nl.wos.teletext.mockserver;
 
-import nl.wos.teletext.ejb.NewsModule;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
