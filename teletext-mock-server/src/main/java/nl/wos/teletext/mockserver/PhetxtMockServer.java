@@ -27,7 +27,7 @@ public class PhetxtMockServer {
         new PhetxtMockServer();
     }
 
-    public PhetxtMockServer() {
+    public PhetxtMockServer(int port) {
         log.log(Level.INFO, "Start Phetxt mock server on port: " + mockServerPort);
         Runnable serverTask = () -> {
             try {
@@ -61,6 +61,10 @@ public class PhetxtMockServer {
         };
         Thread dataRetrievalThread = new Thread(dataRetrievalTask);
         dataRetrievalThread.start();
+    }
+
+    public PhetxtMockServer() {
+        new PhetxtMockServer(mockServerPort);
     }
 
     private class SendPageTask implements Runnable {
