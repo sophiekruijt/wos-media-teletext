@@ -25,7 +25,9 @@ public class TestClient {
         try (Socket sock = new Socket(mockServerHost, mockServerPort)) {
             OutputStream out = sock.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(out);
-            dataOutputStream.writeInt(2);
+            dataOutputStream.writeInt(3);
+            dataOutputStream.writeUTF("text-719-0.txt");
+            dataOutputStream.writeUTF("Test content for page 719 \nsecond line on page 719");
             dataOutputStream.writeUTF("control.dat");
             dataOutputStream.writeUTF("[719.*]\n" +
                     "\n" +
@@ -37,6 +39,27 @@ public class TestClient {
                     "links=101 600 200 700");
             dataOutputStream.writeUTF("update.sem");
             dataOutputStream.writeUTF("");
+            dataOutputStream.close();
+        }
+        catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
+        }
+
+        // Connect to mock server to execute GetTeletextDataTask
+        try (Socket sock = new Socket(mockServerHost, mockServerPort+1)) {
+            OutputStream out = sock.getOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(out);
+            DataInputStream dataInputStream = new DataInputStream(sock.getInputStream());
+
+            dataOutputStream.writeInt(719);
+            dataOutputStream.writeInt(0);
+            dataOutputStream.writeInt(1);
+
+
+            String textLine = dataInputStream.readUTF();
+            log.log(Level.INFO, "Line: " + textLine);
+
+            dataInputStream.close();
             dataOutputStream.close();
         }
         catch (Exception ex) {
