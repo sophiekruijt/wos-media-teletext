@@ -63,9 +63,17 @@ public class MockServerSteps implements En {
 
                 String textLine = dataInputStream.readUTF();
                 assertThat(textLine, is("second line on page 719"));
+
             } catch (Exception e) {
                 fail(e.toString());
             }
+        });
+        And("^I wait (\\d+) seconds$", (Integer seconds) -> {
+            try {
+                Thread.sleep(seconds * 1000);
+            } catch (InterruptedException e) {
+                 fail(e.toString());
+            };
         });
     }
 }
