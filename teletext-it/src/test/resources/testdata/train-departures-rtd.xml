@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<ActueleVertrekTijden>
+
+    <VertrekkendeTrein>
+        <RitNummer>1418</RitNummer>
+        <VertrekTijd>2016-10-30T04:02:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Utrecht Centraal</EindBestemming>
+        <TreinSoort>Intercity</TreinSoort>
+
+        <RouteTekst>Den Haag HS, Schiphol Airport, Amsterdam CS</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">8</VertrekSpoor>
+
+
+        <Opmerkingen>
+
+
+            <Opmerking>
+                Rijdt via een andere route
+            </Opmerking>
+
+
+        </Opmerkingen>
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>1422</RitNummer>
+        <VertrekTijd>2016-10-30T05:02:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Utrecht Centraal</EindBestemming>
+        <TreinSoort>Intercity</TreinSoort>
+
+        <RouteTekst>Den Haag HS, Schiphol Airport, Amsterdam CS</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">8</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>5110</RitNummer>
+        <VertrekTijd>2016-10-30T05:47:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Den Haag Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+
+        <RouteTekst>Delft, Den Haag HS</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">8</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>981821</RitNummer>
+        <VertrekTijd>2016-10-30T05:50:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Dordrecht</EindBestemming>
+        <TreinSoort>Stopbus i.p.v. trein</TreinSoort>
+
+        <RouteTekst>Blaak, Rotterdam Zuid, Lombardijen</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false"></VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>1426</RitNummer>
+        <VertrekTijd>2016-10-30T06:02:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Amsterdam Centraal</EindBestemming>
+        <TreinSoort>Intercity</TreinSoort>
+
+        <RouteTekst>Delft, Den Haag HS, Schiphol Airport</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">9</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>5114</RitNummer>
+        <VertrekTijd>2016-10-30T06:47:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Den Haag Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+
+        <RouteTekst>Delft, Den Haag HS</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">8</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>12625</RitNummer>
+        <VertrekTijd>2016-10-30T06:52:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Groningen</EindBestemming>
+        <TreinSoort>Intercity</TreinSoort>
+
+        <RouteTekst>Schiedam C., Schiphol Airport, Amsterdam CS</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">9</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>4114</RitNummer>
+        <VertrekTijd>2016-10-30T07:02:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+
+        <RouteTekst>Maassluis</RouteTekst>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">1b</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>9212</RitNummer>
+        <VertrekTijd>2016-10-30T07:08:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Brussel-Zuid/Midi</EindBestemming>
+        <TreinSoort>Intercity</TreinSoort>
+
+        <RouteTekst>Dordrecht, Antwerpen-C., Brussels Airport</RouteTekst>
+
+
+        <Vervoerder>NS International</Vervoerder>
+
+        <VertrekSpoor wijziging="false">4</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+    <VertrekkendeTrein>
+        <RitNummer>15123</RitNummer>
+        <VertrekTijd>2016-10-30T07:15:00+0100</VertrekTijd>
+
+
+        <EindBestemming>Dordrecht</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+
+
+        <Vervoerder>NS</Vervoerder>
+
+        <VertrekSpoor wijziging="false">6</VertrekSpoor>
+
+
+    </VertrekkendeTrein>
+
+</ActueleVertrekTijden>

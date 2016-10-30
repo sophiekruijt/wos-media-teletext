@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActueleVertrekTijden>
+    <VertrekkendeTrein>
+        <RitNummer>4114</RitNummer>
+        <VertrekTijd>2016-10-30T07:22:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4116</RitNummer>
+        <VertrekTijd>2016-10-30T07:52:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4129</RitNummer>
+        <VertrekTijd>2016-10-30T08:06:00+0100</VertrekTijd>
+        <EindBestemming>Rotterdam Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">4</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4118</RitNummer>
+        <VertrekTijd>2016-10-30T08:22:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4131</RitNummer>
+        <VertrekTijd>2016-10-30T08:36:00+0100</VertrekTijd>
+        <EindBestemming>Rotterdam Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">4</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4120</RitNummer>
+        <VertrekTijd>2016-10-30T08:52:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4133</RitNummer>
+        <VertrekTijd>2016-10-30T09:06:00+0100</VertrekTijd>
+        <EindBestemming>Rotterdam Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">4</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4122</RitNummer>
+        <VertrekTijd>2016-10-30T09:22:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4135</RitNummer>
+        <VertrekTijd>2016-10-30T09:36:00+0100</VertrekTijd>
+        <EindBestemming>Rotterdam Centraal</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">4</VertrekSpoor>
+    </VertrekkendeTrein>
+    <VertrekkendeTrein>
+        <RitNummer>4124</RitNummer>
+        <VertrekTijd>2016-10-30T09:52:00+0100</VertrekTijd>
+        <EindBestemming>Hoek van Holland Haven</EindBestemming>
+        <TreinSoort>Sprinter</TreinSoort>
+        <Vervoerder>NS</Vervoerder>
+        <VertrekSpoor wijziging="false">3</VertrekSpoor>
+    </VertrekkendeTrein>
+</ActueleVertrekTijden>

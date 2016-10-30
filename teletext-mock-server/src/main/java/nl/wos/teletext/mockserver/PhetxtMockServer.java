@@ -27,14 +27,19 @@ public class PhetxtMockServer {
         new PhetxtMockServer();
     }
 
+    public PhetxtMockServer() {
+        new PhetxtMockServer(mockServerPort);
+    }
+
     public PhetxtMockServer(int port) {
-        log.log(Level.INFO, "Start Phetxt mock server on port: " + mockServerPort);
+        log.log(Level.INFO, "Start Phetxt mock server on port: " + port);
         Runnable serverTask = () -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(mockServerPort);
+                ServerSocket serverSocket = new ServerSocket(port);
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
+                    log.log(Level.INFO, "New SendPageTask");
                     clientProcessingPool1.submit(new SendPageTask(clientSocket));
                 }
             } catch (IOException ex) {
@@ -48,10 +53,11 @@ public class PhetxtMockServer {
 
         Runnable dataRetrievalTask= () -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(mockServerPort+1);
+                ServerSocket serverSocket = new ServerSocket(port+1);
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
+                    log.log(Level.INFO, "New dataRetrievalTast");
                     clientProcessingPool2.submit(new GetTeletextDataTask(clientSocket));
                 }
             } catch (IOException ex) {
@@ -61,10 +67,6 @@ public class PhetxtMockServer {
         };
         Thread dataRetrievalThread = new Thread(dataRetrievalTask);
         dataRetrievalThread.start();
-    }
-
-    public PhetxtMockServer() {
-        new PhetxtMockServer(mockServerPort);
     }
 
     private class SendPageTask implements Runnable {
@@ -83,7 +85,7 @@ public class PhetxtMockServer {
 
                 DataInputStream in = new DataInputStream(clientSocket.getInputStream());
                 int numberOfTextfilesToReceive = in.readInt();
-                log.log(Level.FINE, "Got a new client who's going to send " + numberOfTextfilesToReceive + " files.");
+                log.log(Level.INFO, "Got a new client who's going to send " + numberOfTextfilesToReceive + " files.");
 
                 for(int i=0; i<numberOfTextfilesToReceive; i++) {
                     String fileName = in.readUTF();
@@ -91,7 +93,7 @@ public class PhetxtMockServer {
 
                     fileProcessor.addFile(fileName, fileText);
 
-                    log.log(Level.FINE, "Received file: " + fileName);
+                    log.log(Level.INFO, "Received file: " + fileName);
                 }
 
                 List<TeletextPage> teletextPagesToBroadcast = fileProcessor.getTeletextPagesToBroadcast();
@@ -99,7 +101,6 @@ public class PhetxtMockServer {
 
                 clientSocket.close();
             } catch (Exception ex) {
-                log.log(Level.SEVERE, "Exception occured", ex);
             }
         }
     }
@@ -121,16 +122,24 @@ public class PhetxtMockServer {
                 int pageNumber = in.readInt();
                 int subPageNumber = in.readInt();
                 int lineNumber = in.readInt();
-                log.log(Level.FINE, "Got a new client who wants to know the content of page " + pageNumber);
 
-                String lineText = teletext.getTextLine(pageNumber, subPageNumber, lineNumber);
+                if(pageNumber == 999 && subPageNumber == 999 && lineNumber == 999) {
+                    log.log(Level.INFO, "Reset mock server");
+                    teletext.resetServer();
+                }
+                else {
+                    log.log(Level.FINE, "Got a new client who wants to know the content of page " + pageNumber);
 
-                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-                out.writeUTF(lineText);
-                out.close();
+                    String lineText = teletext.getTextLine(pageNumber, subPageNumber, lineNumber);
+
+                    DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+                    out.writeUTF(lineText);
+                    out.close();
+                }
+
                 clientSocket.close();
             } catch (Exception ex) {
-                log.log(Level.SEVERE, "Exception occured", ex);
+
             }
         }
     }

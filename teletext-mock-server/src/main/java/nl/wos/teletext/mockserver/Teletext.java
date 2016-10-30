@@ -49,4 +49,8 @@ public class Teletext {
 
         return "Error, no valid combination of pagenumber, subpageNumber and lineNumber";
     }
+
+    public void resetServer() {
+        teletextPages.clear();
+    }
 }

@@ -14,4 +14,8 @@ public abstract class TeletextModule {
     protected Properties properties = new ConfigurationLoader().getProperties();
 
     public abstract void doTeletextUpdate() throws Exception;
+
+    public void setTeletextConnector(PhecapConnector teletextConnector) {
+        this.phecapConnector = teletextConnector;
+    }
 }

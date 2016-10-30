@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Singleton
@@ -31,14 +32,41 @@ public class PublicTransportModule extends TeletextModule {
 
     @Inject private PropertyManager propertyManager;
     @Inject private TrainStationDao trainStationDao;
-    @Inject private PhecapConnector phecapConnector;
+
+    public void doTeletextUpdate(List<TrainStation> trainStations) {
+        log.info(this.getClass().getName() + " is going to update teletext.");
+    }
+
+    public List<TrainStation> getTrainStations() {
+        return trainStationDao.findAll();
+    }
 
     @Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
     public void doTeletextUpdate() {
         log.info(this.getClass().getName() + " is going to update teletext.");
-        List<TrainStation> trainStations = trainStationDao.findAll();
+        List<TrainStation> trainStations = getTrainStations();
 
-        Map<String, List<TrainDeparture>> trainDepartures = getTrainDepartureData(trainStations);
+        Map<String, List<TrainDeparture>> trainDepartures = new HashMap<>(trainStations.size());
+
+        for(TrainStation station : trainStations) {
+            try {
+                String stationData = doAPICallToWebservice(station.getCode());
+                Element root = XMLParser.XMLParser(stationData).getDocumentElement();
+                NodeList trainStationDepartureNodeList = root.getElementsByTagName("VertrekkendeTrein");
+
+                List stationDepartureList = new ArrayList<TrainDeparture>(trainStationDepartureNodeList.getLength());
+                for(int i=0; i<trainStationDepartureNodeList.getLength(); i++) {
+                    Node trainDeparture = trainStationDepartureNodeList.item(i);
+                    NodeList trainDeparturePropertiesNodeList = trainDeparture.getChildNodes();
+
+                    parseDeparture(stationDepartureList, trainDeparturePropertiesNodeList);
+                }
+                trainDepartures.put(station.getCode(), stationDepartureList);
+            } catch (Exception ex) {
+                log.log(Level.SEVERE, "Exception occured at train station " + station.getName(), ex);
+            }
+        }
+
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
         for(TrainStation station : trainStations) {
@@ -52,31 +80,6 @@ public class PublicTransportModule extends TeletextModule {
         }
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
-
-    }
-
-    private Map<String, List<TrainDeparture>> getTrainDepartureData(List<TrainStation> trainStations) {
-        Map<String, List<TrainDeparture>> trainDepartures = new HashMap<>(trainStations.size());
-
-        for(TrainStation station : trainStations) {
-            try {
-                Element root = XMLParser.XMLParser(getTrainDeparturesForTrainstation(station.getCode())).getDocumentElement();
-                NodeList trainStationDepartureNodeList = root.getElementsByTagName("VertrekkendeTrein");
-
-                List stationDepartureList = new ArrayList<TrainDeparture>(trainStationDepartureNodeList.getLength());
-                for(int i=0; i<trainStationDepartureNodeList.getLength(); i++) {
-                    Node trainDeparture = trainStationDepartureNodeList.item(i);
-                    NodeList trainDeparturePropertiesNodeList = trainDeparture.getChildNodes();
-
-                    parseDeparture(stationDepartureList, trainDeparturePropertiesNodeList);
-                }
-                trainDepartures.put(station.getCode(), stationDepartureList);
-            } catch (Exception e) {
-                log.severe(e.toString());
-                e.printStackTrace();
-            }
-        }
-        return trainDepartures;
     }
 
     private void parseDeparture(List stationDepartureList, NodeList trainDeparturePropertiesNodeList) {
@@ -105,11 +108,15 @@ public class PublicTransportModule extends TeletextModule {
         stationDepartureList.add(departure);
     }
 
+    public void setTrainStationDao(TrainStationDao trainStationDao) {
+        this.trainStationDao = trainStationDao;
+    }
+
     /***
      * @param stationIdentifier The code (abbreviation) or short, medium or full name or synonym for the trainstation name.
      * @return
      */
-    private String getTrainDeparturesForTrainstation(String stationIdentifier)
+    public String doAPICallToWebservice(String stationIdentifier)
     {
         try {
             BasicCredentialsProvider credentials = new BasicCredentialsProvider();
@@ -120,9 +127,9 @@ public class PublicTransportModule extends TeletextModule {
             String url = "http://webservices.ns.nl/ns-api-avt?station=" + stationIdentifier;
             return EntityUtils.toString(Web.doWebRequest(url, credentials), "UTF-8");
 
-        } catch (Exception e) {
-            log.severe(e.toString());
-            return "";
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, "Exception occured", ex);
         }
+        return "";
     }
 }

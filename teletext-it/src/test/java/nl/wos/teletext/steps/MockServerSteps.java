@@ -1,6 +1,5 @@
 package nl.wos.teletext.steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java8.En;
 
 import java.io.*;

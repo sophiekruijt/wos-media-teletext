@@ -27,7 +27,7 @@ public class PhecapConnector {
     private final FTPClient ftpClient = new FTPClient();
     private final Properties properties = new ConfigurationLoader().getProperties();
 
-    private final boolean debugMode = Boolean.parseBoolean(properties.getProperty("debugMode"));
+    private boolean debugMode = Boolean.parseBoolean(properties.getProperty("debugMode"));
     private final String teletextServerHost = properties.getProperty("teletextServerHost");
     private final String teletextServerUser = properties.getProperty("teletextServerUser");
     private final String teletextServerPassword = properties.getProperty("teletextServerPassword");
@@ -124,9 +124,8 @@ public class PhecapConnector {
         List<File> filesInFolder = Files.walk(folder).filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList());
 
         try (Socket sock = new Socket(mockServerHost, mockServerPort)) {
-            OutputStream out = sock.getOutputStream();
-            DataOutputStream dataOutputStream = new DataOutputStream(out);
-            dataOutputStream.writeInt(filesInFolder.size());
+            DataOutputStream dataOutputStream = new DataOutputStream(sock.getOutputStream());
+            dataOutputStream.writeInt(filesInFolder.size() + 1);
 
             filesInFolder.stream().filter(file -> !file.getName().equals("update.sem")).forEach(file -> {
                 try {
@@ -140,6 +139,8 @@ public class PhecapConnector {
                 }
 
             });
+            dataOutputStream.writeUTF("update.sem");
+            dataOutputStream.writeUTF("");
             dataOutputStream.close();
         }
         catch (Exception ex) {
