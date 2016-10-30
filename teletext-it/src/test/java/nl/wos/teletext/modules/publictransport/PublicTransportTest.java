@@ -6,8 +6,6 @@ import nl.wos.teletext.ejb.PublicTransportModule;
 import nl.wos.teletext.entity.TrainStation;
 import nl.wos.teletext.util.TextClient;
 
-import nl.wos.teletext.util.Web;
-import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public class PublicTransportTest {
     PublicTransportModule publicTransportModule;
 
     @Before
-    public void setUp() throws SQLException {
+    public void setUp() throws SQLException, IOException {
         publicTransportModule.setTeletextConnector(phecapConnector);
         publicTransportModule.setTrainStationDao(trainStationDao);
 
@@ -73,25 +70,18 @@ public class PublicTransportTest {
         assertThat(textClient.getTeletextLine(704, 0, 4), is("vertrekkende treinen"));
     }
 
-    private String getTestApiCallResult(String station) {
+    private String getTestData(String station) throws IOException {
         String fileName = "teletext-it/src/test/resources/testdata/train-departures-"+station+".xml";
         File file = new File(fileName);
         if(!file.exists()) {
             fileName =  "teletext-it/src/test/resources/testdata/train-departures-not-exists.xml";
         }
 
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-            return String.join("", lines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "error";
+        return String.join("", Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8));
     }
 
-    private TrainStation initializeMockData(String trainStation, String name, String pageNumber) {
-        when(publicTransportModule.doAPICallToWebservice(trainStation)).thenReturn(getTestApiCallResult(trainStation));
+    private TrainStation initializeMockData(String trainStation, String name, String pageNumber) throws IOException {
+        when(publicTransportModule.doAPICallToWebservice(trainStation)).thenReturn(getTestData(trainStation));
         return new TrainStation(trainStation, name, Short.parseShort(pageNumber), true);
     }
 }
