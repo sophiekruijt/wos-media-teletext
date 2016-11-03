@@ -1,4 +1,4 @@
-package nl.wos.teletext.modules.publictransport;
+package nl.wos.teletext.modules;
 
 import nl.wos.teletext.dao.TrainStationDao;
 import nl.wos.teletext.ejb.PhecapConnector;
@@ -16,6 +16,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,7 +44,7 @@ public class PublicTransportTest {
     PublicTransportModule publicTransportModule;
 
     @Before
-    public void setUp() throws SQLException, IOException {
+    public void setUp() throws SQLException, IOException, URISyntaxException {
         publicTransportModule.setTeletextConnector(phecapConnector);
         publicTransportModule.setTrainStationDao(trainStationDao);
 
@@ -70,17 +72,16 @@ public class PublicTransportTest {
         assertThat(textClient.getTeletextLine(704, 0, 4), is("vertrekkende treinen"));
     }
 
-    private String getTestData(String station) throws IOException {
-        String fileName = "teletext-it/src/test/resources/testdata/train-departures-"+station+".xml";
-        File file = new File(fileName);
-        if(!file.exists()) {
-            fileName =  "teletext-it/src/test/resources/testdata/train-departures-not-exists.xml";
+    private String getTestData(String station) throws IOException, URISyntaxException {
+        URL u = getClass().getResource("/train-departures-"+station+".xml");
+        if(u == null) {
+            u = getClass().getResource("/train-departures-not-exists.xml");
         }
 
-        return String.join("", Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8));
+        return String.join("", Files.readAllLines(Paths.get(u.toURI()), StandardCharsets.UTF_8));
     }
 
-    private TrainStation initializeMockData(String trainStation, String name, String pageNumber) throws IOException {
+    private TrainStation initializeMockData(String trainStation, String name, String pageNumber) throws IOException, URISyntaxException{
         when(publicTransportModule.doAPICallToWebservice(trainStation)).thenReturn(getTestData(trainStation));
         return new TrainStation(trainStation, name, Short.parseShort(pageNumber), true);
     }

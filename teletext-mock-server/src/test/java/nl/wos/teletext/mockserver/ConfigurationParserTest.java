@@ -1,6 +1,8 @@
 package nl.wos.teletext.mockserver;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -8,7 +10,7 @@ import static java.util.Optional.empty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class ConfigurationParserTest {
     @Test
     public void parseConfiguration() throws Exception {
