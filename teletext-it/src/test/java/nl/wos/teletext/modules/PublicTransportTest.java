@@ -72,6 +72,19 @@ public class PublicTransportTest {
         assertThat(textClient.getTeletextLine(704, 0, 4), is("vertrekkende treinen"));
     }
 
+    @Test
+    public void ResetMockServerTest() throws Exception {
+        publicTransportModule.doTeletextUpdate();
+
+        verify(publicTransportModule, times(1)).doTeletextUpdate();
+        verify(phecapConnector, times(1)).uploadFilesToTeletextServer(any());
+        Thread.sleep(1000);
+        assertThat(textClient.getTeletextLine(701, 0, 0), is("\u0002MAASSLUIS"));
+        textClient.resetServer();
+        Thread.sleep(1000);
+        assertThat(textClient.getTeletextLine(701, 0, 0), is("Error, mock server doens't contain page with pagenumber: 701"));
+    }
+
     private String getTestData(String station) throws IOException, URISyntaxException {
         URL u = getClass().getResource("/train-departures-"+station+".xml");
         if(u == null) {
