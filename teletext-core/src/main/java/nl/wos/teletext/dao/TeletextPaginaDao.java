@@ -1,12 +1,12 @@
 package nl.wos.teletext.dao;
 
 import nl.wos.teletext.entity.TeletextPage;
+import org.springframework.stereotype.Component;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
-@Stateless
-public class TeletextPaginaDao extends BaseDao<TeletextPage, Integer> {
+@Component
+public class TeletextPaginaDao extends BaseDaoOld<TeletextPage, Integer> {
     public TeletextPage findPagina(int pagina) {
         EntityManager em = super.getEntityManager();
         return (TeletextPage) em.createQuery(

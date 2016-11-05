@@ -3,6 +3,7 @@ package nl.wos.teletext.modules;
 import nl.wos.teletext.dao.TrainStationDao;
 import nl.wos.teletext.ejb.PhecapConnector;
 import nl.wos.teletext.ejb.PublicTransportModule;
+import nl.wos.teletext.entity.PropertyManager;
 import nl.wos.teletext.entity.TrainStation;
 import nl.wos.teletext.util.TextClient;
 
@@ -34,19 +35,17 @@ public class PublicTransportTest {
 
     TextClient textClient = new TextClient();
 
-    @Mock
-    TrainStationDao trainStationDao;
+    @Mock TrainStationDao trainStationDao;
 
-    @Spy
-    PhecapConnector phecapConnector;
-
-    @Spy
-    PublicTransportModule publicTransportModule;
+    @Spy PhecapConnector phecapConnector;
+    @Spy PropertyManager propertyManager;
+    @Spy PublicTransportModule publicTransportModule;
 
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
         publicTransportModule.setTeletextConnector(phecapConnector);
         publicTransportModule.setTrainStationDao(trainStationDao);
+        publicTransportModule.setPropertyManager(propertyManager);
 
         List<TrainStation> trainstationMockList= new ArrayList();
         trainstationMockList.add(initializeMockData("mss", "Maassluis", "701"));
@@ -96,6 +95,6 @@ public class PublicTransportTest {
 
     private TrainStation initializeMockData(String trainStation, String name, String pageNumber) throws IOException, URISyntaxException{
         when(publicTransportModule.doAPICallToWebservice(trainStation)).thenReturn(getTestData(trainStation));
-        return new TrainStation(trainStation, name, Short.parseShort(pageNumber), true);
+        return new TrainStation(trainStation, name, Integer.parseInt(pageNumber), true);
     }
 }

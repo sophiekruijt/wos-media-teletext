@@ -2,14 +2,14 @@ package nl.wos.teletext.ejb;
 
 import nl.wos.teletext.entity.PropertyManager;
 import nl.wos.teletext.util.ConfigurationLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.util.Properties;
 
 public abstract class TeletextModule {
 
-    @Inject protected PropertyManager propertyManager;
-    @Inject protected PhecapConnector phecapConnector;
+    @Autowired protected PropertyManager propertyManager;
+    @Autowired protected PhecapConnector phecapConnector;
 
     protected Properties properties = new ConfigurationLoader().getProperties();
 
@@ -17,5 +17,9 @@ public abstract class TeletextModule {
 
     public void setTeletextConnector(PhecapConnector teletextConnector) {
         this.phecapConnector = teletextConnector;
+    }
+
+    public void setPropertyManager(PropertyManager propertyManager) {
+        this.propertyManager = propertyManager;
     }
 }

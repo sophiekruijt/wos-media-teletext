@@ -1,8 +1,5 @@
 package nl.wos.teletext.ejb;
 
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -19,8 +16,9 @@ import nl.wos.teletext.util.ConfigurationLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.stereotype.Component;
 
-@Singleton
+@Component
 public class PhecapConnector {
     private static final Logger log = Logger.getLogger(PhecapConnector.class.getName());
 
@@ -37,7 +35,7 @@ public class PhecapConnector {
     private String mockServerHost = properties.getProperty("mockServerHost");
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
 
-    @Lock(LockType.WRITE)
+    //@Lock(LockType.WRITE)
     public void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
         // Accidental upload to production is also prevented by the need to have an active VPN connection to production.

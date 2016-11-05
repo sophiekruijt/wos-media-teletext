@@ -10,14 +10,14 @@ import nl.wos.teletext.entity.Items;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -30,12 +30,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Singleton
+@Component
 public class NewsModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
 
-    @Inject private TeletextPaginaDao teletextPaginaDao;
-    @Inject private ItemsDao itemDao;
+    @Autowired private TeletextPaginaDao teletextPaginaDao;
+    @Autowired private ItemsDao itemDao;
 
     private final int pageNumberLatestNews = Integer.parseInt(properties.getProperty("PAGENUMBER_LAATSTE_NIEUWS"));
     private final int pageNumberNews = Integer.parseInt(properties.getProperty("PAGENUMBER_NIEUWS_OVERZICHT"));
@@ -45,7 +45,8 @@ public class NewsModule extends TeletextModule {
     private int newsPageNumberCounter = 0;
     private int sportPageNumberCounter = 0;
 
-    @Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
+    @Scheduled(fixedRate = 5000)
+    //@Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
     public void doTeletextUpdate() {
         log.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;

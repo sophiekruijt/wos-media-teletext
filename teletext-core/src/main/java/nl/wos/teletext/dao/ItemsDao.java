@@ -1,12 +1,12 @@
 package nl.wos.teletext.dao;
 
 import nl.wos.teletext.entity.Items;
+import org.springframework.stereotype.Component;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
-@Stateless
-public class ItemsDao extends BaseDao<Items, String> {
+@Component
+public class ItemsDao extends BaseDaoOld<Items, String> {
     public Items findById(String id) {
         EntityManager em = super.getEntityManager();
         return (Items) em.createQuery(

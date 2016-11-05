@@ -1,9 +1,8 @@
 package nl.wos.teletext.dao;
 
 import nl.wos.teletext.entity.SportPoule;
+import org.springframework.stereotype.Component;
 
-import javax.ejb.Stateless;
-
-@Stateless
-public class SportPouleDao extends BaseDao<SportPoule, Integer> {
+@Component
+public class SportPouleDao extends BaseDaoOld<SportPoule, Integer> {
 }

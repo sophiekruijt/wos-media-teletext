@@ -1,38 +1,41 @@
 package nl.wos.teletext.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "bericht")
-public class Bericht extends BaseEntity<String>{
-
-    @Id
-    @Column(name = "bericht")
-    private int bericht;
-    @Column(name = "teletekstPagina")
-    private int teletekstPagina;
-    @Column(name = "titel")
+public class Bericht {
+    private Integer bericht;
+    private Integer teletekstPagina;
     private String titel;
-    @Column(name = "tekst")
     private String tekst;
 
-    public Bericht() {
-
-    }
-
-    public Bericht(int bericht, int teletekstPage, String titel, String tekst) {
+    public Bericht(Integer bericht, Integer teletekstPage, String titel, String tekst) {
+        super();
         this.bericht = bericht;
         this.teletekstPagina = teletekstPage;
         this.titel = titel;
         this.tekst = tekst;
     }
 
-    @Override
-    protected String getPrimaryKey() {
-        return Integer.toString(bericht);
+    public Integer getBericht() {
+        return bericht;
+    }
+
+    public void setBericht(Integer bericht) {
+        this.bericht = bericht;
+    }
+
+    public Integer getTeletekstPagina() {
+        return teletekstPagina;
+    }
+
+    public void setTeletekstPagina(Integer teletekstPagina) {
+        this.teletekstPagina = teletekstPagina;
+    }
+
+    public String getTitel() {
+        return titel;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
     }
 
     public String getTekst() {
@@ -43,27 +46,13 @@ public class Bericht extends BaseEntity<String>{
         this.tekst = tekst;
     }
 
-    public int getBericht() {
-        return bericht;
-    }
-
-    public void setBericht(int bericht) {
-        this.bericht = bericht;
-    }
-
-    public int getTeletekstPagina() {
-        return teletekstPagina;
-    }
-
-    public void setTeletekstPagina(int teletekstPagina) {
-        this.teletekstPagina = teletekstPagina;
-    }
-
-    public String getTitel() {
-        return titel;
-    }
-
-    public void setTitel(String titel) {
-        this.titel = titel;
+    @Override
+    public String toString() {
+        return "Bericht{" +
+                "bericht=" + bericht +
+                ", teletekstPagina=" + teletekstPagina +
+                ", titel='" + titel + '\'' +
+                ", tekst='" + tekst + '\'' +
+                '}';
     }
 }

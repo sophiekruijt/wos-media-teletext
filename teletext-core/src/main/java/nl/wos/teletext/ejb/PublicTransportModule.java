@@ -8,40 +8,31 @@ import nl.wos.teletext.entity.PropertyManager;
 import nl.wos.teletext.entity.TrainStation;
 import nl.wos.teletext.objects.PublicTransportModuleHelper;
 import nl.wos.teletext.objects.TrainDeparture;
+import nl.wos.teletext.util.ConfigurationLoader;
 import nl.wos.teletext.util.Web;
 import nl.wos.teletext.util.XMLParser;
 import org.apache.http.auth.*;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.ejb.*;
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Singleton
+@Component
 public class PublicTransportModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(PublicTransportModule.class.getName());
 
-    @Inject private PropertyManager propertyManager;
-    @Inject private TrainStationDao trainStationDao;
+    @Autowired private TrainStationDao trainStationDao;
 
-    public void doTeletextUpdate(List<TrainStation> trainStations) {
-        log.info(this.getClass().getName() + " is going to update teletext.");
-    }
-
-    public List<TrainStation> getTrainStations() {
-        return trainStationDao.findAll();
-    }
-
-    @Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
+    @Scheduled(fixedRate = 10)
+    //@Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
     public void doTeletextUpdate() {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = getTrainStations();
@@ -80,6 +71,10 @@ public class PublicTransportModule extends TeletextModule {
         }
         updatePackage.generateTextFiles();
         phecapConnector.uploadFilesToTeletextServer(updatePackage);
+    }
+
+    public List<TrainStation> getTrainStations() {
+        return null;
     }
 
     private void parseDeparture(List stationDepartureList, NodeList trainDeparturePropertiesNodeList) {

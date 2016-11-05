@@ -12,6 +12,7 @@
         <module>teletext-api</module>
         <module>teletext-mock-server</module>
         <module>teletext-it</module>
+        <module>teletext-application</module>
     </modules>
     <packaging>pom</packaging>
     <name>WOS Media : Teletext</name>
@@ -35,6 +36,7 @@
             <modules>
                 <module>teletext-core</module>
                 <module>teletext-api</module>
+                <module>teletext-application</module>
             </modules>
         </profile>
         <profile>
@@ -42,6 +44,7 @@
             <modules>
                 <module>teletext-core</module>
                 <module>teletext-api</module>
+                <module>teletext-application</module>
                 <module>teletext-mock-server</module>
                 <module>teletext-it</module>
             </modules>

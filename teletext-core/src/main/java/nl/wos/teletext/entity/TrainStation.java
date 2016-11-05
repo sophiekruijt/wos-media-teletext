@@ -1,69 +1,41 @@
 package nl.wos.teletext.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "train_station")
-public class TrainStation extends BaseEntity<String>{
-
-    @Id
-    @Column
+public class TrainStation {
     private String code;
-    @Column
     private String name;
-    @Column
-    private int teletextPageNumber;
-    @Column
-    private boolean broadcastOnTeletext;
+    private Integer teletextPageNumber;
+    private Boolean broadcastOnTeletext;
 
-    public TrainStation() {
-
-    }
-
-    public TrainStation(String code, String name, short teletextPageNumber, boolean broadcastOnTeletext) {
+    public TrainStation(String code, String name, Integer teletextPageNumber, Boolean broadcastOnTeletext) {
         this.code = code;
         this.name = name;
         this.teletextPageNumber = teletextPageNumber;
         this.broadcastOnTeletext = broadcastOnTeletext;
     }
 
-    @Override
-    protected String getPrimaryKey() {
-        return code;
-    }
-
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String fullName) {
-        this.name = fullName;
-    }
-
-    public int getTeletextPageNumber() {
+    public Integer getTeletextPageNumber() {
         return teletextPageNumber;
     }
 
-    public void setTeletextPageNumber(short teletextPage) {
-        this.teletextPageNumber = teletextPage;
-    }
-
-    public boolean isBroadcastOnTeletext() {
+    public Boolean isBroadcastOnTeletext() {
         return broadcastOnTeletext;
     }
 
-    public void setBroadcastOnTeletext(boolean enabled) {
-        this.broadcastOnTeletext = enabled;
+    @Override
+    public String toString() {
+        return "TrainStation{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", teletextPageNumber=" + teletextPageNumber +
+                ", broadcastOnTeletext=" + broadcastOnTeletext +
+                '}';
     }
 }

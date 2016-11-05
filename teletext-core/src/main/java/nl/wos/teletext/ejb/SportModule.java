@@ -6,25 +6,26 @@ import nl.wos.teletext.entity.SportPoule;
 import nl.wos.teletext.util.SportModuleDataParser;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.inject.Inject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Singleton
+@Component
 public class SportModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(SportModule.class.getName());
 
-    @Inject private PropertyManager propertyManager;
-    @Inject private PhecapConnector phecapConnector;
-    @Inject private SportPouleDao sportPouleDao;
+    @Autowired private PropertyManager propertyManager;
+    @Autowired private PhecapConnector phecapConnector;
+    @Autowired private SportPouleDao sportPouleDao;
 
     private SportModuleDataParser parser = new SportModuleDataParser();
 
-    @Schedule(minute="*",hour="*/100", persistent=false)
+    @Scheduled(fixedRate = 5000)
+    //@Schedule(minute="*",hour="*/100", persistent=false)
     public void doTeletextUpdate() {
         log.info("Sport module is going to update teletext.");
 
