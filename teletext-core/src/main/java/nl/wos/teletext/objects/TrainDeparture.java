@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 public class TrainDeparture {
@@ -64,7 +65,9 @@ public class TrainDeparture {
                 break;
             case "VertrekTijd":
                 try {
-                    this.departureTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(waarde);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+                    this.departureTime = dateFormat.parse(waarde);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

@@ -4,6 +4,7 @@ import nl.wos.teletext.core.TeletextSubpage;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ public class PublicTransportModuleHelper
                 }
 
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
                 String departureTime = format.format(d.getDepartureTime());
                 String departureDelay = (!d.getDepartureDelay().isEmpty()) ? "\u0001" + d.getDepartureDelay().trim() : "";
                 String destination = d.getFinalDestination();

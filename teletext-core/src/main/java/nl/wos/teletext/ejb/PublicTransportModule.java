@@ -31,7 +31,7 @@ public class PublicTransportModule extends TeletextModule {
 
     @Autowired private TrainStationDao trainStationDao;
 
-    @Scheduled(fixedRate = 10)
+    @Scheduled(fixedRate = 300000)
     //@Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
     public void doTeletextUpdate() {
         log.info(this.getClass().getName() + " is going to update teletext.");
@@ -74,7 +74,7 @@ public class PublicTransportModule extends TeletextModule {
     }
 
     public List<TrainStation> getTrainStations() {
-        return null;
+        return trainStationDao.getAllTrainStations();
     }
 
     private void parseDeparture(List stationDepartureList, NodeList trainDeparturePropertiesNodeList) {

@@ -45,7 +45,7 @@ public class NewsModule extends TeletextModule {
     private int newsPageNumberCounter = 0;
     private int sportPageNumberCounter = 0;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 600000)
     //@Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
     public void doTeletextUpdate() {
         log.info("News module is going to update teletext.");

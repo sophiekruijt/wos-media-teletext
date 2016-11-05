@@ -24,7 +24,7 @@ public class SportModule extends TeletextModule {
 
     private SportModuleDataParser parser = new SportModuleDataParser();
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3600000)
     //@Schedule(minute="*",hour="*/100", persistent=false)
     public void doTeletextUpdate() {
         log.info("Sport module is going to update teletext.");
