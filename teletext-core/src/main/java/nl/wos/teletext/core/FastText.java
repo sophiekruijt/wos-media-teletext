@@ -1,16 +1,12 @@
 package nl.wos.teletext.core;
 
+import nl.wos.teletext.entity.PropertyManager;
+
+import java.util.Properties;
+
 public class FastText {
 
-    private static final String defaultRedButtonText = "Nieuws";
-    private static final String defaultGreenButtonText = "Sport";
-    private static final String defaultYellowButtonText = "TV";
-    private static final String defaultBlueButtonText = "Weer";
-
-    private static final int defaultRedButtonLink = 101;
-    private static final int defaultGreenButtonLink = 600;
-    private static final int defaultYellowButtonLink = 200;
-    private static final int defaultBlueButtonLink = 700;
+    private Properties properties = PropertyManager.getProperties();
 
     private String redButtonText;
     private int redButtonLink;
@@ -25,14 +21,14 @@ public class FastText {
     private int blueButtonLink;
 
     public FastText() {
-        this.redButtonText = defaultRedButtonText;
-        this.redButtonLink = defaultRedButtonLink;
-        this.greenButtonText = defaultGreenButtonText;
-        this.greenButtonLink = defaultGreenButtonLink;
-        this.yellowButtonText = defaultYellowButtonText;
-        this.yellowButtonLink = defaultYellowButtonLink;
-        this.blueButtonText = defaultBlueButtonText;
-        this.blueButtonLink = defaultBlueButtonLink;
+        this.redButtonText = properties.getProperty("defaultRedButtonText");
+        this.redButtonLink = Integer.parseInt(properties.getProperty("defaultRedButtonLink"));
+        this.greenButtonText = properties.getProperty("defaultGreenButtonText");
+        this.greenButtonLink = Integer.parseInt(properties.getProperty("defaultGreenButtonLink"));
+        this.yellowButtonText = properties.getProperty("defaultYellowButtonText");
+        this.yellowButtonLink = Integer.parseInt(properties.getProperty("defaultYellowButtonLink"));
+        this.blueButtonText = properties.getProperty("defaultBlueButtonText");
+        this.blueButtonLink = Integer.parseInt(properties.getProperty("defaultBlueButtonLink"));
     }
 
     public int getBlueButtonLink() {

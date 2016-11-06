@@ -2,7 +2,6 @@ package nl.wos.teletext.entity;
 
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -13,15 +12,15 @@ import java.util.logging.Logger;
 public class PropertyManager {
     private static final Logger log = Logger.getLogger(String.valueOf(PropertyManager.class));
 
-    private String defaultConfigurationFile = "config.properties";
+    private static String defaultConfigurationFile = "config.properties";
 
-    public Properties getProperties() {
+    public static Properties getProperties() {
         return getProperties(defaultConfigurationFile);
     }
 
-    public Properties getProperties(String configurationFileName) {
+    public static Properties getProperties(String configurationFileName) {
         Properties properties = new java.util.Properties();
-        InputStream input = getClass().getClassLoader().getResourceAsStream(configurationFileName);
+        InputStream input = new PropertyManager().getClass().getClassLoader().getResourceAsStream(configurationFileName);
 
         try {
             properties.load(input);

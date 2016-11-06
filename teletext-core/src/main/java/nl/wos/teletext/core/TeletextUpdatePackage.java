@@ -1,10 +1,11 @@
 package nl.wos.teletext.core;
 
-import nl.wos.teletext.util.ConfigurationLoader;
+import nl.wos.teletext.entity.PropertyManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 public class TeletextUpdatePackage {
 
     private static int teletextUpdatePackageId = 1;
-    protected Properties properties = new ConfigurationLoader().getProperties();
+    protected Properties properties = new PropertyManager().getProperties();
 
     private final String dataDirectory = properties.getProperty("dataDirectory");
 
@@ -84,7 +85,7 @@ public class TeletextUpdatePackage {
         try {
             File file = new File(folderName + textFileName);
             file.createNewFile();
-            FileUtils.writeStringToFile(file, page.getPageText());
+            FileUtils.writeStringToFile(file, page.getPageText(), Charset.defaultCharset());
 
         } catch (IOException e) {
             log.severe(e.toString());
@@ -97,7 +98,7 @@ public class TeletextUpdatePackage {
         try {
             File file = new File(folderName + "control.dat");
             file.createNewFile();
-            FileUtils.writeStringToFile(file, teletextConfiguration.toString());
+            FileUtils.writeStringToFile(file, teletextConfiguration.toString(), Charset.defaultCharset());
         } catch (Exception e) {
             log.severe(e.toString());
             e.printStackTrace();

@@ -60,7 +60,7 @@ public class WeatherForecast {
         return maxMmRain;
     }
 
-    public void setMaxmmRain(String maxmmRain) {
+    public void setMaxMmRain(String maxmmRain) {
         this.maxMmRain = maxmmRain;
     }
 

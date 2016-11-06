@@ -4,11 +4,9 @@ import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
 import nl.wos.teletext.dao.TrainStationDao;
-import nl.wos.teletext.entity.PropertyManager;
 import nl.wos.teletext.entity.TrainStation;
 import nl.wos.teletext.objects.PublicTransportModuleHelper;
 import nl.wos.teletext.objects.TrainDeparture;
-import nl.wos.teletext.util.ConfigurationLoader;
 import nl.wos.teletext.util.Web;
 import nl.wos.teletext.util.XMLParser;
 import org.apache.http.auth.*;
@@ -31,8 +29,7 @@ public class PublicTransportModule extends TeletextModule {
 
     @Autowired private TrainStationDao trainStationDao;
 
-    @Scheduled(fixedRate = 300000)
-    //@Schedule(minute="4,9,14,19,24,29,34,39,44,49,54,59", hour="*", persistent=false)
+    @Scheduled(fixedRate = 300000, initialDelay = 300000)
     public void doTeletextUpdate() {
         log.info(this.getClass().getName() + " is going to update teletext.");
         List<TrainStation> trainStations = getTrainStations();

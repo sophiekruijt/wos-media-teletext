@@ -4,9 +4,9 @@ import nl.wos.teletext.core.RSSItem;
 import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
-import nl.wos.teletext.dao.ItemsDao;
+import nl.wos.teletext.dao.ItemDao;
 import nl.wos.teletext.dao.TeletextPaginaDao;
-import nl.wos.teletext.entity.Items;
+import nl.wos.teletext.entity.Item;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;
@@ -24,9 +24,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +32,7 @@ import java.util.logging.Logger;
 public class NewsModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(NewsModule.class.getName());
 
-    @Autowired private TeletextPaginaDao teletextPaginaDao;
-    @Autowired private ItemsDao itemDao;
+    @Autowired private ItemDao itemDao;
 
     private final int pageNumberLatestNews = Integer.parseInt(properties.getProperty("PAGENUMBER_LAATSTE_NIEUWS"));
     private final int pageNumberNews = Integer.parseInt(properties.getProperty("PAGENUMBER_NIEUWS_OVERZICHT"));
@@ -45,8 +42,7 @@ public class NewsModule extends TeletextModule {
     private int newsPageNumberCounter = 0;
     private int sportPageNumberCounter = 0;
 
-    @Scheduled(fixedRate = 600000)
-    //@Schedule(second="0,10,20,30,40,50", hour="*", persistent=false)
+    @Scheduled(fixedRate = 600000, initialDelay = 600000)
     public void doTeletextUpdate() {
         log.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;
@@ -64,10 +60,15 @@ public class NewsModule extends TeletextModule {
             updateNieuwsOverzicht(updatePackage, newsData);
             updateLaatsteNieuwsOverzicht(updatePackage, newsData);
 
-            Items p648 = itemDao.findById("item001");
-            Items p649 = itemDao.findById("item002");
-            Items p656 = itemDao.findById("item003");
-            Items p657 = itemDao.findById("item004");
+            Map<String, Item> items = new HashMap<>();
+            for(Item item : itemDao.getAllItems()) {
+                items.put(item.getId(), item);
+            }
+
+            Item p648 = items.get("item001");
+            Item p649 = items.get("item002");
+            Item p656 = items.get("item003");
+            Item p657 = items.get("item004");
 
             publiceerSportOverzicht(newsData, updatePackage, p648, p649, p656, p657);
             publiceerExtraSportPaginas(Arrays.asList(p648, p649, p656, p657), updatePackage);
@@ -80,7 +81,7 @@ public class NewsModule extends TeletextModule {
         }
     }
 
-    private void publiceerExtraSportPaginas(List<Items> items, TeletextUpdatePackage updatePackage) {
+    private void publiceerExtraSportPaginas(List<Item> items, TeletextUpdatePackage updatePackage) {
         updatePackage.addRemovePagesTask(648, 649);
         updatePackage.addRemovePagesTask(656, 657);
 
@@ -90,9 +91,9 @@ public class NewsModule extends TeletextModule {
         publiceerExtraSportPagina(items.get(3), 657, updatePackage);
     }
 
-    private void publiceerExtraSportPagina(Items item, int pageNumber, TeletextUpdatePackage updatePackage) {
-        String titel = item.getPublicationTitle();
-        String[] subpageTexts = item.getPublicationText().split("#NEWSUBPAGE#");
+    private void publiceerExtraSportPagina(Item item, int pageNumber, TeletextUpdatePackage updatePackage) {
+        String titel = item.getTitle();
+        String[] subpageTexts = item.getText().split("#NEWSUBPAGE#");
 
         TeletextPage teletextPage = new TeletextPage(pageNumber);
         for (int i=0; i<subpageTexts.length; i++)
@@ -170,7 +171,7 @@ public class NewsModule extends TeletextModule {
         }
     }
 
-    public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage, Items i1, Items i2, Items i3, Items i4) {
+    public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage, Item i1, Item i2, Item i3, Item i4) {
 
         RSSItem[] sportItems = items.stream().filter(b -> b.getCategory().equals("sport")).toArray(RSSItem[]::new);
 
@@ -178,8 +179,8 @@ public class NewsModule extends TeletextModule {
         TeletextSubpage subPage = page.addNewSubpage();
         subPage.setLayoutTemplateFileName("template-sportoverzicht.tpg");
         subPage.setTextOnLine(0, "\u0003Uitslagen amateurvoetbal");
-        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getPublicationTitle()) + "\u0003" + 648);
-        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getPublicationTitle()) + "\u0003" + 649);
+        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getTitle()) + "\u0003" + 648);
+        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getTitle()) + "\u0003" + 649);
         subPage.setTextOnLine(4, "\u0003Sportnieuws");
         int row = 5;
         for(int i=0; i < sportItems.length; i++) {
@@ -191,8 +192,8 @@ public class NewsModule extends TeletextModule {
         }
 
         subPage.setTextOnLine(12, "\u0003Inhoud WOS Sport radio 87.6 FM");
-        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getPublicationTitle()) + "\u0003" + 656);
-        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getPublicationTitle()) + "\u0003" + 657);
+        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getTitle()) + "\u0003" + 656);
+        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getTitle()) + "\u0003" + 657);
 
         updatePackage.addTeletextPage(page);
     }

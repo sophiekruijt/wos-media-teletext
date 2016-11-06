@@ -32,7 +32,7 @@ public class PublicTransportModuleHelper
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                 format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
                 String departureTime = format.format(d.getDepartureTime());
-                String departureDelay = (!d.getDepartureDelay().isEmpty()) ? "\u0001" + d.getDepartureDelay().trim() : "";
+                String departureDelay = (!d.getDepartureDelayText().isEmpty()) ? "\u0001" + d.getDepartureDelayText().trim() : "";
                 String destination = d.getFinalDestination();
                 String opmerking = "";
                 //for(int j=0; j<departures.get(i).getRouteText().length(); j++)

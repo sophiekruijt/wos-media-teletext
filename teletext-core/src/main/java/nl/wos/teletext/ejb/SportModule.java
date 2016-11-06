@@ -18,13 +18,11 @@ import java.util.logging.Logger;
 public class SportModule extends TeletextModule {
     private static final Logger log = Logger.getLogger(SportModule.class.getName());
 
-    @Autowired private PropertyManager propertyManager;
-    @Autowired private PhecapConnector phecapConnector;
     @Autowired private SportPouleDao sportPouleDao;
 
     private SportModuleDataParser parser = new SportModuleDataParser();
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 3600000, initialDelay = 3600000)
     //@Schedule(minute="*",hour="*/100", persistent=false)
     public void doTeletextUpdate() {
         log.info("Sport module is going to update teletext.");

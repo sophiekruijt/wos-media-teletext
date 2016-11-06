@@ -12,18 +12,20 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import nl.wos.teletext.core.TeletextUpdatePackage;
-import nl.wos.teletext.util.ConfigurationLoader;
+import nl.wos.teletext.entity.PropertyManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PhecapConnector {
     private static final Logger log = Logger.getLogger(PhecapConnector.class.getName());
 
+    private final Properties properties = PropertyManager.getProperties();
+
     private final FTPClient ftpClient = new FTPClient();
-    private final Properties properties = new ConfigurationLoader().getProperties();
 
     private boolean debugMode = Boolean.parseBoolean(properties.getProperty("debugMode"));
     private final String teletextServerHost = properties.getProperty("teletextServerHost");

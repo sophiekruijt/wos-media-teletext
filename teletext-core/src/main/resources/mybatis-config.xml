@@ -6,6 +6,7 @@
     <typeAliases>
         <typeAlias type='nl.wos.teletext.entity.Bericht' alias='Bericht'></typeAlias>
         <typeAlias type='nl.wos.teletext.entity.TrainStation' alias='TrainStation'></typeAlias>
+        <typeAlias type='nl.wos.teletext.entity.Item' alias='Item'></typeAlias>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -21,5 +22,6 @@
     <mappers>
         <mapper resource = "mapper/Bericht.xml"/>
         <mapper resource = "mapper/TrainStation.xml"/>
+        <mapper resource = "mapper/Item.xml"/>
     </mappers>
 </configuration>
