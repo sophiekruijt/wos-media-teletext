@@ -1,4 +1,4 @@
-package nl.wos.teletext.objects;
+package nl.wos.teletext.models;
 
 import java.util.List;
 

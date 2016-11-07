@@ -1,4 +1,4 @@
-package nl.wos.teletext.ejb;
+package nl.wos.teletext.components;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,11 +12,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import nl.wos.teletext.core.TeletextUpdatePackage;
-import nl.wos.teletext.entity.PropertyManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

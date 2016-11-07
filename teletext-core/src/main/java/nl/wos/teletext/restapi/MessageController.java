@@ -1,39 +1,31 @@
-package nl.wos.teletext.controller;
+package nl.wos.teletext.restapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.wos.teletext.dao.TrainStationDao;
-import nl.wos.teletext.entity.Bericht;
-import nl.wos.teletext.entity.TrainStation;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import nl.wos.teletext.dao.BerichtDao;
+import nl.wos.teletext.models.Bericht;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.Reader;
 import java.io.StringWriter;
 import java.util.List;
 
 @Controller
 @EnableAutoConfiguration
-public class TrainStationController {
+public class MessageController {
+    @Autowired BerichtDao berichtDao;
 
-    @Autowired
-    TrainStationDao trainStationDao;
-
-    @RequestMapping("/trainstation")
+    @RequestMapping("/")
     @ResponseBody
-    String getAllTrainStations() {
+    private String getAllMessages() {
         final StringWriter sw = new StringWriter();
-        final List<TrainStation> trainStations = trainStationDao.getAllTrainStations();
+        final List<Bericht> berichten = berichtDao.getAllBerichten();
         final ObjectMapper mapper = new ObjectMapper();
 
         try {
-            mapper.writeValue(sw, trainStations);
+            mapper.writeValue(sw, berichten);
         } catch (Exception e) {
             e.printStackTrace();
         }

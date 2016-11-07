@@ -1,4 +1,4 @@
-package nl.wos.teletext.entity;
+package nl.wos.teletext.components;
 
 import org.springframework.stereotype.Component;
 

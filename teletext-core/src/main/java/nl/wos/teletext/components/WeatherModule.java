@@ -1,10 +1,10 @@
-package nl.wos.teletext.ejb;
+package nl.wos.teletext.components;
 
 import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
-import nl.wos.teletext.objects.WeatherMeasurement;
-import nl.wos.teletext.objects.WeatherForecast;
+import nl.wos.teletext.models.WeatherMeasurement;
+import nl.wos.teletext.models.WeatherForecast;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 

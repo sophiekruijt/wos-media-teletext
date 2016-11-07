@@ -1,6 +1,6 @@
 package nl.wos.teletext.core;
 
-import nl.wos.teletext.entity.PropertyManager;
+import nl.wos.teletext.components.PropertyManager;
 
 import java.util.Properties;
 

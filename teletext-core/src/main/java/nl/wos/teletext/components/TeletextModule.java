@@ -1,6 +1,5 @@
-package nl.wos.teletext.ejb;
+package nl.wos.teletext.components;
 
-import nl.wos.teletext.entity.PropertyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Properties;

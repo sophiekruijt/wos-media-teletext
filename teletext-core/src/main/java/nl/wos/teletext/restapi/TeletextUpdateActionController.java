@@ -1,9 +1,9 @@
-package nl.wos.teletext.controller;
+package nl.wos.teletext.restapi;
 
-import nl.wos.teletext.ejb.NewsModule;
-import nl.wos.teletext.ejb.PublicTransportModule;
-import nl.wos.teletext.ejb.SportModule;
-import nl.wos.teletext.ejb.WeatherModule;
+import nl.wos.teletext.components.NewsModule;
+import nl.wos.teletext.components.PublicTransportModule;
+import nl.wos.teletext.components.SportModule;
+import nl.wos.teletext.components.WeatherModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @EnableAutoConfiguration
-public class TeletextActionController {
+public class TeletextUpdateActionController {
     @Autowired private PublicTransportModule publicTransportModule;
     @Autowired private NewsModule newsModule;
     @Autowired private SportModule sportModule;
@@ -26,7 +26,7 @@ public class TeletextActionController {
 
     @RequestMapping(value = "/module/{moduleName}", method = GET)
     @ResponseBody
-    public String executeAction(@PathVariable("moduleName") String moduleName) {
+    public String doTeletextUpdate(@PathVariable("moduleName") String moduleName) {
         switch (moduleName) {
             case "train_departures":
                 publicTransportModule.doTeletextUpdate();

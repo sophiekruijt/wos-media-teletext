@@ -1,4 +1,4 @@
-package nl.wos.teletext.entity;
+package nl.wos.teletext.models;
 
 public class Item{
     private String id;

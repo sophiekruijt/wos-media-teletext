@@ -1,8 +1,8 @@
 package nl.wos.teletext.rest;
 
-import nl.wos.teletext.ejb.NewsModule;
-import nl.wos.teletext.ejb.PublicTransportModule;
-import nl.wos.teletext.ejb.SportModule;
+import nl.wos.teletext.components.NewsModule;
+import nl.wos.teletext.components.PublicTransportModule;
+import nl.wos.teletext.components.SportModule;
 import org.jboss.resteasy.annotations.cache.NoCache;
 
 import javax.ejb.Stateless;

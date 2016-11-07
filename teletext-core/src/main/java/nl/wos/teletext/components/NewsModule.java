@@ -1,12 +1,11 @@
-package nl.wos.teletext.ejb;
+package nl.wos.teletext.components;
 
 import nl.wos.teletext.core.RSSItem;
 import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
 import nl.wos.teletext.dao.ItemDao;
-import nl.wos.teletext.dao.TeletextPaginaDao;
-import nl.wos.teletext.entity.Item;
+import nl.wos.teletext.models.Item;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;

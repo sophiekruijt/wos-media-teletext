@@ -1,10 +1,10 @@
 package nl.wos.teletext.modules;
 
 import nl.wos.teletext.dao.TrainStationDao;
-import nl.wos.teletext.ejb.PhecapConnector;
-import nl.wos.teletext.ejb.PublicTransportModule;
-import nl.wos.teletext.entity.PropertyManager;
-import nl.wos.teletext.entity.TrainStation;
+import nl.wos.teletext.components.PhecapConnector;
+import nl.wos.teletext.components.PublicTransportModule;
+import nl.wos.teletext.components.PropertyManager;
+import nl.wos.teletext.models.TrainStation;
 import nl.wos.teletext.util.TextClient;
 
 import org.junit.Before;
@@ -13,8 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.File;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

@@ -1,7 +1,7 @@
 package nl.wos.teletext.util;
 
-import nl.wos.teletext.entity.SportPoule;
-import nl.wos.teletext.objects.SportPouleRssItem;
+import nl.wos.teletext.models.SportPoule;
+import nl.wos.teletext.models.SportPouleRssItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

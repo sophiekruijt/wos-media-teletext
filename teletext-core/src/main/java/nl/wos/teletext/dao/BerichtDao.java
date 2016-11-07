@@ -1,6 +1,6 @@
 package nl.wos.teletext.dao;
 
-import nl.wos.teletext.entity.Bericht;
+import nl.wos.teletext.models.Bericht;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 

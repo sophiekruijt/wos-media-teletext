@@ -1,8 +1,8 @@
-package nl.wos.teletext.controller;
+package nl.wos.teletext.restapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.wos.teletext.dao.ItemDao;
-import nl.wos.teletext.entity.Item;
+import nl.wos.teletext.dao.SportPouleDao;
+import nl.wos.teletext.models.SportPoule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -14,18 +14,20 @@ import java.util.List;
 
 @Controller
 @EnableAutoConfiguration
-public class ItemController {
-    @Autowired ItemDao itemDao;
+public class SportPouleController {
 
-    @RequestMapping("/items")
+    @Autowired
+    SportPouleDao sportPouleDao;
+
+    @RequestMapping("/sportpoules")
     @ResponseBody
-    private String getAllItems() {
+    String getAllSportPoules() {
         final StringWriter sw = new StringWriter();
-        final List<Item> berichten = itemDao.getAllItems();
+        final List<SportPoule> sportPoules = sportPouleDao.getAllSportPoules();
         final ObjectMapper mapper = new ObjectMapper();
 
         try {
-            mapper.writeValue(sw, berichten);
+            mapper.writeValue(sw, sportPoules);
         } catch (Exception e) {
             e.printStackTrace();
         }

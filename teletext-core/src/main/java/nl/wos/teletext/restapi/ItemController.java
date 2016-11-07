@@ -1,9 +1,8 @@
-package nl.wos.teletext.controller;
+package nl.wos.teletext.restapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.wos.teletext.dao.BerichtDao;
-import nl.wos.teletext.entity.Bericht;
+import nl.wos.teletext.dao.ItemDao;
+import nl.wos.teletext.models.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -15,14 +14,14 @@ import java.util.List;
 
 @Controller
 @EnableAutoConfiguration
-public class MessageController {
-    @Autowired BerichtDao berichtDao;
+public class ItemController {
+    @Autowired ItemDao itemDao;
 
-    @RequestMapping("/")
+    @RequestMapping("/items")
     @ResponseBody
-    private String getAllMessages() {
+    private String getAllItems() {
         final StringWriter sw = new StringWriter();
-        final List<Bericht> berichten = berichtDao.getAllBerichten();
+        final List<Item> berichten = itemDao.getAllItems();
         final ObjectMapper mapper = new ObjectMapper();
 
         try {
