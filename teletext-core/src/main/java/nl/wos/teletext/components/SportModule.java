@@ -30,18 +30,7 @@ public class SportModule extends TeletextModule {
 
     @Autowired
     private SportPouleDao sportPouleDao;
-
-    private SportModuleDataParser parser = new SportModuleDataParser();
-
-    public static void main(String[] args) {
-        new SportModule();
-    }
-
-    public SportModule() {
-        this.sportPouleDao = new SportPouleDao();
-        doTeletextUpdate();
-    }
-
+    
     public void doTeletextUpdate() {
         logger.info("Sport module is going to update teletext.");
 
