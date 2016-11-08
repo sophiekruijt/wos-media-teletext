@@ -150,15 +150,6 @@ public class SportModuleDataParser {
         return uitslagenData;
     }
 
-    private void searchForNullValuesInSportPoulesAndFillThem (List<SportPouleRssItem> result)
-    {
-        for (int i = 0; i < result.size(); i++) {
-            if (result[i] == null) {
-                result[i] = new SportPouleRssItem("Sportpoule is afgelopen");
-            }
-        }
-    }
-
     private void setTeletextPageNumbers(List<SportPouleRssItem> result) {
         int sportUitslagenBeginPageNumber = 611;
         for(int i = 0; i < result.size(); i++) {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @EnableAutoConfiguration
@@ -23,7 +24,7 @@ public class SportPouleController {
     @ResponseBody
     String getAllSportPoules() {
         final StringWriter sw = new StringWriter();
-        final List<SportPoule> sportPoules = sportPouleDao.getAllSportPoules();
+        final Map<String, SportPoule> sportPoules = sportPouleDao.getAllSportPoules();
         final ObjectMapper mapper = new ObjectMapper();
 
         try {
