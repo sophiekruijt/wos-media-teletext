@@ -12,6 +12,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +29,7 @@ public class SportModule extends TeletextModule {
 
     @Autowired private SportPouleDao sportPouleDao;
 
+    @Scheduled(fixedRate = 900000, initialDelay = 900000)
     public void doTeletextUpdate() {
         logger.info("Sport module is going to update teletext.");
 

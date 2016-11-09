@@ -36,7 +36,7 @@ public class PhecapConnector {
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
 
     //@Lock(LockType.WRITE)
-    public void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
+    public synchronized void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
         // Accidental upload to production is also prevented by the need to have an active VPN connection to production.
         if(debugMode) {
@@ -45,6 +45,11 @@ public class PhecapConnector {
         }
         else {
             ftpUploadToProduction(updatePackage);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -64,7 +69,7 @@ public class PhecapConnector {
         }
     }
 
-    private void sendFilesToMockServer(TeletextUpdatePackage updatePackage) {
+    private synchronized void sendFilesToMockServer(TeletextUpdatePackage updatePackage) {
         if(!mockServerOnline()) {
             log.info("Mock server not available, ignore teletext update.");
             return;
