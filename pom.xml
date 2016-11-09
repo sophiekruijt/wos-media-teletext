@@ -9,7 +9,6 @@
     <version>1.0</version>
     <modules>
         <module>teletext-core</module>
-        <module>teletext-api</module>
         <module>teletext-mock-server</module>
         <module>teletext-it</module>
     </modules>
@@ -34,14 +33,12 @@
             </activation>
             <modules>
                 <module>teletext-core</module>
-                <module>teletext-api</module>
             </modules>
         </profile>
         <profile>
             <id>all</id>
             <modules>
                 <module>teletext-core</module>
-                <module>teletext-api</module>
                 <module>teletext-mock-server</module>
                 <module>teletext-it</module>
             </modules>

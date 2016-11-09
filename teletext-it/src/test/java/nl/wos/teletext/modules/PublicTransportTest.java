@@ -1,9 +1,11 @@
 package nl.wos.teletext.modules;
 
+import nl.wos.teletext.components.PhecapConnector;
+import nl.wos.teletext.components.PropertyManager;
+import nl.wos.teletext.components.PublicTransportModule;
 import nl.wos.teletext.dao.TrainStationDao;
-import nl.wos.teletext.ejb.PhecapConnector;
-import nl.wos.teletext.ejb.PublicTransportModule;
-import nl.wos.teletext.entity.TrainStation;
+
+import nl.wos.teletext.models.TrainStation;
 import nl.wos.teletext.util.TextClient;
 
 import org.junit.Before;
@@ -12,8 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.File;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,14 +34,11 @@ public class PublicTransportTest {
 
     TextClient textClient = new TextClient();
 
-    @Mock
-    TrainStationDao trainStationDao;
+    @Mock TrainStationDao trainStationDao;
 
-    @Spy
-    PhecapConnector phecapConnector;
-
-    @Spy
-    PublicTransportModule publicTransportModule;
+    @Spy PhecapConnector phecapConnector;
+    @Spy PropertyManager propertyManager;
+    @Spy PublicTransportModule publicTransportModule;
 
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
@@ -64,10 +61,10 @@ public class PublicTransportTest {
         verify(phecapConnector, times(1)).uploadFilesToTeletextServer(any());
         Thread.sleep(1000);
         assertThat(textClient.getTeletextLine(701, 0, 0), is("\u0002MAASSLUIS"));
-        assertThat(textClient.getTeletextLine(701, 0, 3), is(" 01:52      \u0007Hoek van Holland Haven   \u00033"));
-        assertThat(textClient.getTeletextLine(702, 0, 3), is(" 01:55      \u0007Hoek van Holland Haven   \u00031"));
-        assertThat(textClient.getTeletextLine(702, 0, 4), is(" 02:03      \u0007Rotterdam Centraal       \u00032"));
-        assertThat(textClient.getTeletextLine(703, 0, 4), is(" 23:47      \u0007Den Haag Centraal        \u00038"));
+        assertThat(textClient.getTeletextLine(701, 0, 3), is(" 07:52      \u0007Hoek van Holland Haven   \u00033"));
+        assertThat(textClient.getTeletextLine(702, 0, 3), is(" 07:55      \u0007Hoek van Holland Haven   \u00031"));
+        assertThat(textClient.getTeletextLine(702, 0, 4), is(" 08:03      \u0007Rotterdam Centraal       \u00032"));
+        assertThat(textClient.getTeletextLine(703, 0, 4), is(" 05:47      \u0007Den Haag Centraal        \u00038"));
         assertThat(textClient.getTeletextLine(704, 0, 3), is("Op dit station zijn momenteel geen"));
         assertThat(textClient.getTeletextLine(704, 0, 4), is("vertrekkende treinen"));
     }
@@ -96,6 +93,6 @@ public class PublicTransportTest {
 
     private TrainStation initializeMockData(String trainStation, String name, String pageNumber) throws IOException, URISyntaxException{
         when(publicTransportModule.doAPICallToWebservice(trainStation)).thenReturn(getTestData(trainStation));
-        return new TrainStation(trainStation, name, Short.parseShort(pageNumber), true);
+        return new TrainStation(trainStation, name, Integer.parseInt(pageNumber), true);
     }
 }

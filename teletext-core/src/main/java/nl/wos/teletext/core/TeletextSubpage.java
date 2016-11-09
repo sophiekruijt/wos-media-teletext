@@ -2,6 +2,8 @@ package nl.wos.teletext.core;
 
 import nl.wos.teletext.util.TextOperations;
 
+import java.util.List;
+
 public class TeletextSubpage {
     private String[] textLines = new String[25];
     private String layoutTemplateFileName;
@@ -27,5 +29,15 @@ public class TeletextSubpage {
 
     public void setLayoutTemplateFileName(String layoutTemplateFileName) {
         this.layoutTemplateFileName = layoutTemplateFileName;
+    }
+
+    public void addText(List<String> programAndScoresPageText) {
+        if(textLines.length < programAndScoresPageText.size()) {
+            textLines = new String[programAndScoresPageText.size()];
+        }
+
+        for(int i=0; i<programAndScoresPageText.size(); i++) {
+            textLines[i] = programAndScoresPageText.get(i);
+        }
     }
 }
