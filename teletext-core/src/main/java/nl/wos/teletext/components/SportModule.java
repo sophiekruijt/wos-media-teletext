@@ -5,15 +5,13 @@ import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
 import nl.wos.teletext.dao.SportPouleDao;
 import nl.wos.teletext.models.SportPoule;
-import nl.wos.teletext.util.SportModuleDataParser;
+import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.util.EntityUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +28,16 @@ public class SportModule extends TeletextModule {
 
     @Autowired
     private SportPouleDao sportPouleDao;
-    
+
+    public static void main(String[] args) {
+        new SportModule();
+    }
+
+    public SportModule() {
+        sportPouleDao = new SportPouleDao();
+        doTeletextUpdate();
+    }
+
     public void doTeletextUpdate() {
         logger.info("Sport module is going to update teletext.");
 
@@ -45,17 +52,18 @@ public class SportModule extends TeletextModule {
                 int pageNumber = 611;
                 SAXBuilder saxBuilder = new SAXBuilder();
                 Document document = saxBuilder.build(new ByteArrayInputStream(sportData.getBytes("UTF-8")));
+                List<String> indexPageText = new ArrayList<>(50);
 
                 List<Element> sportItems = document.getRootElement().getChild("channel").getChildren("item");
                 for(Element item : sportItems) {
                     if(poules.containsKey(item.getChild("title").getValue())) {
-
+                        SportPoule sportPoule = poules.get(item.getChild("title").getValue());
                         Element description = item.getChild("description");
                         Element body1 = description.getChildren("body").get(0);
                         Element body2 = description.getChildren("body").get(1);
 
-                        List<String> programAndScoresPageText = parseProgramAndScores(body1);
-                        List<String> seasonScoresPageText = parseSeasonOverview(body2);
+                        List<String> programAndScoresPageText = parseProgramAndScores(body1, sportPoule.getDisplayName());
+                        List<String> seasonScoresPageText = parseSeasonOverview(body2, sportPoule.getDisplayName());
 
                         TeletextPage sportPage = new TeletextPage(pageNumber);
                         TeletextSubpage page1 = sportPage.addNewSubpage();
@@ -66,6 +74,9 @@ public class SportModule extends TeletextModule {
                         page2.setLayoutTemplateFileName("sportUitslagen2Template");
                         page2.addText(seasonScoresPageText);
 
+                        indexPageText.add(TextOperations.makeBerichtTitelVoorIndexPagina(
+                                sportPoule.getDisplayName()).concat(" ") + pageNumber);
+
                         updatePackage.addTeletextPage(sportPage);
 
                         pageNumber++;
@@ -75,6 +86,24 @@ public class SportModule extends TeletextModule {
                     }
                 }
 
+                TeletextPage indexPage = new TeletextPage(610);
+                TeletextSubpage subPage = indexPage.addNewSubpage();
+                subPage.setLayoutTemplateFileName("template-sportuitslagenIndex.tpg");
+                int i=0;
+                for(String title : indexPageText) {
+                    if(i<17) {
+                        subPage.setTextOnLine(i, title);
+                        i++;
+                    }
+                    else {
+                        subPage = indexPage.addNewSubpage();
+                        subPage.setLayoutTemplateFileName("template-sportuitslagenIndex.tpg");
+                        subPage.setTextOnLine(i, title);
+                        i=0;
+                    }
+                }
+
+                updatePackage.addTeletextPage(indexPage);
                 updatePackage.generateTextFiles();
                 phecapConnector.uploadFilesToTeletextServer(updatePackage);
 
@@ -85,8 +114,15 @@ public class SportModule extends TeletextModule {
         }
     }
 
-    private List<String> parseProgramAndScores(Element programElement) {
+    private List<String> parseProgramAndScores(Element programElement, String title) {
         List<String> pageText = new ArrayList<>(25);
+        pageText.add(title.toUpperCase());
+        pageText.add("");
+
+        if(programElement.getChildren().size() == 0) {
+            pageText.add("Momenteel zijn er geen uitslagen");
+            pageText.add("of programma bekend.");
+        }
 
         for(Element element : programElement.getChildren()) {
             switch(element.getName()) {
@@ -108,14 +144,22 @@ public class SportModule extends TeletextModule {
                         String score1 = "";
                         String score2 = "";
 
-                        if (!score.getChildren("td").isEmpty()) {
-                            club1 = score.getChildren("td").get(0).getValue().trim();
-                            club2 = score.getChildren("td").get(2).getValue().trim();
+                        final List<Element> tdList = score.getChildren("td");
+
+                        if (!tdList.isEmpty()) {
+                            club1 = tdList.get(0).getValue().trim();
+                            club2 = tdList.get(2).getValue().trim();
                         }
-                        // When table contains more than 3 td's there is also a score.
-                        if (score.getChildren("td").size() > 3) {
-                            score1 = score.getChildren("td").get(3).getValue().trim();
-                            score2 = score.getChildren("td").get(5).getValue().trim();
+
+                        // When table contains more than 3 td's there could also a score.
+                        if (tdList.size() >= 5) {
+                            try {
+                                score1 = tdList.get(3).getValue().trim();
+                                score2 = tdList.get(5).getValue().trim();
+                            }
+                            catch(Exception ex) {
+                                System.out.println(score);
+                            }
                         }
 
                         if(!score1.isEmpty() && !score2.isEmpty()) {
@@ -131,8 +175,10 @@ public class SportModule extends TeletextModule {
         return pageText;
     }
 
-    private List<String> parseSeasonOverview(Element scoresElement) {
+    private List<String> parseSeasonOverview(Element scoresElement, String title) {
         List<String> pageText = new ArrayList<>(25);
+        pageText.add(title.toUpperCase());
+        pageText.add("");
 
         Element table = scoresElement.getChild("table");
         List<Element> clubs = table.getChildren();

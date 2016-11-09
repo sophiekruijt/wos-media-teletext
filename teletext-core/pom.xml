@@ -3,13 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.1.RELEASE</version>
+        <artifactId>root</artifactId>
+        <groupId>nl.wos</groupId>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>teletext-core</artifactId>
     <name>WOS Media : Teletext-core</name>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -72,6 +73,18 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>1.1.5.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <finalName>teletext-core</finalName>
         <plugins>

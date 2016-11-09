@@ -2,22 +2,12 @@ package nl.wos.teletext.models;
 
 public class SportPoule{
 
-    private int id;
     private String name;
     private String displayName;
 
-    public SportPoule(Integer id, String name, String displayName) {
-        this.id = id;
+    public SportPoule(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

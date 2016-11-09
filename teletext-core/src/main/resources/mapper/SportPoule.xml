@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "SportPoule">
     <select id = "getAll" resultMap = "result">
-        SELECT * FROM sportpoule ORDER BY name;
+        SELECT name, displayname FROM sportpoule WHERE broadcast = true ORDER BY name;
     </select>
 
     <resultMap id = "result" type = "SportPoule">
