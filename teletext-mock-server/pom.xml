@@ -28,6 +28,11 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>teletext-core</artifactId>
+            <version>1.4.1.RELEASE</version>
+        </dependency>
     </dependencies>
     <packaging>jar</packaging>
 

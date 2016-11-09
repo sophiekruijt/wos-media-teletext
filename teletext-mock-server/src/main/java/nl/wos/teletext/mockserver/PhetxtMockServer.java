@@ -1,5 +1,7 @@
 package nl.wos.teletext.mockserver;
 
+import nl.wos.teletext.components.PropertyManager;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,7 +19,7 @@ public class PhetxtMockServer {
     private final ExecutorService clientProcessingPool1 = Executors.newFixedThreadPool(10);
     private final ExecutorService clientProcessingPool2 = Executors.newFixedThreadPool(10);
 
-    private Properties properties = new ConfigurationLoader().getProperties();
+    private Properties properties = PropertyManager.getProperties();
 
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
 

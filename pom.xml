@@ -9,10 +9,8 @@
     <version>1.0</version>
     <modules>
         <module>teletext-core</module>
-        <module>teletext-api</module>
         <module>teletext-mock-server</module>
         <module>teletext-it</module>
-        <module>teletext-application</module>
     </modules>
     <packaging>pom</packaging>
     <name>WOS Media : Teletext</name>
@@ -35,16 +33,12 @@
             </activation>
             <modules>
                 <module>teletext-core</module>
-                <module>teletext-api</module>
-                <module>teletext-application</module>
             </modules>
         </profile>
         <profile>
             <id>all</id>
             <modules>
                 <module>teletext-core</module>
-                <module>teletext-api</module>
-                <module>teletext-application</module>
                 <module>teletext-mock-server</module>
                 <module>teletext-it</module>
             </modules>

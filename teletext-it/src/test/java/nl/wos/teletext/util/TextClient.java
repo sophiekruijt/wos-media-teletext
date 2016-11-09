@@ -1,5 +1,7 @@
 package nl.wos.teletext.util;
 
+import nl.wos.teletext.components.PropertyManager;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
@@ -10,7 +12,7 @@ import java.util.logging.Logger;
 
 public class TextClient {
     private static final Logger log = Logger.getLogger(String.valueOf(TextClient.class));
-    private Properties properties = new ConfigurationLoader().getProperties();
+    private Properties properties = PropertyManager.getProperties();
 
     private String mockServerHost = properties.getProperty("mockServerHost");
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
