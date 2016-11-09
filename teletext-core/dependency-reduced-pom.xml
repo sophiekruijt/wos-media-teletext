@@ -24,6 +24,21 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <fork>true</fork>
+          <mainClass>nl.wos.teletext.Application</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencyManagement>
@@ -31,7 +46,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>1.1.5.RELEASE</version>
+        <version>1.4.1.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

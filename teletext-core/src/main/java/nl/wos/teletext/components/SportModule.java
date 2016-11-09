@@ -26,17 +26,7 @@ import java.util.stream.Collectors;
 public class SportModule extends TeletextModule {
     private static final Logger logger = Logger.getLogger(SportModule.class.getName());
 
-    @Autowired
-    private SportPouleDao sportPouleDao;
-
-    public static void main(String[] args) {
-        new SportModule();
-    }
-
-    public SportModule() {
-        sportPouleDao = new SportPouleDao();
-        doTeletextUpdate();
-    }
+    @Autowired private SportPouleDao sportPouleDao;
 
     public void doTeletextUpdate() {
         logger.info("Sport module is going to update teletext.");
