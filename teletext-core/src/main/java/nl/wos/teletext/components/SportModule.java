@@ -17,8 +17,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -41,13 +43,16 @@ public class SportModule extends TeletextModule {
 
         try {
             if (!sportData.isEmpty()) {
-                int pageNumber = 611;
+                final AtomicInteger pageNumber = new AtomicInteger(611);
                 SAXBuilder saxBuilder = new SAXBuilder();
                 Document document = saxBuilder.build(new ByteArrayInputStream(sportData.getBytes("UTF-8")));
                 List<String> indexPageText = new ArrayList<>(50);
 
+                Comparator<Element> byTitle =
+                        (Element e1, Element e2)->e1.getChild("title").getValue().compareTo(e2.getChild("title").getValue());
+
                 List<Element> sportItems = document.getRootElement().getChild("channel").getChildren("item");
-                for(Element item : sportItems) {
+                sportItems.stream().sorted(byTitle).forEach((item) -> {
                     if(poules.containsKey(item.getChild("title").getValue())) {
                         SportPoule sportPoule = poules.get(item.getChild("title").getValue());
                         Element description = item.getChild("description");
@@ -57,7 +62,7 @@ public class SportModule extends TeletextModule {
                         List<String> programAndScoresPageText = parseProgramAndScores(body1, sportPoule.getDisplayName());
                         List<String> seasonScoresPageText = parseSeasonOverview(body2, sportPoule.getDisplayName());
 
-                        TeletextPage sportPage = new TeletextPage(pageNumber);
+                        TeletextPage sportPage = new TeletextPage(pageNumber.get());
                         TeletextSubpage page1 = sportPage.addNewSubpage();
                         page1.setLayoutTemplateFileName("template-sport1.tpg");
                         page1.addText(programAndScoresPageText);
@@ -71,12 +76,9 @@ public class SportModule extends TeletextModule {
 
                         updatePackage.addTeletextPage(sportPage);
 
-                        pageNumber++;
-                        if(pageNumber>650) {
-                            break;
-                        }
+                        pageNumber.incrementAndGet();
                     }
-                }
+                });
 
                 TeletextPage indexPage = new TeletextPage(610);
                 TeletextSubpage subPage = indexPage.addNewSubpage();
@@ -88,10 +90,12 @@ public class SportModule extends TeletextModule {
                         i++;
                     }
                     else {
+                        i=0;
                         subPage = indexPage.addNewSubpage();
                         subPage.setLayoutTemplateFileName("template-sportuitslagenIndex.tpg");
                         subPage.setTextOnLine(i, title);
-                        i=0;
+                        i++;
+
                     }
                 }
 
