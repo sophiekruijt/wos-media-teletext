@@ -232,7 +232,7 @@ public class WeatherModule extends TeletextModule {
 
     private void updateWeersVerwachting(String weerbericht, TeletextUpdatePackage updatePackage) {
         try {
-            List<List<String>> pageTextList = TextOperations.parseTekstToTeletextPageSizeArray(weerbericht, 15);
+            List<List<String>> pageTextList = TextOperations.parseTextToTeletextPageSizeArray(weerbericht, 15);
             TeletextPage weerberichtPage = new TeletextPage(701);
 
             for(int i=0; i<pageTextList.size(); i++)

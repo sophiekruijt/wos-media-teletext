@@ -8,7 +8,8 @@ public class TextOperations {
     public static final int TEXT_PAGE_SIZE = 39;
     public static final int MAX_TITLE_SIZE = 35;
 
-    public static String removeSpecialCharactersAndHTML(String text) {
+    // To do: This works but is not efficient and hard to manage.
+    public static String removeIllegalCharacters(String text) {
         String result = text;
 
         result = result.replace("&gt;", ">");
@@ -135,12 +136,11 @@ public class TextOperations {
         return result;
     }
 
-    // Parse een string naar een lijst (subpagina's), met lijsten met strings per regel.
-    public static List<List<String>> parseTekstToTeletextPageSizeArray(String tekst, int height)
+    public static List<List<String>> parseTextToTeletextPageSizeArray(String text, int height)
     {
         List<List<String>> result = new ArrayList<>();
         result.add(new ArrayList<>());
-        String[] words = tekst.split(" ");
+        String[] words = text.split(" ");
 
         StringBuilder builder = new StringBuilder();
         int subPage = 0;

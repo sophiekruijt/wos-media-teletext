@@ -17,7 +17,7 @@ public class TeletextSubpage {
     }
 
     public void setTextOnLine(int line, String text) {
-        String checkedText = TextOperations.removeSpecialCharactersAndHTML(text);
+        String checkedText = TextOperations.removeIllegalCharacters(text);
         if (line < textLines.length) {
             textLines[line] = checkedText;
         }
