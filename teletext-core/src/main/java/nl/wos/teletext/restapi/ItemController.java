@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 @EnableAutoConfiguration
 public class ItemController {
-    @Autowired ItemDao itemDao;
+    @Autowired private ItemDao itemDao;
 
     @RequestMapping("/items")
     @ResponseBody

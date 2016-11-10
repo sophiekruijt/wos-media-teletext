@@ -162,6 +162,10 @@ public class SportModule extends TeletextModule {
                             pageText.add(String.format("%-20.20s" + " - " + "%-19.19s", club1, club2));
                         }
                     }
+                    break;
+                default:
+                    logger.warning("Unknown element found." + element);
+                    break;
             }
         }
         return pageText;

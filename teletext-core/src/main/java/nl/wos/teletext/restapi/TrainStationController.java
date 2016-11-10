@@ -16,8 +16,7 @@ import java.util.List;
 @EnableAutoConfiguration
 public class TrainStationController {
 
-    @Autowired
-    TrainStationDao trainStationDao;
+    @Autowired private TrainStationDao trainStationDao;
 
     @RequestMapping("/trainstation")
     @ResponseBody

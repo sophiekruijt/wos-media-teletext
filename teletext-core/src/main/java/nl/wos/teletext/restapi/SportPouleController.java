@@ -17,8 +17,7 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class SportPouleController {
 
-    @Autowired
-    SportPouleDao sportPouleDao;
+    @Autowired private SportPouleDao sportPouleDao;
 
     @RequestMapping("/sportpoules")
     @ResponseBody

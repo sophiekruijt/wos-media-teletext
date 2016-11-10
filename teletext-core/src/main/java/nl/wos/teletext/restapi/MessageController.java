@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 @EnableAutoConfiguration
 public class MessageController {
-    @Autowired BerichtDao berichtDao;
+    @Autowired private BerichtDao berichtDao;
 
     @RequestMapping("/")
     @ResponseBody
