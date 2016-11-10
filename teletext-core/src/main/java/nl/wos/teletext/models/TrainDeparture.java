@@ -18,7 +18,7 @@ public class TrainDeparture {
     private String routeText = "";
     private String transportCompany = "";
     private String departureTrack = "";
-    private String departeDelay = "";
+    private String departureDelay = "";
     private String departureDelayText = "";
     private String reisTip = "";
     private List<String> opmerkingen = new ArrayList<>();
@@ -98,7 +98,7 @@ public class TrainDeparture {
                 this.departureTrack = value;
                 break;
             case "VertrekVertraging":
-                this.departeDelay = value;
+                this.departureDelay = value;
                 break;
             case "VertrekVertragingTekst":
                 this.departureDelayText = value;

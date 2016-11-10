@@ -57,7 +57,6 @@ public class PhetxtMockServer {
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
-                    log.log(Level.INFO, "New dataRetrievalTast");
                     clientProcessingPool2.submit(new GetTeletextDataTask(clientSocket));
                 }
             } catch (IOException ex) {
@@ -106,7 +105,7 @@ public class PhetxtMockServer {
     }
 
     private class GetTeletextDataTask implements Runnable {
-        private final Logger log = Logger.getLogger(String.valueOf(GetTeletextDataTask.class));
+        private final Logger logger = Logger.getLogger(String.valueOf(GetTeletextDataTask.class));
         private final Socket clientSocket;
 
         private GetTeletextDataTask(Socket clientSocket) {
@@ -124,11 +123,11 @@ public class PhetxtMockServer {
                 int lineNumber = in.readInt();
 
                 if(pageNumber == 999 && subPageNumber == 999 && lineNumber == 999) {
-                    log.log(Level.INFO, "Reset mock server");
+                    logger.log(Level.INFO, "Reset mock server");
                     teletext.resetServer();
                 }
                 else {
-                    log.log(Level.FINE, "Got a new client who wants to know the content of page " + pageNumber);
+                    logger.log(Level.FINE, "Got a new client who wants to know the content of page " + pageNumber);
 
                     String lineText = teletext.getTextLine(pageNumber, subPageNumber, lineNumber);
 
@@ -139,7 +138,7 @@ public class PhetxtMockServer {
 
                 clientSocket.close();
             } catch (Exception ex) {
-
+                logger.log(Level.SEVERE, "Exception occured", ex);
             }
         }
     }

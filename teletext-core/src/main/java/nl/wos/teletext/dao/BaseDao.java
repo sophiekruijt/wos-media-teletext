@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 @Service
 public abstract class BaseDao {
-    private static final Logger log = Logger.getLogger(String.valueOf(BaseDao.class));
     private SqlSessionFactory sqlSessionFactory;
 
     public BaseDao() {
