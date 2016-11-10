@@ -138,14 +138,13 @@ public class NewsModule extends TeletextModule {
         TeletextPage teletextPage = new TeletextPage(pageNumberNews);
         TeletextSubpage subpage = teletextPage.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-nieuwsoverzicht.tpg");
-        subpage.setTextOnLine(0, "NIEUWS OVERZICHT");
 
-        int line = 2;
+        int line = 0;
         RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
         for(RSSItem bericht : newsItems)
         {
             subpage.setTextOnLine(line,
-                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (pageNumberNewsStart + line - 2));
+                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (pageNumberNewsStart + line));
             line++;
         }
         updatePackage.addTeletextPage(teletextPage);
