@@ -15,6 +15,7 @@ import nl.wos.teletext.core.TeletextUpdatePackage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +24,7 @@ public class PhecapConnector {
 
     private final Properties properties = PropertyManager.getProperties();
 
-    private final FTPClient ftpClient = new FTPClient();
+    private FTPClient ftpClient;
 
     private boolean debugMode = Boolean.parseBoolean(properties.getProperty("debugMode"));
     private final String teletextServerHost = properties.getProperty("teletextServerHost");
@@ -31,6 +32,7 @@ public class PhecapConnector {
     private final String teletextServerPassword = properties.getProperty("teletextServerPassword");
     private final String teletextServerUploadPath = properties.getProperty("teletextServerUploadPath");
     private final int teletextServerPort = Integer.parseInt(properties.getProperty("teletextServerPort"));
+    private final int connectTimeOut = Integer.parseInt(properties.getProperty("connectTimeOut"));
 
     private String mockServerHost = properties.getProperty("mockServerHost");
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
@@ -58,11 +60,8 @@ public class PhecapConnector {
         log.info("Start new upload for teletext update package: " + updatePackage.toString());
 
         try {
-            connectAndInitializeFtpClient();
-            uploadTextFiles(folder);
-            uploadUpdateSem();
+            uploadFilesInFolder(folder);
 
-            ftpClient.logout();
             Files.deleteIfExists(folder);
         } catch (Exception ex) {
             log.log(Level.SEVERE, "Exception occured", ex);
@@ -93,32 +92,57 @@ public class PhecapConnector {
         return false;
     }
 
-    private void uploadUpdateSem() throws IOException {
-        InputStream emptyFileInputStream = new ByteArrayInputStream("".getBytes());
-        ftpClient.storeFile("update.sem", emptyFileInputStream);
-        emptyFileInputStream.close();
-    }
-
-    private void connectAndInitializeFtpClient() throws IOException {
+    private void uploadFilesInFolder(Path folder) throws IOException {
+        ftpClient = new FTPClient();
+        ftpClient.setConnectTimeout(connectTimeOut);
         ftpClient.connect(teletextServerHost, teletextServerPort);
-        ftpClient.login(teletextServerUser, teletextServerPassword);
-        ftpClient.enterLocalActiveMode();
-        ftpClient.setConnectTimeout(5);
-        ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
-        ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
-        ftpClient.changeWorkingDirectory(teletextServerUploadPath);
-    }
 
-    private void uploadTextFiles(Path folder) throws IOException, InterruptedException {
-        List<File> filesInFolder = Files.walk(folder).filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList());
+        boolean error = false;
+        try {
+            int reply;
+            ftpClient.connect(teletextServerHost);
+            System.out.println("Connected to " + teletextServerHost + ".");
+            System.out.print(ftpClient.getReplyString());
 
-        for (File file : filesInFolder) {
-            if (!file.getName().equals("update.sem")) {
-                FileInputStream fis = new FileInputStream(file.getCanonicalPath());
-                ftpClient.storeFile(file.getName(), fis);
-                Thread.sleep(25);
-                fis.close();
-                Files.delete(Paths.get(file.getCanonicalPath()));
+            reply = ftpClient.getReplyCode();
+            if(!FTPReply.isPositiveCompletion(reply)) {
+                ftpClient.disconnect();
+                System.err.println("FTP server refused connection.");
+            }
+
+            ftpClient.login(teletextServerUser, teletextServerPassword);
+            ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
+            ftpClient.enterLocalActiveMode();
+            ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
+            ftpClient.changeWorkingDirectory(teletextServerUploadPath);
+
+            List<File> filesInFolder = Files.walk(folder).filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList());
+
+            for (File file : filesInFolder) {
+                if (!file.getName().equals("update.sem")) {
+                    FileInputStream fis = new FileInputStream(file.getCanonicalPath());
+                    ftpClient.storeFile(file.getName(), fis);
+                    Thread.sleep(25);
+                    fis.close();
+                    Files.delete(Paths.get(file.getCanonicalPath()));
+                }
+            }
+
+            InputStream emptyFileInputStream = new ByteArrayInputStream("".getBytes());
+            ftpClient.storeFile("update.sem", emptyFileInputStream);
+            emptyFileInputStream.close();
+
+            ftpClient.logout();
+        } catch(Exception e) {
+            error = true;
+            e.printStackTrace();
+        } finally {
+            if(ftpClient.isConnected()) {
+                try {
+                    ftpClient.disconnect();
+                } catch(IOException ioe) {
+                    log.warning(ioe.toString());
+                }
             }
         }
     }
@@ -149,5 +173,39 @@ public class PhecapConnector {
         catch (Exception ex) {
             log.log(Level.SEVERE, "Exception occured", ex);
         }
+    }
+
+    public boolean checkConnection() {
+        ftpClient = new FTPClient();
+        ftpClient.setConnectTimeout(connectTimeOut);
+
+        boolean error = false;
+        try {
+            int reply;
+            ftpClient.connect(teletextServerHost, teletextServerPort);
+            System.out.println("Connected to " + teletextServerHost + ".");
+            System.out.print(ftpClient.getReplyString());
+
+            reply = ftpClient.getReplyCode();
+            if(!FTPReply.isPositiveCompletion(reply)) {
+                ftpClient.disconnect();
+                return false;
+            }
+
+            ftpClient.logout();
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if(ftpClient.isConnected()) {
+                try {
+                    ftpClient.disconnect();
+                } catch(IOException ioe) {
+                    log.warning(ioe.toString());
+                }
+            }
+        }
+
     }
 }
