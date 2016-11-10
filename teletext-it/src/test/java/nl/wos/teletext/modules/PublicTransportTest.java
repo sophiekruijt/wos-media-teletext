@@ -32,13 +32,13 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class PublicTransportTest {
 
-    TextClient textClient = new TextClient();
+    private TextClient textClient = new TextClient();
 
-    @Mock TrainStationDao trainStationDao;
+    @Mock private TrainStationDao trainStationDao;
 
-    @Spy PhecapConnector phecapConnector;
-    @Spy PropertyManager propertyManager;
-    @Spy PublicTransportModule publicTransportModule;
+    @Spy private PhecapConnector phecapConnector;
+    @Spy private PropertyManager propertyManager;
+    @Spy private PublicTransportModule publicTransportModule;
 
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
