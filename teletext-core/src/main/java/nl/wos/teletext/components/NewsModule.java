@@ -35,7 +35,8 @@ public class NewsModule extends TeletextModule {
 
     private final int pageNumberLatestNews = Integer.parseInt(properties.getProperty("PAGENUMBER_LAATSTE_NIEUWS"));
     private final int pageNumberNews = Integer.parseInt(properties.getProperty("PAGENUMBER_NIEUWS_OVERZICHT"));
-    private final int pageNumberSport = Integer.parseInt(properties.getProperty("PAGENUMBER_SPORT_BERICHTEN_START"));
+    private final int pageNumberNewsStart = Integer.parseInt(properties.getProperty("PAGENUMBER_NEWS_BERICHTEN_START"));
+    private final int pageNumberSportStart = Integer.parseInt(properties.getProperty("PAGENUMBER_SPORT_BERICHTEN_START"));
     private final String newsDataSource = properties.getProperty("newsDataSource");
 
     private int newsPageNumberCounter = 0;
@@ -137,13 +138,14 @@ public class NewsModule extends TeletextModule {
         TeletextPage teletextPage = new TeletextPage(pageNumberNews);
         TeletextSubpage subpage = teletextPage.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-nieuwsoverzicht.tpg");
+        subpage.setTextOnLine(0, "NIEUWS OVERZICHT");
 
-        int line = 0;
+        int line = 2;
         RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
         for(RSSItem bericht : newsItems)
         {
             subpage.setTextOnLine(line,
-                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (103 + line));
+                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (pageNumberNewsStart + line - 2));
             line++;
         }
         updatePackage.addTeletextPage(teletextPage);
@@ -246,11 +248,11 @@ public class NewsModule extends TeletextModule {
         TeletextPage teletextPage;
         switch (item.getCategory()) {
             case "nieuws":
-                teletextPage = new TeletextPage(pageNumberNews + newsPageNumberCounter);
+                teletextPage = new TeletextPage(pageNumberNewsStart + newsPageNumberCounter);
                 this.newsPageNumberCounter = newsPageNumberCounter + 1;
                 break;
             case "sport":
-                teletextPage = new TeletextPage(pageNumberSport + sportPageNumberCounter);
+                teletextPage = new TeletextPage(pageNumberSportStart + sportPageNumberCounter);
                 this.sportPageNumberCounter = sportPageNumberCounter + 1;
                 break;
             default:
