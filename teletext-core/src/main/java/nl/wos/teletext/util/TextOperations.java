@@ -180,24 +180,6 @@ public class TextOperations {
         return result;
     }
 
-    /*public static string GetStringInBetween(string stringBegin, string stringEnd, string stringSource) {
-        string result = "";
-
-        int start1 = stringSource.IndexOf(stringBegin);
-        if (start1 == -1)
-        {
-            return "";
-        }
-        int end1 = stringSource.IndexOf(stringEnd);
-        if (end1 == -1)
-        {
-            return "";
-        }
-        result = stringSource.Substring(start1 + stringBegin.Length, end1 - start1 - stringBegin.Length);
-
-        return result;
-    }*/
-
     public static String makeBerichtTitelVoorIndexPagina(String publicationTitle) {
         String result;
         if (publicationTitle.length() >= MAX_TITLE_SIZE) {

@@ -7,7 +7,6 @@ import nl.wos.teletext.dao.TrainStationDao;
 import nl.wos.teletext.models.TrainStation;
 import nl.wos.teletext.models.TrainDeparture;
 import nl.wos.teletext.util.Web;
-import nl.wos.teletext.util.XMLParser;
 import org.apache.http.auth.*;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
