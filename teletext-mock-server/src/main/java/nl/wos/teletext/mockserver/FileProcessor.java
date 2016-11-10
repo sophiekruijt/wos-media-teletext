@@ -9,14 +9,13 @@ import java.util.logging.Logger;
 public class FileProcessor {
     private static final Logger log = Logger.getLogger(FileProcessor.class.getName());
 
-    private static FileProcessor fileProcessor = new FileProcessor( );
-    private FileProcessor(){ }
-
+    private static FileProcessor fileProcessor = new FileProcessor();
     private Map<String, String> textFiles = new HashMap<>();
     private String controlDat = "";
     private List<TeletextPage> teletextPages = new ArrayList<>();
-
     private ConfigurationParser configurationParser = ConfigurationParser.getInstance();
+
+    private FileProcessor(){ }
 
     public static FileProcessor getInstance( ) {
         return fileProcessor;
