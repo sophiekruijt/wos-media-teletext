@@ -54,7 +54,7 @@ public class PublicTransportTest {
     }
 
     @Test
-    public void DoTeletextUpdateTest() throws Exception {
+    public void doTeletextUpdateTest() throws Exception {
         publicTransportModule.doTeletextUpdate();
 
         verify(publicTransportModule, times(1)).doTeletextUpdate();
@@ -70,7 +70,7 @@ public class PublicTransportTest {
     }
 
     @Test
-    public void ResetMockServerTest() throws Exception {
+    public void resetMockServerTest() throws Exception {
         publicTransportModule.doTeletextUpdate();
 
         verify(publicTransportModule, times(1)).doTeletextUpdate();
