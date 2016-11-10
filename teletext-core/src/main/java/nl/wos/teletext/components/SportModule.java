@@ -68,7 +68,7 @@ public class SportModule extends TeletextModule {
                         page1.addText(programAndScoresPageText);
 
                         TeletextSubpage page2 = sportPage.addNewSubpage();
-                        page2.setLayoutTemplateFileName("sportUitslagen2Template");
+                        page2.setLayoutTemplateFileName("template-sport2.tpg");
                         page2.addText(seasonScoresPageText);
 
                         indexPageText.add(TextOperations.makeBerichtTitelVoorIndexPagina(
