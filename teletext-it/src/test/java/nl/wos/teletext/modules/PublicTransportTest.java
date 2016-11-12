@@ -5,6 +5,7 @@ import nl.wos.teletext.components.PropertyManager;
 import nl.wos.teletext.components.PublicTransportModule;
 import nl.wos.teletext.dao.TrainStationDao;
 
+import nl.wos.teletext.mockserver.PhetxtMockServer;
 import nl.wos.teletext.models.TrainStation;
 import nl.wos.teletext.util.TextClient;
 
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublicTransportTest {
-
+    PhetxtMockServer mockServer = new PhetxtMockServer();
     private TextClient textClient = new TextClient();
 
     @Mock private TrainStationDao trainStationDao;

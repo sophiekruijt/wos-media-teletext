@@ -37,7 +37,6 @@ public class PhecapConnector {
     private String mockServerHost = properties.getProperty("mockServerHost");
     private int mockServerPort = Integer.parseInt(properties.getProperty("mockServerPort"));
 
-    //@Lock(LockType.WRITE)
     public synchronized void uploadFilesToTeletextServer(TeletextUpdatePackage updatePackage)
     {
         // Accidental upload to production is also prevented by the need to have an active VPN connection to production.

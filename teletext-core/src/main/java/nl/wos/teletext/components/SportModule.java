@@ -38,7 +38,7 @@ public class SportModule extends TeletextModule {
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
         updatePackage.addRemovePagesTask(611, 645);
 
-        Map<String, SportPoule> poules = sportPouleDao.getAllSportPoules();
+        Map<String, SportPoule> poules = getSportPoules();
         String sportData = getSportData();
 
         try {
@@ -100,14 +100,23 @@ public class SportModule extends TeletextModule {
                 }
 
                 updatePackage.addTeletextPage(indexPage);
-                updatePackage.generateTextFiles();
-                phecapConnector.uploadFilesToTeletextServer(updatePackage);
+                sendFilesToTeletextServer(updatePackage);
 
                 logger.info("Sport module teletext update is finished.");
             }
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Exception occured", ex);
         }
+    }
+
+    public Map<String, SportPoule> getSportPoules() {
+        Map<String, SportPoule> poules = sportPouleDao.getAllSportPoules();
+        return poules;
+    }
+
+    public void sendFilesToTeletextServer(TeletextUpdatePackage updatePackage) {
+        updatePackage.generateTextFiles();
+        phecapConnector.uploadFilesToTeletextServer(updatePackage);
     }
 
     private List<String> parseProgramAndScores(Element programElement, String title) {
@@ -123,11 +132,11 @@ public class SportModule extends TeletextModule {
         for(Element element : programElement.getChildren()) {
             switch(element.getName()) {
                 case "p":
-                    pageText.add(programElement.getChild("p").getValue());
+                    pageText.add(element.getValue());
                     pageText.add("");
                     break;
                 case "table":
-                    List<Element> scores = programElement.getChild("table").getChildren("tr");
+                    List<Element> scores = element.getChildren("tr");
                     if(scores.isEmpty()) {
                         pageText.add("Momenteel zijn er geen uitslagen");
                         pageText.add("of programma bekend.");
@@ -165,7 +174,9 @@ public class SportModule extends TeletextModule {
                         else {
                             pageText.add(String.format("%-20.20s" + " - " + "%-19.19s", club1, club2));
                         }
+
                     }
+                    pageText.add("");
                     break;
                 default:
                     logger.warning("Unknown element found." + element);
@@ -211,12 +222,16 @@ public class SportModule extends TeletextModule {
         return pageText;
     }
 
-    private String getSportData() {
+    public String getSportData() {
         try {
             return EntityUtils.toString(Web.doWebRequest("http://sportstanden.infothuis.nl/public/internet-rss.php"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public void setSportPouleDao(SportPouleDao sportPouleDao) {
+        this.sportPouleDao = sportPouleDao;
     }
 }
