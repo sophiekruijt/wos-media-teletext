@@ -10,7 +10,6 @@
     <modules>
         <module>teletext-core</module>
         <module>teletext-mock-server</module>
-        <module>teletext-it</module>
     </modules>
     <packaging>pom</packaging>
     <name>WOS Media : Teletext</name>
@@ -40,7 +39,6 @@
             <modules>
                 <module>teletext-core</module>
                 <module>teletext-mock-server</module>
-                <module>teletext-it</module>
             </modules>
         </profile>
     </profiles>

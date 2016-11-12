@@ -1,7 +1,5 @@
 package nl.wos.teletext.mockserver;
 
-import nl.wos.teletext.components.PropertyManager;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
