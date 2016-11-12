@@ -28,6 +28,10 @@ public class TeletextUpdatePackage {
     public TeletextUpdatePackage() {
         packageId = teletextUpdatePackageId++;
         folderName = dataDirectory + this.packageId + "/";
+        File directory = new File(folderName);
+        if(!directory.exists()) {
+            log.info("Directory has been created" + directory.mkdir());
+        }
 
         try {
             File f = new File(folderName);
@@ -84,10 +88,6 @@ public class TeletextUpdatePackage {
 
         try {
             File file = new File(folderName + textFileName);
-            File directory = new File(String.valueOf(folderName));
-            if(!directory.exists()) {
-                directory.mkdir();
-            }
             file.createNewFile();
             FileUtils.writeStringToFile(file, page.getPageText(), Charset.defaultCharset());
 
