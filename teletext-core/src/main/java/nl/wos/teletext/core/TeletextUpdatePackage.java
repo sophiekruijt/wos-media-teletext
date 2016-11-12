@@ -84,6 +84,10 @@ public class TeletextUpdatePackage {
 
         try {
             File file = new File(folderName + textFileName);
+            File directory = new File(String.valueOf(folderName));
+            if(!directory.exists()) {
+                directory.mkdir();
+            }
             file.createNewFile();
             FileUtils.writeStringToFile(file, page.getPageText(), Charset.defaultCharset());
 
