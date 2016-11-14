@@ -15,4 +15,12 @@ public class ItemDao extends BaseDao {
         session.close();
         return result;
     }
+
+    public Item getItem(String id) {
+        SqlSession session = getSession();
+        Item item = session.selectOne("Item.getById", id);
+        session.commit();
+        session.close();
+        return item;
+    }
 }

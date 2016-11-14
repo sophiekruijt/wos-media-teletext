@@ -26,10 +26,12 @@ import java.io.ByteArrayInputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class NewsModule extends TeletextModule {
-    private static final Logger log = Logger.getLogger(NewsModule.class.getName());
+    private static final Logger logger = Logger.getLogger(NewsModule.class.getName());
 
     @Autowired private ItemDao itemDao;
 
@@ -44,40 +46,43 @@ public class NewsModule extends TeletextModule {
 
     @Scheduled(fixedRate = 600000, initialDelay = 600000)
     public void doTeletextUpdate() {
-        log.info("News module is going to update teletext.");
+        logger.info("News module is going to update teletext.");
         this.newsPageNumberCounter = 0;
         this.sportPageNumberCounter= 0;
 
         try {
-            TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
             List<RSSItem> newsData = getNewsData();
             if(newsData.isEmpty()) {
-                log.warning("Geen data ontvangen uit RSS feed van IB Broadcast.");
+                logger.warning("No data received from IB Broadcast. Teletext update will be aborted.");
                 return;
             }
 
-            updateNieuwsEnSportBerichten(updatePackage, newsData);
-            updateNieuwsOverzicht(updatePackage, newsData);
-            updateLaatsteNieuwsOverzicht(updatePackage, newsData);
+            TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
 
-            Map<String, Item> items = new HashMap<>();
-            for(Item item : itemDao.getAllItems()) {
-                items.put(item.getId(), item);
-            }
+            List<RSSItem> newsItems = newsData.stream()
+                    .filter(b -> b.getCategory().equals("nieuws"))
+                    .limit(20).collect(Collectors.toList());
+            List<RSSItem> sportItems = newsData.stream()
+                    .filter(b -> b.getCategory().equals("sport"))
+                    .limit(6).collect(Collectors.toList());
 
-            Item p648 = items.get("item001");
-            Item p649 = items.get("item002");
-            Item p656 = items.get("item003");
-            Item p657 = items.get("item004");
+            Item p648 = itemDao.getItem("item001");
+            Item p649 = itemDao.getItem("item002");
+            Item p656 = itemDao.getItem("item003");
+            Item p657 = itemDao.getItem("item004");
 
-            publiceerSportOverzicht(newsData, updatePackage, p648, p649, p656, p657);
+            updateAllNewsAndSportPages(updatePackage, newsItems, sportItems);
+            updateNewsOverview102(updatePackage, newsItems);
+            updateLatestNewsPage101(updatePackage, newsItems);
+
+            publiceerSportOverzicht(sportItems, updatePackage, p648, p649, p656, p657);
             publiceerExtraSportPaginas(Arrays.asList(p648, p649, p656, p657), updatePackage);
 
             updatePackage.generateTextFiles();
             phecapConnector.uploadFilesToTeletextServer(updatePackage);
         }
         catch(Exception ex) {
-            log.log(Level.SEVERE, "Exception occured", ex);
+            logger.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
@@ -111,7 +116,7 @@ public class NewsModule extends TeletextModule {
         updatePackage.addTeletextPage(teletextPage);
     }
 
-    private void updateLaatsteNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
+    private void updateLatestNewsPage101(TeletextUpdatePackage updatePackage, List<RSSItem> newsItems)
     {
         try {
             TeletextPage teletextPage = new TeletextPage(pageNumberLatestNews);
@@ -119,28 +124,26 @@ public class NewsModule extends TeletextModule {
             subpage.setLayoutTemplateFileName("template-laatstenieuws.tpg");
 
             int line = 0;
-            RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
-            for(RSSItem item: newsItems)
+            for(RSSItem newsItem : newsItems.stream().limit(6).collect(Collectors.toList()))
             {
                 int lineNumber = line * 2 + 1;
-                subpage.setTextOnLine(lineNumber, TextOperations.makeBerichtTitelVoorIndexPagina(item.getTitle()) + "\u0003" + (103 + line));
+                subpage.setTextOnLine(lineNumber, TextOperations.makeBerichtTitelVoorIndexPagina(newsItem.getTitle()) + "\u0003" + (103 + line));
                 line++;
             }
             updatePackage.addTeletextPage(teletextPage);
         }
         catch(Exception ex) {
-            log.log(Level.SEVERE, "Exception occured", ex);
+            logger.log(Level.SEVERE, "Exception occured", ex);
         }
     }
 
-    private void updateNieuwsOverzicht(TeletextUpdatePackage updatePackage, List<RSSItem> berichten)
+    private void updateNewsOverview102(TeletextUpdatePackage updatePackage, List<RSSItem> newsItems)
     {
         TeletextPage teletextPage = new TeletextPage(pageNumberNews);
         TeletextSubpage subpage = teletextPage.addNewSubpage();
         subpage.setLayoutTemplateFileName("template-nieuwsoverzicht.tpg");
 
         int line = 0;
-        RSSItem[] newsItems = berichten.stream().filter(b -> b.getCategory().equals("nieuws")).toArray(RSSItem[]::new);
         for(RSSItem bericht : newsItems)
         {
             subpage.setTextOnLine(line,
@@ -150,31 +153,29 @@ public class NewsModule extends TeletextModule {
         updatePackage.addTeletextPage(teletextPage);
     }
 
-    private void updateNieuwsEnSportBerichten(TeletextUpdatePackage updatePackage, List<RSSItem> berichten) {
+    private void updateAllNewsAndSportPages(TeletextUpdatePackage updatePackage, List<RSSItem>... items) {
         this.newsPageNumberCounter = 0;
         this.sportPageNumberCounter= 0;
 
-        for(RSSItem bericht : berichten) {
-            try {
-                TeletextPage teletextPage = createTeletextPage(bericht);
-                TeletextSubpage subpage = teletextPage.addNewSubpage();
-                subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
+        for(List<RSSItem> list : items) {
+            for (RSSItem bericht : list) {
+                try {
+                    TeletextPage teletextPage = createTeletextPage(bericht);
+                    TeletextSubpage subpage = teletextPage.addNewSubpage();
+                    subpage.setLayoutTemplateFileName("template-nieuwsbericht.tpg");
 
-                addTitleToTeletextPage(bericht, subpage);
-                addTextToTeletextPage(bericht, subpage);
+                    addTitleToTeletextPage(bericht, subpage);
+                    addTextToTeletextPage(bericht, subpage);
 
-                updatePackage.addTeletextPage(teletextPage);
-            }
-            catch(Exception ex) {
-                log.log(Level.SEVERE, "Exception occured", ex);
+                    updatePackage.addTeletextPage(teletextPage);
+                } catch (Exception ex) {
+                    logger.log(Level.SEVERE, "Exception occured", ex);
+                }
             }
         }
     }
 
-    public void publiceerSportOverzicht(List<RSSItem> items, TeletextUpdatePackage updatePackage, Item i1, Item i2, Item i3, Item i4) {
-
-        RSSItem[] sportItems = items.stream().filter(b -> b.getCategory().equals("sport")).toArray(RSSItem[]::new);
-
+    public void publiceerSportOverzicht(List<RSSItem> sportItems, TeletextUpdatePackage updatePackage, Item i1, Item i2, Item i3, Item i4) {
         TeletextPage page = new TeletextPage(601);
         TeletextSubpage subPage = page.addNewSubpage();
         subPage.setLayoutTemplateFileName("template-sportoverzicht.tpg");
@@ -183,11 +184,11 @@ public class NewsModule extends TeletextModule {
         subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getTitle()) + "\u0003" + 649);
         subPage.setTextOnLine(4, "\u0003Sportnieuws");
         int row = 5;
-        for(int i=0; i < sportItems.length; i++) {
+        for(int i=0; i < sportItems.size(); i++) {
             if(i >= 6) {
                 break;
             }
-            subPage.setTextOnLine(row, " " + TextOperations.makeBerichtTitelVoorIndexPagina(sportItems[i].getTitle()) + "\u0003" + (650 + i));
+            subPage.setTextOnLine(row, " " + TextOperations.makeBerichtTitelVoorIndexPagina(sportItems.get(i).getTitle()) + "\u0003" + (650 + i));
             row++;
         }
 
@@ -201,9 +202,7 @@ public class NewsModule extends TeletextModule {
     private List<RSSItem> getNewsData() throws Exception {
         List<RSSItem> result = new ArrayList<>();
         try {
-            log.info("Request naar IB Broadcast wordt verstuurd.");
             String data = EntityUtils.toString(Web.doWebRequest(newsDataSource), "UTF-8");
-            log.info("Request naar IB Broadcast is klaar.");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -226,7 +225,7 @@ public class NewsModule extends TeletextModule {
                 }
             }
         } catch (Exception ex) {
-            log.log(Level.SEVERE, "Exception occured", ex);
+            logger.log(Level.SEVERE, "Exception occured", ex);
         }
         return result;
     }
@@ -243,8 +242,8 @@ public class NewsModule extends TeletextModule {
         }
     }
 
-    private TeletextPage createTeletextPage(RSSItem item) throws Exception {
-        TeletextPage teletextPage;
+    private TeletextPage createTeletextPage(RSSItem item) {
+        TeletextPage teletextPage = null;
         switch (item.getCategory()) {
             case "nieuws":
                 teletextPage = new TeletextPage(pageNumberNewsStart + newsPageNumberCounter);
@@ -255,7 +254,7 @@ public class NewsModule extends TeletextModule {
                 this.sportPageNumberCounter = sportPageNumberCounter + 1;
                 break;
             default:
-                throw new Exception("Bericht heeft geen geldige categorie: " + item.getCategory());
+                logger.log(Level.WARNING, "News item has no valid category: " + item.getCategory());
         }
         return teletextPage;
     }

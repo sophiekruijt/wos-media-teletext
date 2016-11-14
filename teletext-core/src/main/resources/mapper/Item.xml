@@ -7,6 +7,10 @@
         SELECT * FROM items;
     </select>
 
+    <select id = "getById" parameterType = "string" resultMap = "result">
+        SELECT * FROM items WHERE item_id = #{id};
+    </select>
+
     <resultMap id = "result" type = "Item">
         <result property = "id" column="item_id"/>
         <result property = "title" column="publication_title"/>
