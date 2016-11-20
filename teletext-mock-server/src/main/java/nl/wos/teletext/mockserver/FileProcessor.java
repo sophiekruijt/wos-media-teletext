@@ -15,6 +15,9 @@ public class FileProcessor {
     private List<TeletextPage> teletextPages = new ArrayList<>();
     private ConfigurationParser configurationParser = ConfigurationParser.getInstance();
 
+    private final String CONTROL_DAT = "control.dat";
+    private final String UPDATE_SEM = "update.sem";
+
     private FileProcessor(){ }
 
     public static FileProcessor getInstance( ) {
@@ -26,13 +29,14 @@ public class FileProcessor {
     }
 
     protected void addFile(String fileName, String fileText) {
-        if(fileName.equals("control.dat")) {
+
+        if(CONTROL_DAT.equals(fileName)) {
             controlDat = fileText;
             log.info("The file: " + fileName + " is received with instructions for the teletext server");
             configurationParser.parseConfiguration(fileText);
             return;
         }
-        else if(fileName.equals("update.sem")) {
+        else if(UPDATE_SEM.equals(fileName)) {
             teletextPages.clear();
             log.info("update.sem received. Execute and send instructions to teletext inserter and remove all received files.");
 
@@ -63,9 +67,8 @@ public class FileProcessor {
             textFiles.clear();
             return;
         }
-        
+
         textFiles.put(fileName, fileText);
         log.info("The file: " + fileName + " is added to the teletext mock server.");
-        return;
     }
 }
