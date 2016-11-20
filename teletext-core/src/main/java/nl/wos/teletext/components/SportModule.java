@@ -49,7 +49,7 @@ public class SportModule extends TeletextModule {
                 List<String> indexPageText = new ArrayList<>(50);
 
                 Comparator<Element> byTitle =
-                        (Element e1, Element e2)->e1.getChild("title").getValue().compareTo(e2.getChild("title").getValue());
+                        (Element e1, Element e2) -> e1.getChild("title").getValue().compareTo(e2.getChild("title").getValue());
 
                 List<Element> sportItems = document.getRootElement().getChild("channel").getChildren("item");
                 sportItems.stream().sorted(byTitle).forEach((item) -> {
