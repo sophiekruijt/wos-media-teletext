@@ -2,7 +2,6 @@ package nl.wos.teletext.modules;
 
 import nl.wos.teletext.components.PhecapConnector;
 import nl.wos.teletext.components.SportModule;
-import nl.wos.teletext.core.TeletextUpdatePackage;
 import nl.wos.teletext.dao.SportPouleDao;
 import nl.wos.teletext.mockserver.PhetxtMockServer;
 import nl.wos.teletext.models.SportPoule;

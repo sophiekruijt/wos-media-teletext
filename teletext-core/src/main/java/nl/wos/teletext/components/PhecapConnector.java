@@ -178,7 +178,6 @@ public class PhecapConnector {
         ftpClient = new FTPClient();
         ftpClient.setConnectTimeout(connectTimeOut);
 
-        boolean error = false;
         try {
             int reply;
             ftpClient.connect(teletextServerHost, teletextServerPort);

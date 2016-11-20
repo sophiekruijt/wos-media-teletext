@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class NewsModule extends TeletextModule {
@@ -255,6 +254,7 @@ public class NewsModule extends TeletextModule {
                 break;
             default:
                 logger.log(Level.WARNING, "News item has no valid category: " + item.getCategory());
+                break;
         }
         return teletextPage;
     }

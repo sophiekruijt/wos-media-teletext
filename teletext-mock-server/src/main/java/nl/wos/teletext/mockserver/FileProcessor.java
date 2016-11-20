@@ -26,15 +26,11 @@ public class FileProcessor {
     }
 
     protected void addFile(String fileName, String fileText) {
-        if(fileName.startsWith("text")) {
-            // Text file with contents of a page is received
-            textFiles.put(fileName, fileText);
-            log.info("The file: " + fileName + " is added to the teletext mock server.");
-        }
-        else if(fileName.equals("control.dat")) {
+        if(fileName.equals("control.dat")) {
             controlDat = fileText;
             log.info("The file: " + fileName + " is received with instructions for the teletext server");
             configurationParser.parseConfiguration(fileText);
+            return;
         }
         else if(fileName.equals("update.sem")) {
             teletextPages.clear();
@@ -65,6 +61,11 @@ public class FileProcessor {
 
             controlDat = "";
             textFiles.clear();
+            return;
         }
+        
+        textFiles.put(fileName, fileText);
+        log.info("The file: " + fileName + " is added to the teletext mock server.");
+        return;
     }
 }
