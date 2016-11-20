@@ -19,7 +19,7 @@ public class PropertyManager {
     }
 
     public static Properties getProperties(String configurationFileName) {
-        Properties properties = new java.util.Properties();
+        Properties properties = new Properties();
         InputStream input = new PropertyManager().getClass().getClassLoader().getResourceAsStream(configurationFileName);
 
         try {
