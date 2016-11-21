@@ -40,6 +40,8 @@ public class RSSItem {
             case "category":
                 this.category = waarde;
                 break;
+            default:
+                break;
         }
     }
 }

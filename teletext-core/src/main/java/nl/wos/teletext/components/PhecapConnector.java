@@ -96,7 +96,6 @@ public class PhecapConnector {
         ftpClient.setConnectTimeout(connectTimeOut);
         ftpClient.connect(teletextServerHost, teletextServerPort);
 
-        boolean error = false;
         try {
             int reply;
             ftpClient.connect(teletextServerHost);
@@ -133,7 +132,6 @@ public class PhecapConnector {
 
             ftpClient.logout();
         } catch(Exception e) {
-            error = true;
             e.printStackTrace();
         } finally {
             if(ftpClient.isConnected()) {
