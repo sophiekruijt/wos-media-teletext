@@ -24,7 +24,7 @@ The mock-server will automatically be started when you run tests of teletext-cor
 
 Copy teletext-core.war to production server (to /apps/teletext). Do not overwrite the current teletext-core file.
 In /apps/teletext is a symbolic link named "teletext", this symbolic link needs to be changed to link to the new file.
-(sudo ln -sf teletext-core-12345678.jar teletext)
+(sudo ln -sf teletext-core-version.jar teletext)
 
 Finally, reboot the teletext application by stopping the service.
 1. sudo systemctl stop teletext.service
