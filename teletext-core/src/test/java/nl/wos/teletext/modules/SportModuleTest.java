@@ -2,9 +2,7 @@ package nl.wos.teletext.modules;
 
 import nl.wos.teletext.components.PhecapConnector;
 import nl.wos.teletext.components.SportModule;
-import nl.wos.teletext.dao.SportPouleDao;
 import nl.wos.teletext.mockserver.PhetxtMockServer;
-import nl.wos.teletext.models.SportPoule;
 import nl.wos.teletext.util.TextClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,16 +10,10 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -32,14 +24,12 @@ public class SportModuleTest {
     PhetxtMockServer mockServer = new PhetxtMockServer();
     private TextClient textClient = new TextClient();
 
-    @Mock private SportPouleDao sportPouleDao;
     @Spy private PhecapConnector phecapConnector;
 
     @Spy private SportModule sportModule;
 
     @Before
     public void setUp() throws Exception {
-        sportModule.setSportPouleDao(sportPouleDao);
         sportModule.setTeletextConnector(phecapConnector);
 
         String mockData = String.join("", Files.readAllLines(

@@ -3,7 +3,6 @@ package nl.wos.teletext.components;
 import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
-import nl.wos.teletext.dao.SportPouleDao;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;
@@ -27,8 +26,6 @@ import java.util.stream.Collectors;
 @Component
 public class SportModule extends TeletextModule {
     private static final Logger logger = Logger.getLogger(SportModule.class.getName());
-
-    @Autowired private SportPouleDao sportPouleDao;
 
     @Scheduled(fixedRate = 900000, initialDelay = 900000)
     public void doTeletextUpdate() {
@@ -246,9 +243,5 @@ public class SportModule extends TeletextModule {
             e.printStackTrace();
         }
         return "";
-    }
-
-    public void setSportPouleDao(SportPouleDao sportPouleDao) {
-        this.sportPouleDao = sportPouleDao;
     }
 }
