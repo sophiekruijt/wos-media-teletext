@@ -4,13 +4,13 @@ import nl.wos.teletext.core.TeletextPage;
 import nl.wos.teletext.core.TeletextSubpage;
 import nl.wos.teletext.core.TeletextUpdatePackage;
 import nl.wos.teletext.dao.SportPouleDao;
-import nl.wos.teletext.models.SportPoule;
 import nl.wos.teletext.util.TextOperations;
 import nl.wos.teletext.util.Web;
 import org.apache.http.util.EntityUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +37,7 @@ public class SportModule extends TeletextModule {
         TeletextUpdatePackage updatePackage = new TeletextUpdatePackage();
         updatePackage.addRemovePagesTask(611, 645);
 
-        Map<String, SportPoule> poules = getSportPoules();
+        List<String> poules = getSportPoules();
         String sportData = getSportData();
 
         try {
@@ -53,14 +52,13 @@ public class SportModule extends TeletextModule {
 
                 List<Element> sportItems = document.getRootElement().getChild("channel").getChildren("item");
                 sportItems.stream().sorted(byTitle).forEach((item) -> {
-                    if(poules.containsKey(item.getChild("title").getValue())) {
-                        SportPoule sportPoule = poules.get(item.getChild("title").getValue());
+                    if(poules.contains(item.getChild("title").getValue())) {
                         Element description = item.getChild("description");
                         Element body1 = description.getChildren("body").get(0);
                         Element body2 = description.getChildren("body").get(1);
 
-                        List<String> programAndScoresPageText = parseProgramAndScores(body1, sportPoule.getDisplayName());
-                        List<String> seasonScoresPageText = parseSeasonOverview(body2, sportPoule.getDisplayName());
+                        List<String> programAndScoresPageText = parseProgramAndScores(body1, item.getChild("title").getValue());
+                        List<String> seasonScoresPageText = parseSeasonOverview(body2, item.getChild("title").getValue());
 
                         TeletextPage sportPage = new TeletextPage(pageNumber.get());
                         TeletextSubpage page1 = sportPage.addNewSubpage();
@@ -71,8 +69,9 @@ public class SportModule extends TeletextModule {
                         page2.setLayoutTemplateFileName("template-sport2.tpg");
                         page2.addText(seasonScoresPageText);
 
-                        indexPageText.add(TextOperations.makeBerichtTitelVoorIndexPagina(
-                                sportPoule.getDisplayName()).concat(" ") + pageNumber);
+                        String title = TextOperations.removeIllegalCharacters(item.getChild("title").getValue());
+                        title = TextOperations.createIndexPageTitle(title);
+                        indexPageText.add(title.concat(" ") + pageNumber);
 
                         updatePackage.addTeletextPage(sportPage);
 
@@ -109,9 +108,22 @@ public class SportModule extends TeletextModule {
         }
     }
 
-    public Map<String, SportPoule> getSportPoules() {
-        Map<String, SportPoule> poules = sportPouleDao.getAllSportPoules();
-        return poules;
+    public List<String> getSportPoules() {
+        List<String> sportPoules = new ArrayList<String>(50);
+        try {
+            org.jsoup.nodes.Document doc = Jsoup.parse(getSportPouleData());
+            for(org.jsoup.nodes.Element poule : doc.getElementsByClass("uitslagPoule")) {
+                sportPoules.add(poule.attributes().get("data-id"));
+            }
+        } catch (Exception e) {
+            System.out.println("this is bad!, TODO: Add custom exception and cancel teletext update");
+        }
+
+        return sportPoules;
+    }
+
+    public String getSportPouleData() throws Exception {
+        return Web.doWebRequest("http://www.wos.nl/sport/uitslagen").toString();
     }
 
     public void sendFilesToTeletextServer(TeletextUpdatePackage updatePackage) {
@@ -152,8 +164,13 @@ public class SportModule extends TeletextModule {
                         final List<Element> tdList = score.getChildren("td");
 
                         if (!tdList.isEmpty()) {
-                            club1 = tdList.get(0).getValue().trim();
-                            club2 = tdList.get(2).getValue().trim();
+                            if(tdList.size() == 1) {
+                                club1 = tdList.get(0).getValue().trim();
+                            }
+                            else {
+                                club1 = tdList.get(0).getValue().trim();
+                                club2 = tdList.get(2).getValue().trim();
+                            }
                         }
 
                         // When table contains more than 3 td's there could also a score.

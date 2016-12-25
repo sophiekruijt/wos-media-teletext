@@ -10,130 +10,133 @@ public class TextOperations {
 
     // To do: This works but is not efficient and hard to manage.
     public static String removeIllegalCharacters(String text) {
-        String result = text;
+        text = text.replace("&gt;", ">");
+        text = text.replace("&lt;", "<");
+        text = text.replace("&#38;", "&");
+        text = text.replace("&quot;", "\"");
+        text = text.replace("&nbsp;", " ");
+        text = text.replace("&amp;", "&");
 
-        result = result.replace("&gt;", ">");
-        result = result.replace("&lt;", "<");
-        result = result.replace("&#38;", "&");
-        result = result.replace("&quot;", "\"");
-        result = result.replace("&nbsp;", " ");
-        result = result.replace("&amp;", "&");
+        text = text.replace("]]>", "");
+        text = text.replace("‘", "'");
+        text = text.replace("’", "'");
+        text = text.replace("`", "'");
+        text = text.replace("´", "'");
+        text = text.replace("“", "\"");
+        text = text.replace("”", "\"");
+        text = text.replace("³", "3");
+        text = text.replace("²", "2");
 
-        result = result.replace("]]>", "");
-        result = result.replace("‘", "'");
-        result = result.replace("’", "'");
-        result = result.replace("`", "'");
-        result = result.replace("´", "'");
-        result = result.replace("“", "\"");
-        result = result.replace("”", "\"");
-        result = result.replace("³", "3");
-        result = result.replace("²", "2");
+        text = text.replace("ë", "e");
+        text = text.replace("é", "e");
+        text = text.replace("è", "e");
+        text = text.replace("È", "E");
+        text = text.replace("Ë", "E");
+        text = text.replace("É", "E");
 
-        result = result.replace("ë", "e");
-        result = result.replace("é", "e");
-        result = result.replace("è", "e");
-        result = result.replace("È", "E");
-        result = result.replace("Ë", "E");
-        result = result.replace("É", "E");
+        text = text.replace("ä", "a");
+        text = text.replace("á", "a");
+        text = text.replace("à", "a");
+        text = text.replace("ã", "a");
+        text = text.replace("â", "a");
 
-        result = result.replace("ä", "a");
-        result = result.replace("á", "a");
-        result = result.replace("à", "a");
-        result = result.replace("ã", "a");
-        result = result.replace("â", "a");
+        text = text.replace("Á", "A");
+        text = text.replace("À", "A");
+        text = text.replace("Ä", "A");
 
-        result = result.replace("Á", "A");
-        result = result.replace("À", "A");
-        result = result.replace("Ä", "A");
+        text = text.replace("í", "i");
+        text = text.replace("ì", "i");
+        text = text.replace("ï", "i");
+        text = text.replace("Í", "I");
+        text = text.replace("Ì", "I");
+        text = text.replace("Ï", "I");
+        text = text.replace("Î", "I");
 
-        result = result.replace("í", "i");
-        result = result.replace("ì", "i");
-        result = result.replace("ï", "i");
-        result = result.replace("Í", "I");
-        result = result.replace("Ì", "I");
-        result = result.replace("Ï", "I");
-        result = result.replace("Î", "I");
+        text = text.replace("ù", "u");
+        text = text.replace("ú", "u");
+        text = text.replace("ü", "u");
+        text = text.replace("Ù", "u");
+        text = text.replace("Ú", "U");
+        text = text.replace("Ü", "U");
 
-        result = result.replace("ù", "u");
-        result = result.replace("ú", "u");
-        result = result.replace("ü", "u");
-        result = result.replace("Ù", "u");
-        result = result.replace("Ú", "U");
-        result = result.replace("Ü", "U");
+        text = text.replace("ö", "o");
+        text = text.replace("ò", "o");
+        text = text.replace("ó", "o");
+        text = text.replace("Ò", "O");
+        text = text.replace("Ó", "O");
+        text = text.replace("Ö", "O");
+        text = text.replace("Õ", "O");
+        text = text.replace("Ø", "O");
+        text = text.replace("Ô", "O");
 
-        result = result.replace("ö", "o");
-        result = result.replace("ò", "o");
-        result = result.replace("ó", "o");
-        result = result.replace("Ò", "O");
-        result = result.replace("Ó", "O");
-        result = result.replace("Ö", "O");
-        result = result.replace("Õ", "O");
-        result = result.replace("Ø", "O");
-        result = result.replace("Ô", "O");
+        text = text.replace("†", "-");
+        text = text.replace("‡", "-");
+        text = text.replace("•", ".");
+        text = text.replace("…", ".");
+        text = text.replace("‰", "%");
+        text = text.replace("™", " ");
+        text = text.replace("·", ".");
+        text = text.replace("˜", "");
 
-        result = result.replace("†", "-");
-        result = result.replace("‡", "-");
-        result = result.replace("•", ".");
-        result = result.replace("…", ".");
-        result = result.replace("‰", "%");
-        result = result.replace("™", " ");
-        result = result.replace("·", ".");
-        result = result.replace("˜", "");
-
-        result = result.replace("Œ", "");
-        result = result.replace("œ", "");
-        result = result.replace("Š", "");
-        result = result.replace("š", "");
-        result = result.replace("Ÿ", "");
-        result = result.replace("ƒ", "");
-        result = result.replace("Ç", "");
-        result = result.replace("¬", "");
-        result = result.replace("¦", "");
-        result = result.replace("¥", "");
-        result = result.replace("§", "");
-        result = result.replace("¢", "");
-        result = result.replace("Þ", "");
-        result = result.replace("ß", "");
-        result = result.replace("¶", "");
+        text = text.replace("Œ", "");
+        text = text.replace("œ", "");
+        text = text.replace("Š", "");
+        text = text.replace("š", "");
+        text = text.replace("Ÿ", "");
+        text = text.replace("ƒ", "");
+        text = text.replace("Ç", "");
+        text = text.replace("¬", "");
+        text = text.replace("¦", "");
+        text = text.replace("¥", "");
+        text = text.replace("§", "");
+        text = text.replace("¢", "");
+        text = text.replace("Þ", "");
+        text = text.replace("ß", "");
+        text = text.replace("¶", "");
 
 
-        result = result.replace("©", "C");
-        result = result.replace("®", "R");
+        text = text.replace("©", "C");
+        text = text.replace("®", "R");
 
-        result = result.replace("€", "");
-        result = result.replace("\r", " ");
-        result = result.replace("\n", "");
-        result = result.replace("–", "-");
-        result = result.replace("—", "-");
-        result = result.replace("<link", "");
-        result = result.replace("=\"\">", "");
-        result = result.replace("</span>", "");
-        result = result.replace("</p>", "");
-        result = result.replace("<div>", "");
-        result = result.replace("</div>", "");
-        result = result.replace("<DIV>", "");
-        result = result.replace("</DIV>", "");
-        result = result.replace("<i>", "");
-        result = result.replace("</i>", "");
-        result = result.replace("<I>", "");
-        result = result.replace("</I>", "");
-        result = result.replace("<u>", "");
-        result = result.replace("</U>", "");
-        result = result.replace("<U>", "");
-        result = result.replace("</u>", "");
-        result = result.replace("<b>", "");
-        result = result.replace("</b>", "");
-        result = result.replace("<B>", "");
-        result = result.replace("</B>", "");
-        result = result.replace("<br />", "");
-        result = result.replace("<BR />", "");
-        result = result.replace("<BR>", "");
-        result = result.replace("<br>", "");
+        text = text.replace("€", "");
+        text = text.replace("\r", " ");
+        text = text.replace("\n", "");
+        text = text.replace("–", "-");
+        text = text.replace("—", "-");
+        text = text.replace("<link", "");
+        text = text.replace("=\"\">", "");
+        text = text.replace("</span>", "");
+        text = text.replace("</p>", "");
+        text = text.replace("<div>", "");
+        text = text.replace("</div>", "");
+        text = text.replace("<DIV>", "");
+        text = text.replace("</DIV>", "");
+        text = text.replace("<i>", "");
+        text = text.replace("</i>", "");
+        text = text.replace("<I>", "");
+        text = text.replace("</I>", "");
+        text = text.replace("<u>", "");
+        text = text.replace("</U>", "");
+        text = text.replace("<U>", "");
+        text = text.replace("</u>", "");
+        text = text.replace("<b>", "");
+        text = text.replace("</b>", "");
+        text = text.replace("<B>", "");
+        text = text.replace("</B>", "");
+        text = text.replace("<br />", "");
+        text = text.replace("<BR />", "");
+        text = text.replace("<BR>", "");
+        text = text.replace("<br>", "");
 
-        result = result.replace("\u00a0", " ");
-        result = result.replaceAll(" ", " ");
+        text = text.replace("\u00a0", " ");
+        text = text.replaceAll(" ", " ");
 
-        return result;
+        text = text.replace("2016/2017 ", "");
+        text = text.replace("2017/2018 ", "");
+        text = text.replace("2018/2019 ", "");
+        text = text.replace("2020/2021 ", "");
+
+        return text;
     }
 
     public static List<List<String>> parseTextToTeletextPageSizeArray(String text, int height)
@@ -180,14 +183,14 @@ public class TextOperations {
         return result;
     }
 
-    public static String makeBerichtTitelVoorIndexPagina(String publicationTitle) {
+    public static String createIndexPageTitle(String title) {
         String result;
-        if (publicationTitle.length() >= MAX_TITLE_SIZE) {
-            result = publicationTitle.substring(0, MAX_TITLE_SIZE);
+        if (title.length() >= MAX_TITLE_SIZE) {
+            result = title.substring(0, MAX_TITLE_SIZE);
         }
         else {
-            result = publicationTitle;
-            for (int i = 0; i < MAX_TITLE_SIZE - publicationTitle.length(); i++) {
+            result = title;
+            for (int i = 0; i < MAX_TITLE_SIZE - title.length(); i++) {
                 result += ".";
             }
         }

@@ -126,7 +126,7 @@ public class NewsModule extends TeletextModule {
             for(RSSItem newsItem : newsItems.stream().limit(6).collect(Collectors.toList()))
             {
                 int lineNumber = line * 2 + 1;
-                subpage.setTextOnLine(lineNumber, TextOperations.makeBerichtTitelVoorIndexPagina(newsItem.getTitle()) + "\u0003" + (103 + line));
+                subpage.setTextOnLine(lineNumber, TextOperations.createIndexPageTitle(newsItem.getTitle()) + "\u0003" + (103 + line));
                 line++;
             }
             updatePackage.addTeletextPage(teletextPage);
@@ -146,7 +146,7 @@ public class NewsModule extends TeletextModule {
         for(RSSItem bericht : newsItems)
         {
             subpage.setTextOnLine(line,
-                    TextOperations.makeBerichtTitelVoorIndexPagina(bericht.getTitle()) + "\u0003" + (pageNumberNewsStart + line));
+                    TextOperations.createIndexPageTitle(bericht.getTitle()) + "\u0003" + (pageNumberNewsStart + line));
             line++;
         }
         updatePackage.addTeletextPage(teletextPage);
@@ -179,21 +179,21 @@ public class NewsModule extends TeletextModule {
         TeletextSubpage subPage = page.addNewSubpage();
         subPage.setLayoutTemplateFileName("template-sportoverzicht.tpg");
         subPage.setTextOnLine(0, "\u0003Uitslagen amateurvoetbal");
-        subPage.setTextOnLine(1, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i1.getTitle()) + "\u0003" + 648);
-        subPage.setTextOnLine(2, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i2.getTitle()) + "\u0003" + 649);
+        subPage.setTextOnLine(1, " " + TextOperations.createIndexPageTitle(i1.getTitle()) + "\u0003" + 648);
+        subPage.setTextOnLine(2, " " + TextOperations.createIndexPageTitle(i2.getTitle()) + "\u0003" + 649);
         subPage.setTextOnLine(4, "\u0003Sportnieuws");
         int row = 5;
         for(int i=0; i < sportItems.size(); i++) {
             if(i >= 6) {
                 break;
             }
-            subPage.setTextOnLine(row, " " + TextOperations.makeBerichtTitelVoorIndexPagina(sportItems.get(i).getTitle()) + "\u0003" + (650 + i));
+            subPage.setTextOnLine(row, " " + TextOperations.createIndexPageTitle(sportItems.get(i).getTitle()) + "\u0003" + (650 + i));
             row++;
         }
 
         subPage.setTextOnLine(12, "\u0003Inhoud WOS Sport radio 87.6 FM");
-        subPage.setTextOnLine(13, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i3.getTitle()) + "\u0003" + 656);
-        subPage.setTextOnLine(14, " " + TextOperations.makeBerichtTitelVoorIndexPagina(i4.getTitle()) + "\u0003" + 657);
+        subPage.setTextOnLine(13, " " + TextOperations.createIndexPageTitle(i3.getTitle()) + "\u0003" + 656);
+        subPage.setTextOnLine(14, " " + TextOperations.createIndexPageTitle(i4.getTitle()) + "\u0003" + 657);
 
         updatePackage.addTeletextPage(page);
     }
