@@ -44,6 +44,10 @@ public class TeletextUpdatePackage {
         new File(folderName).mkdirs();
     }
 
+    public int getId() {
+        return this.packageId;
+    }
+
     public void addTeletextPage(TeletextPage teletextPage) {
         teletextPages.add(teletextPage);
     }
@@ -63,7 +67,6 @@ public class TeletextUpdatePackage {
 
     /***
      * Generate all textfiles in data directory for this set of commands and teletextpages.
-     * This will also result in locking the teletext page since the configuration string with teletext inserter commands will be generated.
      */
     public void generateTextFiles() {
         for(TeletextPage teletextPage : teletextPages) {
@@ -116,9 +119,5 @@ public class TeletextUpdatePackage {
             result.append("Pagenumber: " + page.getTeletextPagenumber() + " (" + page.getTeletextSubPages().size() + " subpages)]\n");
         }
         return result.toString();
-    }
-
-    public int getId() {
-        return this.packageId;
     }
 }

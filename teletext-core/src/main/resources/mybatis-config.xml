@@ -7,7 +7,6 @@
         <typeAlias type='nl.wos.teletext.models.Bericht' alias='Bericht'></typeAlias>
         <typeAlias type='nl.wos.teletext.models.TrainStation' alias='TrainStation'></typeAlias>
         <typeAlias type='nl.wos.teletext.models.Item' alias='Item'></typeAlias>
-        <typeAlias type='nl.wos.teletext.models.SportPoule' alias='SportPoule'></typeAlias>
     </typeAliases>
     <environments default="development">
         <environment id="development">

@@ -31,13 +31,13 @@ public class TeletextSubpage {
         this.layoutTemplateFileName = layoutTemplateFileName;
     }
 
-    public void addText(List<String> programAndScoresPageText) {
-        if(textLines.length < programAndScoresPageText.size()) {
-            textLines = new String[programAndScoresPageText.size()];
+    public void addText(List<String> text) {
+        if(textLines.length < text.size()) {
+            textLines = new String[text.size()];
         }
 
-        for(int i=0; i<programAndScoresPageText.size(); i++) {
-            textLines[i] = programAndScoresPageText.get(i);
+        for(int i=0; i<text.size(); i++) {
+            textLines[i] = text.get(i);
         }
     }
 }
