@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "TrainStation">
+<mapper namespace = "nl.wos.teletext.dao.TrainStationDao">
     <select id = "getAll" resultMap = "result">
         SELECT * FROM train_station ORDER BY teletextPageNumber;
     </select>
