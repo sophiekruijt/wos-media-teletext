@@ -3,8 +3,8 @@
 Teletext is a television information retrieval service.
 This application is capable of keeping news, weather, sport scores, and departure times of train stations up to date 24/7 for a Dutch TV channel.
 
-![Index page of teletext](./images/index.png?raw=true)
-![Departures at train stations](./images/train_departures.png?raw=true)
+![Index page of teletext](github-screenshots/page100-index.png?raw=true)
+![Departures at train stations](github-screenshots/page715-train-departures.png?raw=true)
 
 ### Requirements to develop application
 1. Java8 JDK (tested with 1.8.0_111)
