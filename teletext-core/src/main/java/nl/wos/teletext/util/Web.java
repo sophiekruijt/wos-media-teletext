@@ -27,7 +27,7 @@ public class Web {
             return response.getEntity();
         }
         catch (IOException ex) {
-            log.log(Level.SEVERE, "Exception occured", ex);
+            log.log(Level.SEVERE, "Exception occurred", ex);
             throw new Exception("Something went wrong with the web request", ex);
         }
     }
@@ -42,7 +42,7 @@ public class Web {
             return response.getEntity();
         }
         catch (IOException ex) {
-            log.log(Level.SEVERE, "Exception occured", ex);
+            log.log(Level.SEVERE, "Exception occurred", ex);
             throw new Exception("Something went wrong with the web request", ex);
         }
     }

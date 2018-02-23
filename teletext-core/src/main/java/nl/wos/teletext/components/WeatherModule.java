@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class WeatherModule extends TeletextModule {
     private static final Logger logger = Logger.getLogger(WeatherModule.class.getName());
 
-    @Scheduled(fixedRate = 900000, initialDelay = 900000)
+    @Scheduled(fixedRate = 900000, initialDelay = 20000)
     public void doTeletextUpdate() {
         logger.info("Weather module is going to update teletext.");
 
@@ -52,7 +52,7 @@ public class WeatherModule extends TeletextModule {
                 updatePackage.generateTextFiles();
                 phecapConnector.uploadFilesToTeletextServer(updatePackage);
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Exeption occured", ex);
+                logger.log(Level.SEVERE, "Exception occurred", ex);
             }
 
 
@@ -62,7 +62,7 @@ public class WeatherModule extends TeletextModule {
 
     private String getWeatherData() {
         try {
-            return EntityUtils.toString(Web.doWebRequest("http://xml.buienradar.nl/"));
+            return EntityUtils.toString(Web.doWebRequest("https://xml.buienradar.nl/"));
         } catch (Exception e) {
             e.printStackTrace();
         }

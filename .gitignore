@@ -8,3 +8,5 @@ target
 target/
 .idea
 teletext-data/
+
+node_modules/

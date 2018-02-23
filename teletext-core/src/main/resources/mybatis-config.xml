@@ -23,6 +23,5 @@
         <mapper resource = "mapper/Bericht.xml"/>
         <mapper resource = "mapper/TrainStation.xml"/>
         <mapper resource = "mapper/Item.xml"/>
-        <mapper resource = "mapper/SportPoule.xml"/>
     </mappers>
 </configuration>

@@ -29,10 +29,10 @@ public class PublicTransportModule extends TeletextModule {
 
     @Autowired private TrainStationDao trainStationDao;
 
-    @Scheduled(fixedRate = 300000, initialDelay = 300000)
+    @Scheduled(fixedRate = 999999, initialDelay = 9999999)
     public void doTeletextUpdate() {
         logger.info(this.getClass().getName() + " is going to update teletext.");
-        List<TrainStation> trainStations = trainStationDao.getAllTrainStations();
+        /*List<TrainStation> trainStations = trainStationDao.getAllTrainStations();
         
         for(TrainStation station : trainStations) {
             try {
@@ -69,7 +69,7 @@ public class PublicTransportModule extends TeletextModule {
             updatePackage.addTeletextPage(teletextPage);
         }
         updatePackage.generateTextFiles();
-        phecapConnector.uploadFilesToTeletextServer(updatePackage);
+        phecapConnector.uploadFilesToTeletextServer(updatePackage);*/
     }
 
     public List<TrainStation> getTrainStations() {
