@@ -98,7 +98,7 @@ public class PhecapConnector {
 
         try {
             int reply;
-            ftpClient.connect(teletextServerHost);
+            ftpClient.connect(teletextServerHost, teletextServerPort);
             System.out.println("Connected to " + teletextServerHost + ".");
             System.out.print(ftpClient.getReplyString());
 
