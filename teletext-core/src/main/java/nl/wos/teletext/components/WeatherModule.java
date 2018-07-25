@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class WeatherModule extends TeletextModule {
     private static final Logger logger = Logger.getLogger(WeatherModule.class.getName());
 
-    @Scheduled(fixedRate = 900000, initialDelay = 10)
+    @Scheduled(fixedRate = 900000, initialDelay = 20000)
     public void doTeletextUpdate() {
         logger.info("Weather module is going to update teletext.");
 
@@ -175,8 +175,7 @@ public class WeatherModule extends TeletextModule {
                 meerdaagse.get(1).getDayOfWeek(),
                 meerdaagse.get(2).getDayOfWeek(),
                 meerdaagse.get(3).getDayOfWeek(),
-                meerdaagse.get(4).getDayOfWeek(),
-                meerdaagse.get(5).getDayOfWeek());
+                meerdaagse.get(4).getDayOfWeek());
         subpage.setTextOnLine(2, line0);
 
         String line1 = String.format(format, "Kans zon:",
