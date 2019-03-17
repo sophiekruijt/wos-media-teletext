@@ -111,6 +111,7 @@ public class PhecapConnector {
             ftpClient.login(teletextServerUser, teletextServerPassword);
             ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
+            ftpClient.enterLocalPassiveMode();
             ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
             ftpClient.changeWorkingDirectory(teletextServerUploadPath);
 

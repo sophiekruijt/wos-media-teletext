@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class WeatherModule extends TeletextModule {
     private static final Logger logger = Logger.getLogger(WeatherModule.class.getName());
 
-    @Scheduled(fixedRate = 900000, initialDelay = 20000)
+    @Scheduled(fixedRate = 900000, initialDelay = 5000)
     public void doTeletextUpdate() {
         logger.info("Weather module is going to update teletext.");
 
